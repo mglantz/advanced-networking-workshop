@@ -28,12 +28,12 @@ $ sudo restorecon $(which containerlab)
 $ sudo podman import cEOS64-lab-4.32.0F.tar.tar ceos:4.32.0F 
 ```
 
-6. Clone this repository
+6. Clone this repository into your /home/user directory. If you place it elsewhere, adjust items as described in 7.
 ```
 git clone https://github.com/mglantz/advanced-networking-workshop
 ```
 
-7. Go into the directory and adjust the path for startup-config for each node.
+7. Go into the directory and ensure the path for startup-config for each node is correct.
 ```
 cd advanced-networking-workshop/containerlab
 vim ceos-evpn-overlaid.clab-full.yml
