@@ -1,5 +1,24 @@
 # advanced-networking-workshop
-Work in progress
+Work in progress, everything is a draft.
+
+## Overview of lab excercises
+1. Configure Multi-Chassis Link Aggregation (MLAG)
+2. Configure MLAG – Dual-Active Detection (aka Peer Keepalive)
+3. Configure Underlay Point-to-Point Interfaces
+4. Configure Underlay Point-to-Point Interfaces - Leaf-to-Leaf
+5. Configure Loopbacks for BGP Peering
+6. Configure BGP Process
+7. Configure Underlay EBGP Neighbors
+8. Configure Underlay IBGP Neighbors
+9. Activating BGP
+10. Enable EVPN Capability
+11. Configure BGP EVPN Overlays - Leaf-to-Spine
+12. Configure BGP EVPN Overlay - Spines-to-Leafs
+13. Validating EVPN Neighbors
+14. Configure VXLAN Tunnel Endpoints (VTEP)
+15. Validating host to host communication
+16. Future: Transporting L2VXLAN with EVPN
+17. Future: Transporting L3VXLAN with EVPN 
 
 ## Installation of lab infrastructure
 
