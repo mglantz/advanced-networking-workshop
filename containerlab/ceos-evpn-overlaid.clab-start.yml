@@ -9,34 +9,34 @@ topology:
   nodes:
     leaf1:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg
     leaf2:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-start.cfg
     leaf3:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf3-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf3-start.cfg
     leaf4:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf4-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf4-start.cfg
     leaf5:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf5-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf5-start.cfg
     leaf6:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf6-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf6-start.cfg
     leaf7:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf7-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf7-start.cfg
     leaf8:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf8-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf8-start.cfg
     spine1:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine1-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine1-start.cfg
     spine2:
       kind: ceos
-      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine2-full.cfg
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine2-start.cfg
     host1:
       kind: linux
     host2:
