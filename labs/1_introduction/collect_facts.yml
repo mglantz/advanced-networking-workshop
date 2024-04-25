@@ -1,0 +1,7 @@
+- name: Fact collecting
+  hosts: switches
+  tasks:
+    - name: Gather all legacy facts
+      arista.eos.eos_facts:
+        gather_subset:
+          - config
