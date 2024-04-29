@@ -1,0 +1,6 @@
+- name: Ping leaf switches
+  hosts: leafs
+  tasks:
+    - name: Validate that we have a working connection to each switch
+      ansible.builtin.ping:
+        data: pong
