@@ -11,7 +11,8 @@ cat << 'EOF' >$inventory_file
 ansible_user=admin
 ansible_ssh_private_key_file=~/.ssh/advanced-networking-workshop_id_rsa
 ansible_network_os=arista.eos.eos
-ansible_connection=ansible.netcommon.httpapi
+ansible_connection=ansible.netcommon.network_cli
+
 EOF
 
 echo "[linux]" >>$inventory_file
