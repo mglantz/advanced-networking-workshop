@@ -1,7 +1,6 @@
-# Section 1: Ansible networking fundamentals
+# Section 1: Fundamentals, test automation, information related tasks
 In this section, you will learn about some of the different main approaches when automating against network devices.
-At the end of this section, you will have automatically learned different ways you can configure VLAN and interface information.
-This is before we go unto more advanced networking architectures, commonly found in larger data centers.
+At the end of this section, you will have learned about fundamentals, how to perform automated testing and using the information we can pull from the network to perform common tasks.
 
 ## Overview
 This is what we will learn about in this first section of the workshop.
@@ -1121,7 +1120,12 @@ clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0  
 </p>
 </details>
 
-Well done! We are now ready to move on to how we can work with configuration of network devices.
+Well done! We are now ready to move on to how we can work with configuration of network devices. Which we will deal with in the next section.
+
+```
+End-of-lab
+```
+[Go to the next lab, lab 2](../lab-2/README.md)
 
 ## 1.1.4 Using specific modules to configure devices
 This part is about learning about different module states (and managing some VLAN configuration along the way).
@@ -1172,7 +1176,7 @@ vlan 20
 
 Here, we can see that the name "twenty" of vlan 20, has been kept as is, as we did not define that.
 
-### 1.1.2: eos_vlan state: "replaced"
+### 1.1.4.2: eos_vlan state: "replaced"
 Next, we can choose replaced. Replaced will force overwrite existing configuration for the VLANs we define, but leave the VLANs we do not define untouched.
 
 Before we run our Ansible automation the device looks like this:
@@ -1208,7 +1212,7 @@ vlan 20
 Please note how ```name twenty``` now is gone, as we did not define that for VLAN 20, in our Ansible automation.
 At the same time, VLAN 10 is untouched, as we did not define anything for that.
 
-### 1.1.3: eos_vlan state: "overridden"
+### 1.1.4.3: eos_vlan state: "overridden"
 This options overrides the device configuration of all VLANs you define, with whatever configuration you define. It means that if you have not defined something in your Ansible automation, it will be deleted from the device.
 
 Before we do anything, the device looks like this:
@@ -1241,7 +1245,7 @@ vlan 20
 Above we can see that that both VLAN 10 and the name definition for VLAN 20 is gone. This is because they were not defined.
 Using ```overridden``` is clearly very powerful, as we will only end up with that is defined, but it's also easier to make misstakes, if we are for example generating this Ansible automation somehow and that automation suffers a failure, failing to define all VLANs we need.
 
-### 1.1.4: eos_vlan state: "deleted"
+### 1.1.4.4: eos_vlan state: "deleted"
 This option is self explainatory, it will remove a defined VLAN. As an example:
 
 ```
@@ -1254,7 +1258,7 @@ This option is self explainatory, it will remove a defined VLAN. As an example:
 
 Above configuration will delete VLAN 20 out of the device (but leave any other VLANs untouched).
 
-### eos_vlan state: "gathered"
+### 1.1.4.5: eos_vlan state: "gathered"
 This option is to gather VLAN related configuration from a device, allowing you to process the information is a programtic fashion.
 This is an alternativt to plainly using eos_facts to gather the vlan subset, or running and parsing ```show vlan brief``` or somethig simliar.
 
@@ -1273,7 +1277,7 @@ You get below data gathered:
   state: suspend
 ```
 
-### 1.1.5: eos_vlan state: "rendered" / "parsed"
+### 1.1.4.6: eos_vlan state: "rendered" / "parsed"
 The rendered option allows you to convert structured data, that you would fetch from facts gathering, to native device config.
 The "parsed" option allows you to do vice-versa. Meaning, to convert native device config, to structured data.
 Doing this is useful when you are using Ansible to document your network.
@@ -1299,6 +1303,7 @@ vlan 20
 
 And "parsed" works in the opposite way.
 
+## 1.1.5 
 # 1.2. Create MLAG VLAN and place it in a trunk group
 
 Now that that we are fully briefed on how we can configure the VLANs on our switches, we're ready to start setting up our network.

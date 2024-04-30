@@ -2,6 +2,40 @@
 Work in progress, everything is a draft.
 
 ## Overview of lab excercises
+# Section 0: Introduction to the lab
+```
+2.1: Building a new containerlab environment
+2.2: Reviewing the desired configuration state
+2.3: Using specific modules to configure devices
+2.4: Using config modules to configure devices
+2.5: Using templates to configure devices
+```
+
+# Section 1: Fundamentals, test automation, information related tasks
+```
+1.1: Different Ansible approaches to automating network devices
+1.1.1: Vendor differences
+1.1.2: Network test automation (using ContainerLab)
+1.1.2.1: Creating a containerlab test environment
+1.1.3: Gathering information
+1.1.3.1: Using the command module
+1.1.3.2: Performing backups
+1.1.3.3: Documenting your network
+1.1.3.4: Adding intelligence to your playbooks
+1.1.3.5: Operational use-cases
+```
+
+# Section 2: Applying configuration to devices
+```
+2.1: Building a new containerlab environment
+2.2: Reviewing the desired configuration state
+2.3: Using specific modules to configure devices
+2.4: Using config modules to configure devices
+2.5: Using templates to configure devices
+```
+
+# Section 3: Applying best practices to build a BGP EVPN architecture?
+```
 1. Configure Multi-Chassis Link Aggregation (MLAG)
 2. Configure MLAG – Dual-Active Detection (aka Peer Keepalive)
 3. Configure Underlay Point-to-Point Interfaces
@@ -19,6 +53,7 @@ Work in progress, everything is a draft.
 15. Validating host to host communication
 16. Future: Transporting L2VXLAN with EVPN
 17. Future: Transporting L3VXLAN with EVPN 
+```
 
 ## Installation of lab infrastructure
 
@@ -173,5 +208,6 @@ PING 172.20.20.22 (172.20.20.22) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.036/0.044/0.057/0.009 ms
 bash-5.0#
 ```
+
 
 
