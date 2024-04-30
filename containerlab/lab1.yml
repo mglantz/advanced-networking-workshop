@@ -1,0 +1,15 @@
+name: lab1
+topology:
+  kinds:
+    ceos:
+      image: localhost/ceos:4.32.0F
+  nodes:
+    leaf1:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg
+    leaf2:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-start.cfg
+  links:
+    - endpoints: ["leaf1:eth9", "leaf2:eth9"]
+    - endpoints: ["leaf1:eth10", "leaf2:eth10"]
