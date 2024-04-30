@@ -2,7 +2,7 @@
 Work in progress, everything is a draft.
 
 ## Overview of lab excercises
-# Section 0: Introduction to the lab
+### Section 0: Introduction to the lab
 ```
 2.1: Building a new containerlab environment
 2.2: Reviewing the desired configuration state
@@ -11,7 +11,7 @@ Work in progress, everything is a draft.
 2.5: Using templates to configure devices
 ```
 
-# Section 1: Fundamentals, test automation, information related tasks
+### Section 1: Fundamentals, test automation, information related tasks
 ```
 1.1: Different Ansible approaches to automating network devices
 1.1.1: Vendor differences
@@ -25,7 +25,7 @@ Work in progress, everything is a draft.
 1.1.3.5: Operational use-cases
 ```
 
-# Section 2: Applying configuration to devices
+### Section 2: Applying configuration to devices
 ```
 2.1: Building a new containerlab environment
 2.2: Reviewing the desired configuration state
@@ -34,7 +34,7 @@ Work in progress, everything is a draft.
 2.5: Using templates to configure devices
 ```
 
-# Section 3: Applying best practices to build a BGP EVPN architecture?
+### Section 3: Applying best practices to build a BGP EVPN architecture?
 ```
 1. Configure Multi-Chassis Link Aggregation (MLAG)
 2. Configure MLAG – Dual-Active Detection (aka Peer Keepalive)
@@ -55,7 +55,7 @@ Work in progress, everything is a draft.
 17. Future: Transporting L3VXLAN with EVPN 
 ```
 
-## Installation of lab infrastructure
+# Installation of lab infrastructure
 
 To get the containerlab setup working on Fedora 39, using podman.
 1. Install podman
@@ -208,6 +208,8 @@ PING 172.20.20.22 (172.20.20.22) 56(84) bytes of data.
 rtt min/avg/max/mdev = 0.036/0.044/0.057/0.009 ms
 bash-5.0#
 ```
+
+11. Now you are ready to start the lab. Goto lab-0/README.md.
 
 
 
