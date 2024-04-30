@@ -4,21 +4,22 @@ At the end of this section, you will have automatically learned different ways y
 This is before we go unto more advanced networking architectures, commonly found in larger data centers.
 
 ## Overview
+This is what we will learn about in this first section of the workshop.
 
-This is what we will learn about in this section of the workshop.
 ```
 1.1: Different Ansible approaches to automating network devices
-1.1.1 Network test automation (using ContainerLab)
-1.1.1.1 Creating a containerlab test environment
-1.1.2 Gathering information
-1.1.2.1 Using the command module
-1.1.2.2 Performing backups
-1.1.2.3 Documenting your network
-1.1.3.4 Operational usecases
-1.1.3.5 Adding intelligence to your playbooks
-1.1.4 Using specific modules to configure devices
-1.1.5 Using config modules to configure devices
-1.1.6 Using templates
+1.1.1: Vendor differences
+1.1.2: Network test automation (using ContainerLab)
+1.1.2.1: Creating a containerlab test environment
+1.1.3: Gathering information
+1.1.3.1: Using the command module
+1.1.3.2: Performing backups
+1.1.3.3: Documenting your network
+1.1.3.4: Adding intelligence to your playbooks
+1.1.3.5: Operational use-cases
+1.1.4: Using specific modules to configure devices
+1.1.5: Using config modules to configure devices
+1.1.6: Using templates
 ```
 ## 1.1: Different Ansible approaches to automating network devices
 Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what vendor you may be using.
@@ -28,7 +29,14 @@ Ansible is versatile, meaning you can approach automating your network in many d
 * Optimize for readability (makes for easier collaboration, maintenance and makes it more robust)
 * Think declaratively (Ansible is a state engine, do not try to 'code' with playbooks)
 
-## 1.1.1 Network test automation (using ContainerLab)
+## 1.1.1: Vendor differences
+When doing Ansible automation outside of the domain of networking, we are used to use the same settings and the same modules, even when we automate against different operating systems. When it comes to networking, this is not always true.
+
+Main differences between network vendors are:
+* How you connected to the devices. [See list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html)
+* What modules you use to perform tasks like, fact gathering, configuration changes, command execution. [See list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html#settings-by-platform)
+
+## 1.1.2 Network test automation (using ContainerLab)
 Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. A fundamental of programming is testing your code.
 The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test or molecule.
 You can read more about this on the [ansible.com dev-guide for testing](https://docs.ansible.com/ansible/latest/dev_guide/testing.html).
@@ -61,7 +69,7 @@ based routers using vrnetlab or boxen integration
 
 :boom: If you can. [Click here, to have a look at this introductionary video on YouTube, for containerlab](https://www.youtube.com/watch?v=xdi7rwdJgkg).
 
-## 1.1.1.1 Creating a containerlab environment
+## 1.1.2.1 Creating a containerlab environment
 In this section, you will learn how to create your first containerlab environment, which we will use to test against.
 Containerlab uses a few main components:
 * The containerlab cli tool
@@ -390,7 +398,7 @@ Don't forget to add --reconfigure to your "sudo containerlab" command and re-run
 
 The only thing we have not covered here, is how you would execute the tasks automatically in a CI/CD pipeline, the reason for that is that it would differ depending on what CI engines you run. With that said, most CI engines supports shell scripting, meaning you almost only have to add the commands you leared about here, to automate the process.
 
-## 1.1.2 Gathering information about your devices
+## 1.1.3 Gathering information about your devices
 Next thing which is something you often do when you automate against network elements, is gathering facts and information. Collecting information about devices are key to three main Ansible network use-cases:
 
 * Performing backups
@@ -405,7 +413,7 @@ Next thing which is something you often do when you automate against network ele
 
 Let's dive into some of the basic use-cases and how we can implement them. First off, is performing backups.
 
-## 1.1.2.1 Using the command module
+## 1.1.3.1 Using the command module
 The command module allows you to inject any number of commands into a network device. This allows you to directly use existing knowledge about network device CLIs, in your Ansible automation. Different network vendors will have their own versions of the command module. For example:
 
 * [Cisco IOS command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html#ansible-collections-cisco-ios-ios-command-module)
@@ -498,7 +506,7 @@ clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0  
 
 Well done, later on in the workshop, you will learn some different methods where you can use this type of information to automate various common tasks.
 
-### 1.1.2.2 Performing backups
+### 1.1.3.2 Performing backups
 A very common scenario when we are pulling information from the network devices is when we are performing backups. You can use the various facts gathering modules to perform a backup, but normally there is a config module you can use for this specific purpose, which is simpler to use. Again, like the fact gathering module, there are unique versions of the config modules for different network vendors. For example:
 
 * [Cisco config module](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html)
@@ -555,7 +563,7 @@ $ cat $LABDIR/backups/clab-containerlab-basic-leaf1/clab-containerlab-basic-leaf
 
 Well done, creating backups does not have to be more difficult. Of course, normally you would put them somewhere special, a location also backed up by some backup software.
 
-### 1.1.2.1 Documenting the network
+### 1.1.3.1 Documenting the network
 Ansibles ability to pull information from your network devices allows you to automate something which not all organizations has - network documentation.
 
 We will review a more basic example of creating network documentation, where we write information about our network devices to a plain text file. With that said, this information may as well be written to your CMDB system, using the ansible.builtin.uri module (or more specific one) to do a API call to some external system.
@@ -720,7 +728,15 @@ Now, let's create some smarter versions of the playbooks we have previously crea
 
 :boom: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
 
-:exclamation: Hint: Check so that something does not exist in output using assert, by using "not in".
+:exclamation: Because of the output we get from the "show version" command, we need to process the output and used search to find what we are looking for, like so:
+```
+# Below is true, if we DO NOT find it. Eg, list of hits less than 1.
+ansible.builtin.assert:
+  that:
+    - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+
+# To construct something which is true, IF we find it, use: count > 0. Eg, list of hits is more than 0.
+```
 :star: Use a fail_msg and success_msg.
 
 <details>
@@ -749,9 +765,9 @@ Now, let's create some smarter versions of the playbooks we have previously crea
     - name: Ensure no strange CPU architectures are detected
       ansible.builtin.assert:
         that:
-          - "'Architecture: s390' not in show_version.stdout_lines"
+          - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
         fail_msg: "Oh no"
-        success_msg: "All is well" 
+        success_msg: "All is well"
 ```
 </p>
 </details>
@@ -802,28 +818,316 @@ clab-containerlab-basic-leaf2 : ok=4    changed=0    unreachable=0    failed=0  
 </details>
 
 :boom: Finally you are going to use variable file naming and the fail module. Do this:
-* Add a variable file inside of a folder called vars, which you name the same as the devices group (leafs).
-* Set the following variable in your vars file: demo_var: "success"
-* Use the fail module to check if demo_var was set to "success".
+* Load a variable file, using a task which runs after the eos_facts task.
+* Use the ansible.builtin.include_vars module to load your variable file. 
+* Use the {{ ansible_net_system }} fact (it will be set to "eos") in the name of your vars file.
+* Set the following variable in your vars file: switch_sla: "premium"
+* Use the fail module and a when statement to check if switch_sla was set to anything but "premium"
+* Make up a suitable msg for the fail module.
+
+:exclamation: Get some clues of how to do this by reading here: [include_vars module examples](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/include_vars_module.html#examples) and also here [fail module examples](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fail_module.html#examples)
+:exclamation: Please note that 
+
 
 <details>
 <summary>Show solution</summary>
 <p>
 
 ```
+# In vars/eos.yml:
+---
+switch_sla: "premium"
+
+# Your playbook:
+- name: "Gather facts from Arista switches"
+  hosts: leafs
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+
+    - name: Load vars file based on ansible_net_system
+      ansible.builtin.include_vars: "vars/{{ ansible_net_system }}.yml"
+
+    - name: Tell user we found an Arista switch
+      debug:
+        msg: "Arista switch detected"
+      when: ansible_net_system == 'eos'
+
+    - name: Collect show version information
+      arista.eos.eos_command:
+        commands: "show version"
+      register: show_version
+
+    - name: Ensure no strange CPU architectures are detected
+      ansible.builtin.assert:
+        that:
+          - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+        fail_msg: "Oh no"
+        success_msg: "All is well"
+
+    - name: Fail if SLA is not premium
+      fail:
+        msg: "Warning: SLA is {{ switch_sla }}"
+      when: switch_sla != "premium"
 ```
 </p>
 </details>
 
-## 1.1.3.5: Operational usecases
-So far, you have learned about different methods to pull information from your network devices, and we are sure that you have already gotten some ideas about how to apply these learnings in your day to day. A common way to use facts and outputs from show commands, is to apply that 
+:boom: And now you run your updated playbook. After having done that, try and change the switch_sla variable to something else than "premium" to see that your fail and when task does work.
 
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory eos_facts.yml 
+
+PLAY [Gather facts from Arista switches] ********************************************************************************************************************************************
+
+TASK [Gather facts (eos)] ***********************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-containerlab-basic-leaf2]
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Load vars file based on ansible_net_system] ***********************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1]
+ok: [clab-containerlab-basic-leaf2]
+
+TASK [Tell user we found an Arista switch] ******************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "msg": "Arista switch detected"
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "msg": "Arista switch detected"
+}
+
+TASK [Collect show version information] *********************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1]
+ok: [clab-containerlab-basic-leaf2]
+
+TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "changed": false,
+    "msg": "All is well"
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "changed": false,
+    "msg": "All is well"
+}
+
+TASK [debug] ************************************************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "msg": "premium"
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "msg": "premium"
+}
+
+TASK [Fail if SLA is not premium] ***************************************************************************************************************************************************
+skipping: [clab-containerlab-basic-leaf1]
+skipping: [clab-containerlab-basic-leaf2]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-containerlab-basic-leaf1 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+clab-containerlab-basic-leaf2 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0  
+```
+</p>
+</details>
+
+Well done, now you know more about some of the useful features in Ansible which can make your playbooks smarter. This is something we will be using in the next section, where we deal with operational use-cases.
+
+## 1.1.3.5: Operational use-cases
+Armed with knowledge about how we can pull information from devices and also how we can evaluate that information, it would not be strange if some of you already have considered how this can be used to automate some common operational use-cases.
+
+A very common operational task which fits what we have learned like a glove, is troubleshooting.
+Let's have a look at a practical example, which is helping to troubleshoot connectivity issues for a server to a leaf/access switch. The idea is that we get a playbook which will print out the ARP table for a given port.
+
+:boom: Create a playbook which use the arista.eos.eos_command module to display the ARP table on a specific port, also ensure that:
+* Call the playbook arp_check.yml
+* The name of the port we look at should be set using a variable called interface_name, allowing us to set it at runtime.
+* Name the variable interface_name set it to be Ethernet9 by default.
+* You print out the registered result using the debug module.
+
+<details>
+<summary>Show hint</summary>
+<p>
+
+Use the Arista CLI command:
+```
+"show arp int {{ interface_name }}"
+```
+
+Set variable with default value like so:
+```
+- name: Check for MAC-address
+  hosts: leafs
+  vars:
+    interface_name: "Ethernet9"
+  tasks:
+...
+```
+</p>
+</details>
+
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+---
+- name: Check ARP table on port
+  hosts: leafs
+  vars:
+    interface_name: Ethernet9
+  tasks:
+    - name: "Fetch ARP table for {{ interface_name }}"
+      arista.eos.eos_command:
+        commands: "show arp int {{ interface_name }}"
+      register: arp_table
+
+    - name: "Printing ARP table for {{ interface_name }}"
+      ansible.builtin.debug:
+        msg: " {{ arp_table.stdout_lines }}"
+```
+</p>
+</details>
+
+:boom: Now, run the troubleshooting playbook. For it to be useful, pass -e "interface_name=Ma0" and --limit nodename_from_inventory to the ansible-playbook command, allowing you to target what switch and what port to run against.
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory arp-check.yml -e "interface_name=Ma0" --limit "clab-containerlab-basic-leaf1"
+
+PLAY [Check ARP table on port] ******************************************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Fetch ARP table for Ma0] ******************************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Printing ARP table for Ma0] ***************************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "msg": " [['Address         Age (sec)  Hardware Addr   Interface', '172.20.20.1       0:00:00  72a0.ec69.8301  Management0']]"
+}
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+</p>
+</details>
+
+:boom: Next, let's create a troubleshooting playbook which detects ports which are in a "notconnect" state. As follows:
+* Name the playbook: check_port.yml
+* Use the arista.eos.eos_command module and print out the result using debug.
+* Use the ansible.builtin.assert module to assess that ports are not in a "notconnect" state.
+* :star: If you have time: If a port is in notconnect, gather further debug information about all ports.
+
+<details>
+<summary>Show hints</summary>
+<p>
+
+1. Use: "show int stat" to find status of all ports.
+2. Remember what you learned about assessing tricky output using assert? You'll need the same solution.
+3. On the assert task, use: ignore_errors: yes. This is because we want it to assess all things and not stop when assertions are wrong.
+4. If are you doing the :star: extra task: Use register on the assert task, then use a block which you tie to a: "when: port_assessment is failed"
+</p>
+</details>
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+---
+- name: Check for port issues
+  hosts: leafs
+  vars:
+    port_state: "notconnect"
+  tasks:
+    - name: "Fetch port status on switch"
+      arista.eos.eos_command:
+        commands: "show int stat"
+      register: sh_int_stat
+
+    - name: "Checking so that we DO NOT have {{ port_state }} port states on switch"
+      ansible.builtin.assert:
+        that:
+          - "sh_int_stat.stdout_lines | select('search', port_state) | list | count < 1"
+        fail_msg: "Found ports with line protocol down."
+        success_msg: "All ports are connected."
+      register: port_assessment
+      ignore_errors: yes
+
+# Extra task
+    - name: "Fetch debug info in case of {{ port_state }} port states"
+      block:
+        - name: "Fetch interface information"
+          arista.eos.eos_command:
+            commands:
+              - sh interfaces|inc Ethernet[0-9]
+              - sh int stat
+              - sh int counters errors
+          register: port_status
+
+        - name: "Print interface information"
+          ansible.builtin.debug:
+            msg: "{{ port_status.stdout_lines }}"
+      when: port_assessment is failed
+```
+</p>
+</details>
+
+:boom: Now let's run the troubleshooting playbook we just created. Limit what switch it runs on using the --limit command.
+
+<details>
+<summary>Show solution and output</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory port_check.yml --limit "clab-containerlab-basic-leaf1"
+
+PLAY [Check for port issues] ********************************************************************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Fetch port status on switch] **************************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Checking so that we DO NOT have notconnect port states on switch] *************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "changed": false,
+    "msg": "All ports are connected."
+}
+
+TASK [Fetch interface information] **************************************************************************************************************************************************
+skipping: [clab-containerlab-basic-leaf1]
+
+TASK [Print interface information] **************************************************************************************************************************************************
+skipping: [clab-containerlab-basic-leaf1]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+```
+</p>
+</details>
+
+Well done! We are now ready to move on to how we can work with configuration of network devices.
 
 ## 1.1.4 Using specific modules to configure devices
-Learning about different module states (and managing VLAN configuration).
+This part is about learning about different module states (and managing some VLAN configuration along the way).
 
 To configure VLANs for our switches we have some different approaches we can use.
-Except for simply loading the switch with a full new configuration, we can use a VLAN specific Ansible module to accomplish this.
+Except for simply loading the switch with a full set of configuration, we can use a VLAN specific Ansible module to accomplish this.
 
 For our workshop, we use Arista devices and the module is then called [eos.eos_vlans](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_vlans_module.html).
 
