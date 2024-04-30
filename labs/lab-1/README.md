@@ -1,4 +1,4 @@
-# 2: Section 2: Ansible networking fundamentals
+# Section 1: Ansible networking fundamentals
 In this section, you will learn about some of the different main approaches when automating against network devices.
 At the end of this section, you will have automatically learned different ways you can configure VLAN and interface information.
 This is before we go unto more advanced networking architectures, commonly found in larger data centers.
@@ -7,28 +7,28 @@ This is before we go unto more advanced networking architectures, commonly found
 
 This is what we will learn about in this section of the workshop.
 ```
-2.1: Different Ansible approaches to automating network devices
-2.1.1 Network test automation (using ContainerLab)
-2.1.1.1 Creating a containerlab test environment
-2.1.2 Gathering information
-2.1.2.1 Using the command module
-2.1.2.2 Documenting your network
-2.1.2.3 Performing backups
-2.1.3.4 Operational usecases
-2.1.3.5 Adding intelligence to your playbooks
-2.1.4 Using specific modules to configure devices
-2.1.5 Using config modules to configure devices
-2.1.6 Using templates
+1.1: Different Ansible approaches to automating network devices
+1.1.1 Network test automation (using ContainerLab)
+1.1.1.1 Creating a containerlab test environment
+1.1.2 Gathering information
+1.1.2.1 Using the command module
+1.1.2.2 Performing backups
+1.1.2.3 Documenting your network
+1.1.3.4 Operational usecases
+1.1.3.5 Adding intelligence to your playbooks
+1.1.4 Using specific modules to configure devices
+1.1.5 Using config modules to configure devices
+1.1.6 Using templates
 ```
-## 2.1: Different Ansible approaches to automating network devices
+## 1.1: Different Ansible approaches to automating network devices
 Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what vendor you may be using.
 
-:thumbsup: But before we start, we would like to remind you of Ansible's three guiding principles:
+:thumbsup: With that said, we would like to remind you of Ansible's three guiding development principles:
 * Complexity kills productivity (keep it simple, it makes it robust, scalable and easy to maintain)
 * Optimize for readability (makes for easier collaboration, maintenance and makes it more robust)
 * Think declaratively (Ansible is a state engine, do not try to 'code' with playbooks)
 
-## 2.1.1 Network test automation (using ContainerLab)
+## 1.1.1 Network test automation (using ContainerLab)
 Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. A fundamental of programming is testing your code.
 The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test or molecule.
 You can read more about this on the [ansible.com dev-guide for testing](https://docs.ansible.com/ansible/latest/dev_guide/testing.html).
@@ -61,20 +61,74 @@ based routers using vrnetlab or boxen integration
 
 :boom: If you can. [Click here, to have a look at this introductionary video on YouTube, for containerlab](https://www.youtube.com/watch?v=xdi7rwdJgkg).
 
-## 2.1.1.1 Creating a containerlab environment
+## 1.1.1.1 Creating a containerlab environment
 In this section, you will learn how to create your first containerlab environment, which we will use to test against.
+Containerlab uses a few main components:
+* The containerlab cli tool
+* The containerlab yml definition which decides how to build things
+* A container engine, such as podman or docker.
+* A Linux operating system to run it all on
 
-:boom: Go to your advanced-networking-workshop/containerlab directory.
+An example deployment is shown below. When running the containerlab command to deploy a setup of network devices, you feed it a so called topology file, which containers how things should be setup. In our example, it's called containerlab-basic.yml. Command output includes the management IP addresses of the devices you have created.
 ```
-$ cd advanced-networking-workshop/containerlab
+$ sudo containerlab --runtime podman deploy -t containerlab-basic.yml
+INFO[0000] Containerlab v0.54.2 started                 
+INFO[0000] Parsing & checking topology file: containerlab-basic.yml 
+INFO[0000] Destroying lab: containerlab-basic           
+INFO[0010] Removing containerlab host entries from /etc/hosts file 
+INFO[0010] Removing ssh config for containerlab nodes   
+INFO[0010] Removing /home/mglantz/advanced-networking-workshop/containerlab/clab-containerlab-basic directory... 
+INFO[0010] Creating lab directory: /home/mglantz/advanced-networking-workshop/containerlab/clab-containerlab-basic 
+INFO[0011] Running postdeploy actions for Arista cEOS 'leaf2' node 
+INFO[0011] Created link: leaf1:eth9 <--> leaf2:eth9     
+INFO[0011] Created link: leaf1:eth10 <--> leaf2:eth10   
+INFO[0011] Running postdeploy actions for Arista cEOS 'leaf1' node 
+INFO[0029] Adding containerlab host entries to /etc/hosts file 
+INFO[0029] Adding ssh config for containerlab nodes     
++---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
+| # |             Name              | Container ID |         Image          | Kind |  State  |   IPv4 Address   |     IPv6 Address      |
++---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
+| 1 | clab-containerlab-basic-leaf1 | bebd3333ec69 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.147/24 | 2001:172:20:20::93/64 |
+| 2 | clab-containerlab-basic-leaf2 | c5ca2e2609e5 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.146/24 | 2001:172:20:20::92/64 |
++---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 ```
 
-:boom: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other. As follows:
+Looking into the directory where we ran the containerlab command, that will create a lab directory, below called clab-containerlab-basic:
+There is also a config directory where you put your switch configuration files.
+```
+$ ls
+clab-containerlab-basic config containerlab-basic.yml
+```
+
+In the lab relate directory, you will find an automatically generated ansible-inventory.yml file, a file with authorized SSH keys, a topology file, describing details about your deployment, including IP address of the management interface, mac-addresses, etc. And if you look deeper, there is a separate folder which is named the node names of the devices you deployed, below called "leaf1" and "leaf2" in the example below:
+
+```
+$ ls clab-containerlab-basic/
+ansible-inventory.yml  authorized_keys	leaf1  leaf2  topology-data.json
+```
+
+If we dive deeper into those device specific folders, we will find the devices flash storage there, with the files normal files we'd expected to find.
+```
+$ ls clab-containerlab-basic/leaf1/flash/
+aboot			boot-config  fastpkttx.backup  if-wait.sh	 persist   SsuRestoreLegacy.log  startup-config      tpm-data
+AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuRestore.log	 system_mac_address
+```
+
+Now that you understand a bit better about containerlab, it's time to create your own network test environment.
+
+:boom: Go to your $LABDIR/containerlab directory.
+```
+$ cd $LABDIR/containerlab
+```
+
+:boom: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
 * Save your work in the containerlab directory and name the file lab1.yml.
 * kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
 * Call your nodes leaf1 and leaf2
 * The switches should be connected to each other via ports eth9 on and eth10 (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
 * startup-config should be ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg for leaf1 and leaf2-start.cfg for leaf2.
+
+:exclamation: To get an idea of the basic structure of your YAML based topology file, [click here: https://containerlab.dev/quickstart/](https://containerlab.dev/quickstart/).
 
 <details>
 <summary>Show example solution</summary>
@@ -167,10 +221,11 @@ end
 
 If you SSH to a device in your setup, you will authenticate automatically, that is because the SSH key has been added in your environment.
 
-:boom: Next, you are to start your lab environment, using the "sudo containerlab" CLI command, accordingly:
+:boom: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, accordingly:
 * Use --runtime podman
 * If you have already tried to deploy the lab once, add the --reconfigure parameter.
 * Run "sudo containerlab --help" to get more information.
+* We need to use sudo, because the workloads are very priviledged in nature.
 
 <details>
 <summary>Show example solution</summary>
@@ -335,7 +390,7 @@ Don't forget to add --reconfigure to your "sudo containerlab" command and re-run
 
 The only thing we have not covered here, is how you would execute the tasks automatically in a CI/CD pipeline, the reason for that is that it would differ depending on what CI engines you run. With that said, most CI engines supports shell scripting, meaning you almost only have to add the commands you leared about here, to automate the process.
 
-## 2.1.2 Gathering information about your devices
+## 1.1.2 Gathering information about your devices
 Next thing which is something you often do when you automate against network elements, is gathering facts and information. Collecting information about devices are key to three main Ansible network use-cases:
 
 * Performing backups
@@ -350,7 +405,7 @@ Next thing which is something you often do when you automate against network ele
 
 Let's dive into some of the basic use-cases and how we can implement them. First off, is performing backups.
 
-## 2.1.2.1 Using the command module
+## 1.1.2.1 Using the command module
 The command module allows you to inject any number of commands into a network device. This allows you to directly use existing knowledge about network device CLIs, in your Ansible automation. Different network vendors will have their own versions of the command module. For example:
 
 * [Cisco IOS command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html#ansible-collections-cisco-ios-ios-command-module)
@@ -443,7 +498,7 @@ clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0  
 
 Well done, later on in the workshop, you will learn some different methods where you can use this type of information to automate various common tasks.
 
-### 2.1.2.2 Performing backups
+### 1.1.2.2 Performing backups
 A very common scenario when we are pulling information from the network devices is when we are performing backups. You can use the various facts gathering modules to perform a backup, but normally there is a config module you can use for this specific purpose, which is simpler to use. Again, like the fact gathering module, there are unique versions of the config modules for different network vendors. For example:
 
 * [Cisco config module](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html)
@@ -500,7 +555,7 @@ $ cat $LABDIR/backups/clab-containerlab-basic-leaf1/clab-containerlab-basic-leaf
 
 Well done, creating backups does not have to be more difficult. Of course, normally you would put them somewhere special, a location also backed up by some backup software.
 
-### 2.1.2.1 Documenting the network
+### 1.1.2.1 Documenting the network
 Ansibles ability to pull information from your network devices allows you to automate something which not all organizations has - network documentation.
 
 We will review a more basic example of creating network documentation, where we write information about our network devices to a plain text file. With that said, this information may as well be written to your CMDB system, using the ansible.builtin.uri module (or more specific one) to do a API call to some external system.
@@ -524,7 +579,7 @@ An example of how to use the "ansible" command to review facts.
 $ ansible -i inventory leafs -m arista.eos.eos_facts
 ```
 
-:exclamation: This is an advanced ask and there is no shame in copying the solution in true open source fashion.
+:exclamation: This is an advanced ask and there is no shame in copying the solution below in true open source fashion.
 
 <details>
 <summary>Show solution</summary>
@@ -613,7 +668,158 @@ $
 </p>
 </details>
 
-## 2.1.4 Using specific modules to configure devices
+## 1.1.3.4: Adding intelligence to your playbooks
+Now that you have learned about different methods to pull information from your network devices. Let's review how you can further use that information to make your playbooks smarter. Even though, we have learned that trying to do programming in playbooks violates basic design tenants of Ansible, we will now have a look at how close we can get, without ending up in an unmaintainable mess.
+
+First off, let's review the different useful tools which helps us to process information gathered by facts and commands.
+
+:boom: Have a brief look at the different tools below and imagine how they may be useful.
+
+Ansible modules:
+* [assert](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/assert_module.html)
+* [fail](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fail_module.html)
+
+The Ansible conditional:
+* [when](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_conditionals.html)
+
+Variable filenames:
+* [Selecting filenames based on facts](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_conditionals.html#selecting-variables-files-or-templates-based-on-facts)
+
+Managing error handling:
+* [Error handling in playbooks](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html)
+
+Now, let's create some smarter versions of the playbooks we have previously create.
+
+:boom: Create a version of below playbook which only uses the eos_facts module when you have detected that it is an Arista switch.
+```
+- name: "Gather facts from Arista switches"
+  hosts: leafs 
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+```
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+- name: "Gather facts from Arista switches"
+  hosts: leafs
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+      when: ansible_net_system == 'eos'
+```
+</p>
+</details>
+
+:boom: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
+
+:exclamation: Hint: Check so that something does not exist in output using assert, by using "not in".
+:star: Use a fail_msg and success_msg.
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+- name: "Gather facts from Arista switches"
+  hosts: leafs
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+
+    - name: Tell user we found an Arista switch
+      debug:
+        msg: "Arista switch detected"
+      when: ansible_net_system == 'eos'
+
+    - name: Collect show version information
+      arista.eos.eos_command:
+        commands: "show version"
+      register: show_version
+
+    - name: Ensure no strange CPU architectures are detected
+      ansible.builtin.assert:
+        that:
+          - "'Architecture: s390' not in show_version.stdout_lines"
+        fail_msg: "Oh no"
+        success_msg: "All is well" 
+```
+</p>
+</details>
+
+:boom: And now you run the playbook against your inventory
+
+<details>
+<summary>Show solution and expected output</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory eos_facts.yml 
+
+PLAY [Gather facts from Arista switches] ********************************************************************************************************************************************
+
+TASK [Gather facts (eos)] ***********************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-containerlab-basic-leaf2]
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Tell user we found an Arista switch] ******************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "msg": "Arista switch detected"
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "msg": "Arista switch detected"
+}
+
+TASK [Collect show version information] *********************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1]
+ok: [clab-containerlab-basic-leaf2]
+
+TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "changed": false,
+    "msg": "All is well"
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "changed": false,
+    "msg": "All is well"
+}
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-containerlab-basic-leaf1 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-containerlab-basic-leaf2 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+</p>
+</details>
+
+:boom: Finally you are going to use variable file naming and the fail module. Do this:
+* Add a variable file inside of a folder called vars, which you name the same as the devices group (leafs).
+* Set the following variable in your vars file: demo_var: "success"
+* Use the fail module to check if demo_var was set to "success".
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+```
+</p>
+</details>
+
+## 1.1.3.5: Operational usecases
+So far, you have learned about different methods to pull information from your network devices, and we are sure that you have already gotten some ideas about how to apply these learnings in your day to day. A common way to use facts and outputs from show commands, is to apply that 
+
+
+## 1.1.4 Using specific modules to configure devices
 Learning about different module states (and managing VLAN configuration).
 
 To configure VLANs for our switches we have some different approaches we can use.
@@ -623,7 +829,7 @@ For our workshop, we use Arista devices and the module is then called [eos.eos_v
 
 To use this module, we need to learn a bit more how it works. The module mainly has a number of states, which governs how the configuration we define will be dealt with on our device. You will find that the different states available for the eos_vlan module is also found in many other modules, so pay extra attention here, even if you do not mean to manage VLANs using Ansible.
 
-### 1.1.1: eos_vlan state: "merged" ← (default)
+### 1.1.4.1: eos_vlan state: "merged" ← (default)
 Above option will merge the attributes we define with the existing device configuration, this means existing configuration which is not defined, will be left as is.
 This option is default and will be the one selected if you do not define one.
 
