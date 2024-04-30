@@ -2,7 +2,7 @@
 Work in progress, everything is a draft.
 
 ## Overview of lab excercises
-### Section 0: Introduction to the lab
+### [Section 0: Introduction to the lab](labs/lab-0/README.md)
 ```
 2.1: Building a new containerlab environment
 2.2: Reviewing the desired configuration state
@@ -11,7 +11,7 @@ Work in progress, everything is a draft.
 2.5: Using templates to configure devices
 ```
 
-### Section 1: Fundamentals, test automation, information related tasks
+### [Section 1: Fundamentals, test automation, information related tasks](labs/lab-1/README.md)
 ```
 1.1: Different Ansible approaches to automating network devices
 1.1.1: Vendor differences
@@ -25,7 +25,7 @@ Work in progress, everything is a draft.
 1.1.3.5: Operational use-cases
 ```
 
-### Section 2: Applying configuration to devices
+### [Section 2: Applying configuration to devices](labs/lab-2/README.md)
 ```
 2.1: Building a new containerlab environment
 2.2: Reviewing the desired configuration state
