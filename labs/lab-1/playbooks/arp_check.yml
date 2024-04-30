@@ -1,0 +1,14 @@
+---
+- name: Check ARP table on port
+  hosts: leafs
+  vars:
+    interface_name: Ethernet9
+  tasks:
+    - name: "Fetch ARP table for {{ interface_name }}"
+      arista.eos.eos_command:
+        commands: "show arp int {{ interface_name }}"
+      register: arp_table
+
+    - name: "Printing ARP table for {{ interface_name }}"
+      ansible.builtin.debug:
+        msg: " {{ arp_table.stdout_lines }}"

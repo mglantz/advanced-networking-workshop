@@ -1,0 +1,36 @@
+---
+- name: Check for port issues
+  hosts: leafs
+  vars:
+    port_state: "notconnect"
+  tasks:
+    - name: "Fetch port status on switch"
+      arista.eos.eos_command:
+        commands: "show int stat|include Et"
+      register: sh_int_stat
+
+    - name: "Checking so that we DO NOT have {{ port_state }} port states on switch"
+      ansible.builtin.assert:
+        that: 
+          - "sh_int_stat.stdout_lines | select('search', port_state) | list | count < 1"
+        fail_msg: "Found ports with line protocol down."
+        success_msg: "All ports are connected."
+      register: port_assessment
+      ignore_errors: yes
+
+    - name: "Fetch debug info in case of notconnect port states"
+      block:
+        - name: "Fetch interface information"
+          arista.eos.eos_command:
+            commands:
+              - sh interfaces|inc Ethernet[0-9]
+              - sh int stat
+              - sh int counters errors
+          register: port_status
+
+        - name: "Print interface information"
+          ansible.builtin.debug:
+            msg: "{{ port_status.stdout_lines }}"
+      when: port_assessment is failed
+
+

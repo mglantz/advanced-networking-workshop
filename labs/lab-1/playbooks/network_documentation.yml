@@ -1,0 +1,27 @@
+- name: "Document Arista switches"
+  hosts: leafs
+  gather_facts: no
+
+  tasks:
+    - name: Gather facts (eos)
+      arista.eos.eos_facts:
+
+    - name: Display some facts
+      debug:
+        msg: "Collecting information about {{ ansible_net_hostname }} running {{ ansible_net_system }} {{ ansible_net_version }}"
+
+    - name: Write facts to disk using a template
+      copy:
+        content: |
+          #jinja2: lstrip_blocks: True
+          {% for host in groups['leafs'] %}
+          Hostname: {{ hostvars[host].ansible_net_hostname }}
+          OS: {{ hostvars[host].ansible_net_system }}
+          Version: {{ hostvars[host].ansible_net_version }}
+          Model: {{ hostvars[host].ansible_net_model }}
+          Serial: {{ hostvars[host].ansible_net_serialnum }}
+
+          {% endfor %}
+        dest: ~/advanced-networking-workshop/switch-facts
+      run_once: yes
+

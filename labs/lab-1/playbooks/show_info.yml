@@ -1,0 +1,14 @@
+- name: "Show int stat on leaf switches"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Show summary of interface statuses
+      arista.eos.eos_command:
+        commands: "sh int stat"
+      register: sh_int_stat
+
+    - name: Print collected interface information
+      debug:
+        msg: "{{ sh_int_stat.stdout_lines }}"
+
