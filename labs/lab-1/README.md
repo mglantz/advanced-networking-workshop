@@ -6,16 +6,20 @@ This is before we go unto more advanced networking architectures, commonly found
 ## Overview
 
 This is what we will learn about in this section of the workshop.
-
+```
 2.1: Different Ansible approaches to automating network devices
 2.1.1 Network test automation (using ContainerLab)
 2.1.1.1 Creating a containerlab test environment
-2.1.2 Gathering facts
-2.1.3 Using the command module
+2.1.2 Gathering information
+2.1.2.1 Using the command module
+2.1.2.2 Documenting your network
+2.1.2.3 Performing backups
+2.1.3.4 Operational usecases
+2.1.3.5 Adding intelligence to your playbooks
 2.1.4 Using specific modules to configure devices
 2.1.5 Using config modules to configure devices
 2.1.6 Using templates
-
+```
 ## 2.1: Different Ansible approaches to automating network devices
 Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what vendor you may be using.
 
@@ -29,7 +33,7 @@ Writing Ansible automation may not feel like programming, but make no misstake, 
 The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test or molecule.
 You can read more about this on the [ansible.com dev-guide for testing](https://docs.ansible.com/ansible/latest/dev_guide/testing.html).
 
-When thing becomes specific for networking, is when we are doing more proper integration tests, where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not common that people use virtualized or containerized test environments for router or switch related configuration changes.
+When things becomes specific for networking, is when we are doing more proper integration tests, where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not common that people use virtualized or containerized test environments for router or switch related configuration changes.
 
 With this said, allow us to introduce, [containerlab](https://containerlab.dev), which is a tool which allows you to spin up container based working environments, using a CLI. [Containerlab is also open source, distributed with a BSD license](https://github.com/srl-labs/containerlab/).
 
@@ -319,9 +323,10 @@ Well done! You successfully executed most parts of what we would expected to see
 * Create test environment
 * Run playbook against test environment
 
-:star: If you like, you can deploy your environment and do the test over again.
+:star: If you like, you can re-deploy your environment and do the test over again.
+
 <details>
-<summary>Show solution</summary>
+<summary>Show helpful clues on re-deployment</summary>
 <p>
 
 Don't forget to add --reconfigure to your "sudo containerlab" command and re-run the "scripts/ansible_host.sh basic" command doing so.
@@ -345,8 +350,101 @@ Next thing which is something you often do when you automate against network ele
 
 Let's dive into some of the basic use-cases and how we can implement them. First off, is performing backups.
 
-### 2.1.2.1 Performing backups
-You may use the various facts gathering modules to perform a backup, but normally there is a config module you can use for this specific purpose, which is simpler to use. Again, like the fact gathering module, there are unique versions of the config modules for different network vendors. For example:
+## 2.1.2.1 Using the command module
+The command module allows you to inject any number of commands into a network device. This allows you to directly use existing knowledge about network device CLIs, in your Ansible automation. Different network vendors will have their own versions of the command module. For example:
+
+* [Cisco IOS command](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_command_module.html#ansible-collections-cisco-ios-ios-command-module)
+* [Arista EOS command](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_command_module.html#ansible-collections-arista-eos-eos-command-module)
+* [Juniper JunOS command](https://docs.ansible.com/ansible/latest/collections/junipernetworks/junos/junos_command_module.html#ansible-collections-junipernetworks-junos-junos-command-module)
+
+Even if you can use this approach to make configuration changes, that is not recommended, if you do not have to. Overall, it is recommended and more common to use a config module or specific modules designated to do specific config change, there are good reasons for that, including:
+
+* The command module is not idempotent, it will run a command, every time.
+* Not using Ansible modules, you are directly implementing a specific version of the network CLI, prone to breakage in the future (what happens when a command changes?)
+* Ansible is meant to be simple and declarative, using the command module is more complicated is less declarative.
+
+So, you can see that the command module does violate several of the design principles for Ansible. 
+
+With this said, a time when the command module often is very useful in your Ansible automation, is when you are looking to find specific information, eg. thing you would find when running various "show" related commands in your network CLI. Some examples:
+
+* show int stat
+* show cdp/lldp neighbor
+* show arp int Xx0
+* show ip route
+
+:boom: Create a playbook which displays a to you useful piece of information using the eos_command module and a show command. Print that information out to the screen using the debug module. Name the playbook show_info.yml and store it in the $LABDIR root directory.
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+- name: "Show int stat on leaf switches"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Show summary of interface statuses
+      arista.eos.eos_command:
+        commands: "sh int stat"
+      register: sh_int_stat
+
+    - name: Print collected interface information
+      debug:
+        msg: "{{ sh_int_stat.stdout_lines }}"
+```
+</p>
+</details> 
+
+:boom: Now, let's run the playbook you created.
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory show_info.yml
+
+PLAY [Show int stat on leaf switches] ***********************************************************************************************************************************************
+
+TASK [Show summary of interface statuses] *******************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-containerlab-basic-leaf2]
+ok: [clab-containerlab-basic-leaf1]
+
+TASK [Print collected interface information] ****************************************************************************************************************************************
+ok: [clab-containerlab-basic-leaf1] => {
+    "msg": [
+        [
+            "Port       Name   Status       Vlan     Duplex Speed  Type            Flags Encapsulation",
+            "Et9               connected    1        full   1G     EbraTestPhyPort                   ",
+            "Et10              connected    1        full   1G     EbraTestPhyPort                   ",
+            "Ma0               connected    routed   a-full a-1G   10/100/1000"
+        ]
+    ]
+}
+ok: [clab-containerlab-basic-leaf2] => {
+    "msg": [
+        [
+            "Port       Name   Status       Vlan     Duplex Speed  Type            Flags Encapsulation",
+            "Et9               connected    1        full   1G     EbraTestPhyPort                   ",
+            "Et10              connected    1        full   1G     EbraTestPhyPort                   ",
+            "Ma0               connected    routed   a-full a-1G   10/100/1000"
+        ]
+    ]
+}
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-containerlab-basic-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+```
+</p>
+</details>
+
+Well done, later on in the workshop, you will learn some different methods where you can use this type of information to automate various common tasks.
+
+### 2.1.2.2 Performing backups
+A very common scenario when we are pulling information from the network devices is when we are performing backups. You can use the various facts gathering modules to perform a backup, but normally there is a config module you can use for this specific purpose, which is simpler to use. Again, like the fact gathering module, there are unique versions of the config modules for different network vendors. For example:
 
 * [Cisco config module](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html)
 * [Arista config module](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_config_module.html)
@@ -356,7 +454,7 @@ Now it's time to do something.
 
 :boom: Read up on the Arista config module and create a playbook called arista_backup.yml which backups the documentation to the backups folder located in the lab home directory.
 
-:exclamation: You will need "become: yes" for this operation.
+:exclamation: You will need to use "become: yes" for this operation.
 
 <details>
 <summary>Show solution</summary>
@@ -403,11 +501,30 @@ $ cat $LABDIR/backups/clab-containerlab-basic-leaf1/clab-containerlab-basic-leaf
 Well done, creating backups does not have to be more difficult. Of course, normally you would put them somewhere special, a location also backed up by some backup software.
 
 ### 2.1.2.1 Documenting the network
+Ansibles ability to pull information from your network devices allows you to automate something which not all organizations has - network documentation.
+
 We will review a more basic example of creating network documentation, where we write information about our network devices to a plain text file. With that said, this information may as well be written to your CMDB system, using the ansible.builtin.uri module (or more specific one) to do a API call to some external system.
 
-:boom: Create a playbook called network_documentation.yml which uses the "arista.eos.eos_facts" module to gather facts from your switches, then use the copy module and jinja templating to save this content to the file network-documentation.txt. 
+:boom: Create a playbook called network_documentation.yml which uses the "arista.eos.eos_facts" module to gather facts from your switches, then use the copy module and jinja templating to save facts you care about, to the file network-documentation.txt. 
 
-:exclamation: This may be a bit advanced, so there is no shame in copying the solution in true open source fashion.
+An example of how to write information to a file using copy and jinja:
+```
+    - name: Write facts to disk using a template
+      copy:
+        content: |
+          #jinja2: lstrip_blocks: True
+          {% for host in groups['leafs'] %}
+          Hostname: {{ hostvars[host].ansible_net_hostname }}
+          {% endfor %}
+        dest: ~/advanced-networking-workshop/network-documentation.txt
+```
+
+An example of how to use the "ansible" command to review facts.
+```
+$ ansible -i inventory leafs -m arista.eos.eos_facts
+```
+
+:exclamation: This is an advanced ask and there is no shame in copying the solution in true open source fashion.
 
 <details>
 <summary>Show solution</summary>
@@ -495,9 +612,6 @@ $
 ```
 </p>
 </details>
-
-
-## 2.1.3 Using the command module
 
 ## 2.1.4 Using specific modules to configure devices
 Learning about different module states (and managing VLAN configuration).
