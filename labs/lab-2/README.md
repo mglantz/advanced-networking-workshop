@@ -894,6 +894,92 @@ Overall, there are three different ways to config configuration using the config
 
 Now, it's time to try out some different ways to use the "config" module.
 
+### 2.7.1 Using the config module to load static config files into devices
+The first thing we'll do is to load device specific static config files into the devices. This is easily done, as the config files, are the actual switch configuration we get from "sh run". That means we can quickly go to an automated approach of managing devices, from a manual one. This requires the creators of the automation to have to learn less about Ansible as well.
+
+:boom: Apply the below desired state (the one we used before) to the leaf1 and leaf2 switches, using the arista.eos.eos_config module and static configuration files.
+* Name the playbook config_static.yml
+* Use two separate plays in your playbook, where each play targets a separate switch (leaf1 or leaf2).
+:exclamation: If you do not create separate plays or otherwise manage targeting, you will misconfigure your switches.
+:exclamation: Normally, you would fetch the running config with a simple "sh run" or etc. As you have reset the lab environment you will be provided with the required static
+:exclamation: The formatting should follow the vendor standard, when it comes to normal config intendation. For Arista, that is 3 spaces for intendation.
+
+<details>
+<summary>Show desired running config for switches</summary>
+<p>
+
+* Leaf1 running config:
+```
+vlan 39
+   name prod
+!
+vlan 40
+   name test-l2-vxlan
+!
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.1/31
+!
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.1/31
+```
+
+* Leaf2 running config:
+```
+vlan 39
+   name prod
+!
+vlan 40
+   name test-l2-vxlan
+!
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.3/31
+!
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.3/31
+```
+</p>
+</details>
+
+<summary>Show solution playbook</summary>
+<p>
+```
+- name: "Apply desired static network configuration to leaf1"
+  hosts: clab-lab2-leaf1
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf1.cfg
+
+- name: "Apply desired static network configuration to leaf2"
+  hosts: clab-lab2-leaf2
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf2.cfg
+```
+</p>
+</details>
+
+### 2.7.2 Using the config module to inject lines of config into devices
+
+### 2.7.3 Using the config module to load dynamic config files into devices
+
 
 
 # 1.2. Create MLAG VLAN and place it in a trunk group
