@@ -1,0 +1,34 @@
+- name: "Apply desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN configuration
+      arista.eos.eos_vlans:
+        config:
+          - vlan_id: 39
+            name: prod
+          - vlan_id: 40
+            name: test-l2-vxlan
+
+    - name: Apply Ethernet interface base configuration
+      arista.eos.eos_interfaces:
+        config:
+          - name: Ethernet11
+            enabled: true
+            mode: layer3
+            mtu: 9214
+          - name: Ethernet12
+            enabled: true
+            mode: layer3
+            mtu: 9214
+
+    - name: Apply Ethernet interface L3 configuration
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: Ethernet11
+            ipv4:
+              - address: "{{ eth11_ip_address }}"
+          - name: Ethernet12
+            ipv4:
+              - address: "{{ eth12_ip_address }}"

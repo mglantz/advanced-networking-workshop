@@ -414,21 +414,28 @@ In the example above, we have done some work to separate static and dynamic conf
 * How do you see when configuration is actually changed on a device?
 * Is this easy to maintain?
 
-## 2.3 Reset your lab environment.
-
-
-## 2.4 Using purpose specific modules to configure devices
+## 2.4 Learning about purpose specific configuration modules
 In your Ansible toolbox, there are a lot of modules built to manage specific configuration for your device, such as interface and VLAN configuration.
-This part is about learning how to use those type of modules to accomplish our designed configuration state. and their common, so called module states..
+This part is about learning how to use those type of modules to accomplish our designed configuration state. and their common so called module states.
 
-To configure VLANs for our switches we have some different approaches we can use.
-Except for simply loading the switch with a full set of configuration, we can use a VLAN specific Ansible module to accomplish this.
+First let's learn a bit about these types of modules. Have a look at the different purpose specific modules available for some common vendors.
+* [Arista EOS modules](https://docs.ansible.com/ansible/latest/collections/arista/eos/)
+* [Cisco IOS modules](https://docs.ansible.com/ansible/latest/collections/cisco/ios/)
+* [Juniper JunOS modules](https://docs.ansible.com/ansible/latest/collections/junipernetworks/junos/index.html)
 
-For our workshop, we use Arista devices and the module is then called [eos.eos_vlans](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_vlans_module.html).
+All these vendors have specific modules to manage things such as:
+* ACLs
+* BGP
+* L2, L3, LACP and LAG interfaces
+* OSPF v2 and v3
+* Route maps / routing instances
+* VLANs
+* VRFs
 
-To use this module, we need to learn a bit more how it works. The module mainly has a number of states, which governs how the configuration we define will be dealt with on our device. You will find that the different states available for the eos_vlan module is also found in many other modules, so pay extra attention here, even if you do not mean to manage VLANs using Ansible.
+These purpose build modules allows you to enforce different configuration states for them, which allows you to change configuration in different ways.
+Let's review those different states before we start using these modules.
 
-### 1.1.4.1: eos_vlan state: "merged" ← (default)
+### 2.4.1: module state: "merged" (often the default)
 Above option will merge the attributes we define with the existing device configuration, this means existing configuration which is not defined, will be left as is.
 This option is default and will be the one selected if you do not define one.
 
@@ -467,8 +474,8 @@ vlan 20
 
 Here, we can see that the name "twenty" of vlan 20, has been kept as is, as we did not define that.
 
-### 1.1.4.2: eos_vlan state: "replaced"
-Next, we can choose replaced. Replaced will force overwrite existing configuration for the VLANs we define, but leave the VLANs we do not define untouched.
+### 2.4.2: module state: "replaced"
+Next, we can choose replaced. Replaced will force overwrite existing configuration for what we define, but leave other related configuration untouched.
 
 Before we run our Ansible automation the device looks like this:
 ```
@@ -503,8 +510,8 @@ vlan 20
 Please note how ```name twenty``` now is gone, as we did not define that for VLAN 20, in our Ansible automation.
 At the same time, VLAN 10 is untouched, as we did not define anything for that.
 
-### 1.1.4.3: eos_vlan state: "overridden"
-This options overrides the device configuration of all VLANs you define, with whatever configuration you define. It means that if you have not defined something in your Ansible automation, it will be deleted from the device.
+### 2.4.3: module state: "overridden"
+This options overrides the related device configuration, with whatever configuration you define. It means that if you have not defined something in your Ansible automation, it will be deleted from the device.
 
 Before we do anything, the device looks like this:
 ```
@@ -536,8 +543,8 @@ vlan 20
 Above we can see that that both VLAN 10 and the name definition for VLAN 20 is gone. This is because they were not defined.
 Using ```overridden``` is clearly very powerful, as we will only end up with that is defined, but it's also easier to make misstakes, if we are for example generating this Ansible automation somehow and that automation suffers a failure, failing to define all VLANs we need.
 
-### 1.1.4.4: eos_vlan state: "deleted"
-This option is self explainatory, it will remove a defined VLAN. As an example:
+### 2.4.4: module state: "deleted"
+This option is self explainatory, it will remove a defined item (such as an interface, VLAN, etc). As an example:
 
 ```
 - name: Delete attributes of the given VLANs.
@@ -549,9 +556,9 @@ This option is self explainatory, it will remove a defined VLAN. As an example:
 
 Above configuration will delete VLAN 20 out of the device (but leave any other VLANs untouched).
 
-### 1.1.4.5: eos_vlan state: "gathered"
-This option is to gather VLAN related configuration from a device, allowing you to process the information is a programtic fashion.
-This is an alternativt to plainly using eos_facts to gather the vlan subset, or running and parsing ```show vlan brief``` or somethig simliar.
+### 2.4.5: module state: "gathered"
+This option is to gather related configuration from a device, allowing you to process the information is a programtic fashion.
+This is an alternativt to plainly using facts to gather the information about configuration, or running and parsing a ```show``` command.
 
 As an example, if with below Ansible automation:
 ```
@@ -568,7 +575,7 @@ You get below data gathered:
   state: suspend
 ```
 
-### 1.1.4.6: eos_vlan state: "rendered" / "parsed"
+### 2.4.6: module state: "rendered" / "parsed"
 The rendered option allows you to convert structured data, that you would fetch from facts gathering, to native device config.
 The "parsed" option allows you to do vice-versa. Meaning, to convert native device config, to structured data.
 Doing this is useful when you are using Ansible to document your network.
@@ -594,7 +601,277 @@ vlan 20
 
 And "parsed" works in the opposite way.
 
-## 1.1.5 
+## 2.5 Reset your lab environment
+Now, before we start using some of the purpose specific configuration modules, we need to reset the lab (2) environment your built to it's default state.
+
+:boom: Run below commands to reset the lab environment to it's default state you created in ```2.1```:
+
+```
+$ cd $LABDIR
+$ cd containerlab
+$ sudo containerlab --runtime podman deploy -t lab2.yml --reconfigure
+$ cd $LABDIR
+$ scripts/ansible_hosts.sh lab2
+```
+
+
+<details>
+<summary>Expected output</summary>
+<p>
+
+```
+$ sudo containerlab --runtime podman deploy -t lab2.yml --reconfigure
+INFO[0000] Containerlab v0.54.2 started                 
+INFO[0000] Parsing & checking topology file: lab2.yml   
+INFO[0000] Destroying lab: lab2                         
+INFO[0011] Removing containerlab host entries from /etc/hosts file 
+INFO[0011] Removing ssh config for containerlab nodes   
+INFO[0011] Removing /home/mglantz/advanced-networking-workshop/containerlab/clab-lab2 directory... 
+INFO[0011] Creating lab directory: /home/mglantz/advanced-networking-workshop/containerlab/clab-lab2 
+INFO[0012] Running postdeploy actions for Arista cEOS 'spine2' node 
+INFO[0012] Created link: leaf1:eth9 <--> leaf2:eth9     
+INFO[0012] Running postdeploy actions for Arista cEOS 'spine1' node 
+INFO[0012] Created link: leaf1:eth10 <--> leaf2:eth10   
+INFO[0012] Created link: leaf1:eth11 <--> spine1:eth1   
+INFO[0012] Created link: leaf2:eth11 <--> spine1:eth2   
+INFO[0012] Created link: leaf1:eth12 <--> spine2:eth1   
+INFO[0012] Running postdeploy actions for Arista cEOS 'leaf1' node 
+INFO[0012] Created link: leaf2:eth12 <--> spine2:eth2   
+INFO[0012] Running postdeploy actions for Arista cEOS 'leaf2' node 
+INFO[0031] Adding containerlab host entries to /etc/hosts file 
+INFO[0031] Adding ssh config for containerlab nodes     
++---+------------------+--------------+------------------------+------+---------+-----------------+----------------------+
+| # |       Name       | Container ID |         Image          | Kind |  State  |  IPv4 Address   |     IPv6 Address     |
++---+------------------+--------------+------------------------+------+---------+-----------------+----------------------+
+| 1 | clab-lab2-leaf1  | b1aecbfe9ec0 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.12/24 | 2001:172:20:20::c/64 |
+| 2 | clab-lab2-leaf2  | 6d1af9f2a1ec | localhost/ceos:4.32.0F | ceos | running | 172.20.20.11/24 | 2001:172:20:20::b/64 |
+| 3 | clab-lab2-spine1 | 2a64c629774f | localhost/ceos:4.32.0F | ceos | running | 172.20.20.13/24 | 2001:172:20:20::d/64 |
+| 4 | clab-lab2-spine2 | 73d609e72b35 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.10/24 | 2001:172:20:20::a/64 |
++---+------------------+--------------+------------------------+------+---------+-----------------+----------------------+
+$ cd $LABDIR
+$ scripts/ansible_hosts.sh lab2
+$
+```
+</p>
+</details>
+
+# 2.6 Using purpose specific modules to archieve the desired configuration state
+Now we're going to use the L3 and VLAN specific configuration modules to archieve our desired state.
+
+<details>
+<summary>Show desired state for your leaf switches</summary>
+<p>
+
+* Leaf1 desired state:
+```
+vlan 39
+   name prod
+vlan 40  
+   name test-l2-vxlan
+
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.1/31
+
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.1/31
+```
+
+* Leaf2 desired state:
+```
+vlan 39
+   name prod
+vlan 40
+   name test-l2-vxlan
+
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.3/31
+!
+interface Ethernet12
+   description spine2
+   mtu 9214 
+   no switchport 
+   ip address 10.0.2.3/31
+```
+</p>
+</details>
+
+:boom: Use the three below listed modules in a playbook you name modules_config.yml, to archieve the above desired state for the leaf1 and leaf2 switches. Modules to use are:
+* [arista.eos.eos_vlans](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_vlans_module.html#ansible-collections-arista-eos-eos-vlans-module) 
+* [arista.eos.eos_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_interfaces_module.html#ansible-collections-arista-eos-eos-interfaces-module)
+* [arista.eos.eos_l3_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_l3_interfaces_module.html#ansible-collections-arista-eos-eos-l3-interfaces-module)
+
+:exclamation: You can re-use the host_vars directory and host variable files you created for the previous lab.
+
+<details>
+<summary>Show example solution playbook</summary>
+<p>
+
+```
+- name: "Apply desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN configuration
+      arista.eos.eos_vlans:
+        config:
+          - vlan_id: 39
+            name: prod
+          - vlan_id: 40
+            name: test-l2-vxlan
+
+    - name: Apply Ethernet interface base configuration
+      arista.eos.eos_interfaces:
+        config:
+          - name: Ethernet11
+            enabled: true
+            mode: layer3
+            mtu: 9214
+          - name: Ethernet12
+            enabled: true
+            mode: layer3
+            mtu: 9214
+
+    - name: Apply Ethernet interface L3 configuration
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: Ethernet11
+            ipv4:
+              - address: "{{ eth11_ip_address }}"
+          - name: Ethernet12
+            ipv4:
+              - address: "{{ eth12_ip_address }}"
+```
+</p>
+</details>
+
+:boom: Now it's time for you to run the playbook and validate the result using ```ssh admin@IP-of-switch```
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory module_config.yml 
+
+PLAY [Apply static desired network configuration] ***********************************************************************************************************************************
+
+TASK [Apply VLAN 39 configuration] **************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+changed: [clab-lab2-leaf1]
+changed: [clab-lab2-leaf2]
+
+TASK [Apply Ethernet interface base configuration] **********************************************************************************************************************************
+changed: [clab-lab2-leaf2]
+changed: [clab-lab2-leaf1]
+
+TASK [Apply Ethernet interface L3 configuration] ************************************************************************************************************************************
+changed: [clab-lab2-leaf2]
+changed: [clab-lab2-leaf1]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-lab2-leaf1            : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab2-leaf2            : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+```
+
+* Now to validate the configuration:
+```
+$ cd $LABDIR
+$ grep leaf1 inventory
+clab-lab2-leaf1 ansible_host=172.20.20.9
+$ ssh admin@172.20.20.9
+Last login: Mon May  6 17:49:23 2024 from 172.20.20.1
+leaf1>en
+leaf1#sh run int Ethernet11
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.1/31
+leaf1#sh run int Ethernet12
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.1/31
+leaf1#sh run section vlan
+vlan 39   
+   name prod
+vlan 40   
+   name test-l2-vxlan
+leaf1#
+```
+</p>
+</details>
+
+:boom: Now run the playbook again. Do you see any differences compared to last time?
+
+### 2.6.1 Assessing the use of purpose specific configuration modules
+Well done so far. Now you have accomplished the same configuration result, using two different methods. Before we start with the third, let's assess how this worked.
+
+You should have created something similiar as below as a playbook:
+
+<details>
+<summary>Show example solution playbook</summary>
+<p>
+
+```
+- name: "Apply desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN configuration
+      arista.eos.eos_vlans:
+        config:
+          - vlan_id: 39
+            name: prod
+          - vlan_id: 40
+            name: test-l2-vxlan
+
+    - name: Apply Ethernet interface base configuration
+      arista.eos.eos_interfaces:
+        config:
+          - name: Ethernet11
+            enabled: true
+            mode: layer3
+            mtu: 9214
+          - name: Ethernet12
+            enabled: true
+            mode: layer3
+            mtu: 9214
+
+    - name: Apply Ethernet interface L3 configuration
+      arista.eos.eos_l3_interfaces:
+        config:
+          - name: Ethernet11
+            ipv4:
+              - address: "{{ eth11_ip_address }}"
+          - name: Ethernet12
+            ipv4:
+              - address: "{{ eth12_ip_address }}"
+```
+</p>
+</details>
+
+Now, let's assess what we got, compared to our solution which used the command module. Key differences were:
+* Less Ansible code
+* Easier to understand code. Example: "mode: layer3" instead of "no switchport"
+* We can see when changes are made
+* Idempotency (changes are only made when required)
+* We do not have to maintain cli command syntax, the modules does that for us.
+
+
+
 # 1.2. Create MLAG VLAN and place it in a trunk group
 
 Now that that we are fully briefed on how we can configure the VLANs on our switches, we're ready to start setting up our network.
