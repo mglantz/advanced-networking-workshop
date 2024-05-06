@@ -4,11 +4,12 @@ Work in progress, everything is a draft.
 ## Overview of lab excercises
 ### [Section 0: Introduction to the lab](labs/lab-0/README.md)
 ```
-2.1: Building a new containerlab environment
-2.2: Reviewing the desired configuration state
-2.3: Using specific modules to configure devices
-2.4: Using config modules to configure devices
-2.5: Using templates to configure devices
+0.1: Introduction to the workshop
+0.2: Knowledge prerequisites
+0.3: What this workshop is NOT about
+0.4: Lab graphics
+0.5: If something goes wrong
+0.6: Preparing to do the lab
 ```
 
 ### [Section 1: Fundamentals, test automation, information related tasks](labs/lab-1/README.md)
