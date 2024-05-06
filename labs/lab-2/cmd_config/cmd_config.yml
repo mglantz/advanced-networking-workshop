@@ -1,0 +1,38 @@
+- name: "Apply static desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN 39 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 39
+          - name prod
+
+    - name: Apply VLAN 40 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 40
+          - name test-l2-vxlan
+         
+    - name: Apply Ethernet11 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet11
+          - description spine1
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth11_ip_address }}
+
+    - name: Apply Ethernet11 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet12
+          - description spine2
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth12_ip_address }}
