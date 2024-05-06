@@ -10,7 +10,6 @@ This is what we will learn about in this first section of the workshop.
 2.2: Reviewing the desired configuration state
 2.3: Using specific modules to configure devices
 2.4: Using config modules to configure devices
-2.5: Using templates to configure devices
 ```
 ## 2.1 Building a new containerlab environment
 Before we get started with configuring our switches, we need to build a new containerlab environment. This time, it will include some more switches in a traditional leaf-spine setup. As such:
@@ -174,6 +173,7 @@ To inform your choices, there are three main questions you can ask yourself:
 Don't worry though, we will try out all the different methods, so you can decide yourself what works and what doesn't.
 
 ## 2.3 Using the command module to accomplish our desired state
+
 We will start off trying out what in essence is a not-recommended approach to applying configuration changes - which is using the command module directly. The main reason why we cover it is because the command module to some is easier to understand, which may lure you to use it. We will see it's limitations on full display in this exercise.
 
 :boom: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
@@ -507,7 +507,7 @@ vlan 20
    state suspend
 ```
 
-Please note how ```name twenty``` now is gone, as we did not define that for VLAN 20, in our Ansible automation.
+Please note how "name twenty" now is gone, as we did not define that for VLAN 20, in our Ansible automation.
 At the same time, VLAN 10 is untouched, as we did not define anything for that.
 
 ### 2.4.3: module state: "overridden"
@@ -541,7 +541,7 @@ vlan 20
 ```
 
 Above we can see that that both VLAN 10 and the name definition for VLAN 20 is gone. This is because they were not defined.
-Using ```overridden``` is clearly very powerful, as we will only end up with that is defined, but it's also easier to make misstakes, if we are for example generating this Ansible automation somehow and that automation suffers a failure, failing to define all VLANs we need.
+Using "overridden" is clearly very powerful, as we will only end up with that is defined, but it's also easier to make misstakes, if we are for example generating this Ansible automation somehow and that automation suffers a failure, failing to define all VLANs we need.
 
 ### 2.4.4: module state: "deleted"
 This option is self explainatory, it will remove a defined item (such as an interface, VLAN, etc). As an example:
@@ -558,7 +558,7 @@ Above configuration will delete VLAN 20 out of the device (but leave any other V
 
 ### 2.4.5: module state: "gathered"
 This option is to gather related configuration from a device, allowing you to process the information is a programtic fashion.
-This is an alternativt to plainly using facts to gather the information about configuration, or running and parsing a ```show``` command.
+This is an alternativt to plainly using facts to gather the information about configuration, or running and parsing a "show" command.
 
 As an example, if with below Ansible automation:
 ```
@@ -604,7 +604,7 @@ And "parsed" works in the opposite way.
 ## 2.5 Reset your lab environment
 Now, before we start using some of the purpose specific configuration modules, we need to reset the lab (2) environment your built to it's default state.
 
-:boom: Run below commands to reset the lab environment to it's default state you created in ```2.1```:
+:boom: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
 
 ```
 $ cd $LABDIR
@@ -754,7 +754,7 @@ interface Ethernet12
 </p>
 </details>
 
-:boom: Now it's time for you to run the playbook and validate the result using ```ssh admin@IP-of-switch```
+:boom: Now it's time for you to run the playbook and validate the result using "ssh admin@IP-of-switch"
 
 <details>
 <summary>Show solution</summary>
@@ -869,6 +869,30 @@ Now, let's assess what we got, compared to our solution which used the command m
 * We can see when changes are made
 * Idempotency (changes are only made when required)
 * We do not have to maintain cli command syntax, the modules does that for us.
+
+## 2.7 Using config modules to make changes
+The last approach, is often viewed as the best one. Perhaps because it is a very flexible and very powerful way to manage configuration of network devices, which easily scales across tens of thousands of network devices, or more.
+
+It is using the config module for our specific vendor to apply configuration. Advantage of using the config module is that we can inject arbitrary lines of configuration into a device, or inject a complete config file, which may be static in nature (one per device) or which may be generated dynamically using Ansible templating language (jinja2).
+
+:exclamation: For some vendors, there was previously a separate template module, which is replaced by template support in the config module, in more recent time.
+
+Have an initial look at the "config" module for some common network vendors:
+* [Arista EOS config module](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_config_module.html#ansible-collections-arista-eos-eos-config-module)
+* [Cisco IOS config module](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html#ansible-collections-cisco-ios-ios-config-module)
+* [Juniper JunOS config module](https://docs.ansible.com/ansible/latest/collections/junipernetworks/junos/junos_config_module.html#ansible-collections-junipernetworks-junos-junos-config-module)
+
+You will quickly see that this module is indeed very powerful. Except for being able to change the configuration state of a device, it can also automatically create a backup of what the running config looked like, before we changed it. Other powerful features includes (depends on vendor):
+* Command to run before or after changes are made
+* Ability to define match statements for injected lines of config.
+* And more...
+
+Overall, there are three different ways to config configuration using the config module:
+* By loading a static config file into a device
+* By loading a dynamic config file, rendered as an Ansible template, and then loaded into a device.
+* By injecting lines of config into a device
+
+Now, it's time to try out some different ways to use the "config" module.
 
 
 
