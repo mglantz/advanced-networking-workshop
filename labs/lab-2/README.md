@@ -156,11 +156,233 @@ Don't worry, once you have learned these basics, you will get to work with more 
 
 Above we can see what switch configuration we will start working with. It represents a commonality in most networks, which is that some configuration is static across devices and some varies across devices. In our example, the VLAN configuration is the same across our two leaf switches, while the Ethernet interface configuration is differs more between the two. As we review different approaches to applying configuration, you will find that some methods works better for different types of configuration (static vs unique).
 
-Another thing which affects the viability of different approaches is scale. If you are managing a smaller network with just a couple of handful of devices, most approaches will work. But when you are managing larger networks, selecting the right approach will decide your level of success outright. With this in mind, consider what the future will look like. Are there plans for new network architectures? How many devices do you expect to manage next year? In five years time?
+In general you have four different main approaches you can select from when applying configuration to network devices:
+1. Using the command module to send litteral cli commands (not recommended if it can be avoided).
+2. Using Ansible specific modules to manage specific tasks such as VLAN configuration, interface configuration, etc.
+3. Using a config module, to push specific static lines of configuration or dynamic lines of configuration using Ansible templating. 
 
-Let's get going with evaluating the different methods which you can use in the current environment.
+To inform your choices, there are three main questions you can ask yourself:
 
-## 2.3 Using specific modules to configure devices
+1. What use-cases do I want to support? Examples:
+* Reduced time to deliver - You want to be able to provide automatic network configuration associated with putting in place new servers and services. Focus will be all configuration required to establish a new environment for servers and services to live in. You probably will need to integrate with other solutions, such as IPAM solutions, etc.
+* Increased delivery precision - You want configuration changes to be right from the start. To increase impact, you focus on the things which changes most or what things you most often get wrong.
+* Infrastructure as Code (IaC) - as a part of a larger initiative, you deliver network configuration in an automatic fashion, scope for what you start focusing on gets dictated by the scope of your IaC project.
+* Security - You deliver automation which supports security use-cases such as threat hunting (gathering information) and security incident management (isolating breaches, etc).
+2. What configuration will you manage? (Considering the use-case(s)). What configuration will you need to manage with your automation and on what devices? It's here that you start diving into the nature of the related configuration, if it's static or dynamic across devices, networks, etc.
+3. At what scale will you manage different types of configuration? If there is dynamic configuration across many devices to be dealt with, you will benefit more from approaches where you automatically generate configuring using templates for example. At the same time, creating unique static like definitions for each devices may no longer work.
+
+Don't worry though, we will try out all the different methods, so you can decide yourself what works and what doesn't.
+
+## 2.3 Using the command module to accomplish our desired state
+We will start off trying out what in essence is a not-recommended approach to applying configuration changes - which is using the command module directly. The main reason why we cover it is because the command module to some is easier to understand, which may lure you to use it. We will see it's limitations on full display in this exercise.
+
+:boom: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
+:thumbsup: Hints:
+1. Use host_vars variable files for the unique configuration.
+2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually.
+
+* Leaf1 desired state:
+```
+vlan 39
+   name prod
+vlan 40
+   name test-l2-vxlan
+
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.1/31
+
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.1/31
+```
+
+* Leaf2 desired state:
+```
+vlan 39
+   name prod
+vlan 40
+   name test-l2-vxlan
+
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.3/31
+!
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.3/31
+```
+
+<details>
+<summary>Show example solution</summary>
+<p>
+
+* Create a host_vars/clab-lab2-leaf1 file which contains:
+```
+---
+eth11_ip_address: "10.0.1.1/31"
+eth12_ip_address: "10.0.2.1/31"
+```
+
+* Create a host_vars/clab-lab2-leaf2 file which contains:
+```
+---
+eth11_ip_address: "10.0.1.3/31"
+eth12_ip_address: "10.0.2.3/31"
+```
+
+* Create a playbook as such:
+```
+- name: "Apply static desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN 39 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 39
+          - name prod
+
+    - name: Apply VLAN 40 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 40
+          - name test-l2-vxlan
+         
+    - name: Apply Ethernet11 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet11
+          - description spine1
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth11_ip_address }}
+
+    - name: Apply Ethernet12 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet12
+          - description spine2
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth12_ip_address }}
+```
+</p>
+</details> 
+
+:boom: Now, run the playbook and validate that the configuration state of the switches is correct using 'ssh admin@IP-OF-SWITCH' (password: admin).
+
+<details>
+<summary>Show example solution</summary>
+<p>
+
+```
+$ cd $LABDIR
+$ ansible-playbook -i inventory cmd_config.yml
+
+PLAY [Apply static desired network configuration] ***********************************************************************************************************************************
+
+TASK [Apply VLAN 39 configuration] **************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+ok: [clab-lab2-leaf1]
+ok: [clab-lab2-leaf2]
+
+TASK [Apply VLAN 40 configuration] **************************************************************************************************************************************************
+ok: [clab-lab2-leaf1]
+ok: [clab-lab2-leaf2]
+
+TASK [Apply Ethernet11 configuration] ***********************************************************************************************************************************************
+ok: [clab-lab2-leaf1]
+ok: [clab-lab2-leaf2]
+
+TASK [Apply Ethernet11 configuration] ***********************************************************************************************************************************************
+ok: [clab-lab2-leaf1]
+ok: [clab-lab2-leaf2]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-lab2-leaf1            : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab2-leaf2            : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+</p>
+</details>
+
+:boom: Re-run the automation and see if you can make some conclusions based on that.
+
+## 2.3.1 Assessing the use of the command module.
+Depending on your approach, you will have ended up with a playbook similiar to below:
+
+<details>
+<summary>Show example playbook solution</summary>
+<p>
+
+```
+- name: "Apply static desired network configuration"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply VLAN 39 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 39
+          - name prod
+
+    - name: Apply VLAN 40 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - vlan 40
+          - name test-l2-vxlan
+         
+    - name: Apply Ethernet11 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet11
+          - description spine1
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth11_ip_address }}
+
+    - name: Apply Ethernet11 configuration
+      arista.eos.eos_command:
+        commands:
+          - config
+          - int Ethernet12
+          - description spine2
+          - mtu 9214
+          - no switchport
+          - ip address {{ eth12_ip_address }}
+```
+
+</p>
+</details>
+
+In the example above, we have done some work to separate static and dynamic configuration and should have come to the conclusion that in our case, it's mainly the "ip address" line which differs between the two leaf switches. Still, this is far from perfect. Questions to ask yourself is:
+
+* What happens if the cli syntax changes?
+* How to see when configuration is actually changed?
+* Is this easy to maintain?
+
+* The command module is not idempotent, it will run a command, every time.
+* Not using Ansible modules, you are directly implementing a specific version of the network CLI, prone to breakage in the future (what happens when a command changes?)
+* Ansible is meant to be simple and declarative, using the command module is more complicated is less declarative.
+
+## 2.4 Using specific modules to configure devices
 This part is about learning about different module states (and managing some VLAN configuration along the way).
 
 To configure VLANs for our switches we have some different approaches we can use.
