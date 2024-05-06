@@ -15,7 +15,7 @@ This is what we will learn about in this first section of the workshop.
 ## 2.1 Building a new containerlab environment
 Before we get started with configuring our switches, we need to build a new containerlab environment. This time, it will include some more switches in a traditional leaf-spine setup. As such:
 
-![lab2 setup][lab2-overview.png]
+![lab2 setup](lab2-overview.png)
 
 This means you will need to create a new containerlab topology file, which creates a setup with the spine switches in place as well.
 
