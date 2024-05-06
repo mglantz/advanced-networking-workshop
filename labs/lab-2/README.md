@@ -221,9 +221,17 @@ interface Ethernet12
    ip address 10.0.2.3/31
 ```
 
+:exclamation: As there is not large value in learning how to use the command module to accomplish configuration changes, feel free to copy the solution below.
+
 <details>
 <summary>Show example solution</summary>
 <p>
+
+* Create a directory in $LABDIR called host_vars
+```
+$ cd $LABDIR
+$ mkdir host_vars
+```
 
 * Create a host_vars/clab-lab2-leaf1 file which contains:
 ```
@@ -316,6 +324,34 @@ PLAY RECAP *********************************************************************
 clab-lab2-leaf1            : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 clab-lab2-leaf2            : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+* Now, validating the config is in place
+```
+$ cd $LABDIR
+$ grep leaf1 inventory 
+clab-lab2-leaf1 ansible_host=172.20.20.9
+$ ssh admin@172.20.20.9
+Last login: Mon May  6 17:49:23 2024 from 172.20.20.1
+leaf1>en
+leaf1#sh run int Ethernet11
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+   ip address 10.0.1.1/31
+leaf1#sh run int Ethernet12
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+   ip address 10.0.2.1/31
+leaf1#sh run section vlan
+vlan 39
+   name prod
+vlan 40
+   name test-l2-vxlan
+leaf1#
+```
 </p>
 </details>
 
@@ -375,15 +411,15 @@ Depending on your approach, you will have ended up with a playbook similiar to b
 In the example above, we have done some work to separate static and dynamic configuration and should have come to the conclusion that in our case, it's mainly the "ip address" line which differs between the two leaf switches. Still, this is far from perfect. Questions to ask yourself is:
 
 * What happens if the cli syntax changes?
-* How to see when configuration is actually changed?
+* How do you see when configuration is actually changed on a device?
 * Is this easy to maintain?
 
-* The command module is not idempotent, it will run a command, every time.
-* Not using Ansible modules, you are directly implementing a specific version of the network CLI, prone to breakage in the future (what happens when a command changes?)
-* Ansible is meant to be simple and declarative, using the command module is more complicated is less declarative.
+## 2.3 Reset your lab environment.
 
-## 2.4 Using specific modules to configure devices
-This part is about learning about different module states (and managing some VLAN configuration along the way).
+
+## 2.4 Using purpose specific modules to configure devices
+In your Ansible toolbox, there are a lot of modules built to manage specific configuration for your device, such as interface and VLAN configuration.
+This part is about learning how to use those type of modules to accomplish our designed configuration state. and their common, so called module states..
 
 To configure VLANs for our switches we have some different approaches we can use.
 Except for simply loading the switch with a full set of configuration, we can use a VLAN specific Ansible module to accomplish this.
