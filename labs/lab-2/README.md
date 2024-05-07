@@ -952,6 +952,7 @@ interface Ethernet12
 </p>
 </details>
 
+<details>
 <summary>Show solution</summary>
 <p>
 
@@ -982,6 +983,7 @@ interface Ethernet12
 
 :boom: Run the config_static.yml playbook and validate that configuration was applied properly using "ssh admin@IP-of-switch".
 
+<details>
 <summary>Show solution</summary>
 <p>
 
@@ -1040,6 +1042,7 @@ $ cp config_static.yml config_lines.yml
 * Use the "parents:" and "after:" options to define where the lines should end up.
 * Re-use the host_vars/clab-lab2-leaf1,clab-lab2-leaf2 variable files from previous excercises.
 
+<details>
 <summary>Show example solution</summary>
 <p>
 
@@ -1125,8 +1128,10 @@ interface Ethernet12
 
 :boom: Run the playbook you just created to apply the configuration and validate the result using "ssh admin@Switch-IP-address"
 
+<details>
 <summary>Show solution and example output</summary>
 <p>
+
 ```
 $ ansible-playbook -i inventory config_lines.yml 
 
