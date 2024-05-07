@@ -1,0 +1,3 @@
+---
+eth11_ip_address: "10.0.1.3/31"
+eth12_ip_address: "10.0.2.3/31"

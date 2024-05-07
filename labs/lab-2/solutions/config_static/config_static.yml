@@ -1,0 +1,18 @@
+- name: "Apply desired static network configuration to leaf1"
+  hosts: clab-lab2-leaf1
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf1.cfg
+
+- name: "Apply desired static network configuration to leaf2"
+  hosts: clab-lab2-leaf2
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf2.cfg
+

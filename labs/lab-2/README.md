@@ -9,6 +9,7 @@ This is what we will learn about in this first section of the workshop.
 2.1: Building a new containerlab environment
 2.2: Reviewing the desired configuration state
 2.3: Using specific modules to configure devices
+2.3.1: Assessing the use of the command module.
 2.4: Using config modules to configure devices
 ```
 ## 2.1 Building a new containerlab environment
@@ -705,11 +706,10 @@ interface Ethernet12
 </details>
 
 :boom: Use the three below listed modules in a playbook you name modules_config.yml, to archieve the above desired state for the leaf1 and leaf2 switches. Modules to use are:
+* :exclamation: Re-use the host_vars directory and host variable files you created in 2.3.
 * [arista.eos.eos_vlans](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_vlans_module.html#ansible-collections-arista-eos-eos-vlans-module) 
 * [arista.eos.eos_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_interfaces_module.html#ansible-collections-arista-eos-eos-interfaces-module)
 * [arista.eos.eos_l3_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_l3_interfaces_module.html#ansible-collections-arista-eos-eos-l3-interfaces-module)
-
-:exclamation: You can re-use the host_vars directory and host variable files you created for the previous lab.
 
 <details>
 <summary>Show example solution playbook</summary>
@@ -908,7 +908,7 @@ The first thing we'll do is to load device specific static config files into the
 <summary>Show desired running config for switches</summary>
 <p>
 
-* Leaf1 running config:
+* Leaf1 running config to use: 
 ```
 vlan 39
    name prod
@@ -929,7 +929,7 @@ interface Ethernet12
    ip address 10.0.2.1/31
 ```
 
-* Leaf2 running config:
+* Leaf2 running config to use:
 ```
 vlan 39
    name prod
@@ -952,8 +952,12 @@ interface Ethernet12
 </p>
 </details>
 
-<summary>Show solution playbook</summary>
+<summary>Show solution</summary>
 <p>
+
+* Save leaf1/leaf2 running config above into two separate files called leaf1.cfg and leaf2.cfg in the $LABDIR directory.
+
+* Create config_static.yml as follows:
 ```
 - name: "Apply desired static network configuration to leaf1"
   hosts: clab-lab2-leaf1
@@ -976,7 +980,195 @@ interface Ethernet12
 </p>
 </details>
 
+:boom: Run the config_static.yml playbook and validate that configuration was applied properly using "ssh admin@IP-of-switch".
+
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory config_static.yml 
+
+PLAY [Apply desired static network configuration to leaf1] **************************************************************************************************************************
+
+TASK [Apply device configuration] ***************************************************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+[WARNING]: To ensure idempotency and correct diff the input configuration lines should be similar to how they appear if present in the running configuration on device including the
+indentation
+changed: [clab-lab2-leaf1]
+
+PLAY [Apply desired static network configuration to leaf2] **************************************************************************************************************************
+
+TASK [Apply device configuration] ***************************************************************************************************************************************************
+changed: [clab-lab2-leaf2]
+
+PLAY RECAP **************************************************************************************************************************************************************************
+clab-lab2-leaf1            : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab2-leaf2            : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+* Validate config
+```
+$ grep leaf1 inventory
+clab-lab2-leaf1 ansible_host=172.20.20.14
+$ ssh admin@172.20.20.14
+...
+```
+</p>
+</details>
+
 ### 2.7.2 Using the config module to inject lines of config into devices
+In this section we're going to use the config modules ability to inject specific lines of configuration into devices, in a specific place.
+
+But before we do this, let's reset the environment again.
+
+:boom: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
+
+```
+$ cd $LABDIR
+$ cd containerlab
+$ sudo containerlab --runtime podman deploy -t lab2.yml --reconfigure
+$ cd $LABDIR
+$ scripts/ansible_hosts.sh lab2
+```
+
+:boom: Copy your previously created config_static.yml playbook to the file config_lines.yml.
+```
+$ cp config_static.yml config_lines.yml
+```
+
+:boom: Edit config_lines.yml and related device config files so that the Ethernet11/22 "ip address 1.2.3.4/31" configuration line is injected using the config: lines feature, while the rest of the static configuration loaded as previously using config: src.
+* Use the "parents:" and "after:" options to define where the lines should end up.
+* Re-use the host_vars/clab-lab2-leaf1,clab-lab2-leaf2 variable files from previous excercises.
+
+<summary>Show example solution</summary>
+<p>
+
+* Create the config_lines.yml playbook as below:
+```
+- name: "Apply desired static network configuration to leaf1"
+  hosts: clab-lab2-leaf1
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf1.cfg
+
+- name: "Apply desired static network configuration to leaf2"
+  hosts: clab-lab2-leaf2
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leaf2.cfg
+
+- name: "Apply dynamic network configuration to leaf switches"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply Ethernet11 IP configuration to leaf switches
+      arista.eos.eos_config:
+        lines:
+          - "ip address {{ eth11_ip_address }}"
+        parents: interface Ethernet11
+        after: no switchport
+
+    - name: Apply Ethernet12 IP configuration to leaf switches
+      arista.eos.eos_config:
+        lines:
+          - "ip address {{ eth12_ip_address }}"
+        parents: interface Ethernet12
+        after: no switchport
+```
+
+* Create the leaf1.cfg file as follows:
+```
+vlan 39
+   name prod
+!
+vlan 40
+   name test-l2-vxlan
+!
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+!
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+```
+
+* Create the leaf2.cfg file as follows:
+```
+vlan 39
+   name prod
+!
+vlan 40
+   name test-l2-vxlan
+!
+interface Ethernet11
+   description spine1
+   mtu 9214
+   no switchport
+!
+interface Ethernet12
+   description spine2
+   mtu 9214
+   no switchport
+```
+</p>
+</details>
+
+:boom: Run the playbook you just created to apply the configuration and validate the result using "ssh admin@Switch-IP-address"
+
+<summary>Show solution and example output</summary>
+<p>
+```
+$ ansible-playbook -i inventory config_lines.yml 
+
+PLAY [Apply desired static network configuration to leaf1] ******************************************************************************************
+
+TASK [Apply device configuration] *******************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+[WARNING]: To ensure idempotency and correct diff the input configuration lines should be similar to how they appear if present in the running
+configuration on device including the indentation
+changed: [clab-lab2-leaf1]
+
+PLAY [Apply desired static network configuration to leaf2] ******************************************************************************************
+
+TASK [Apply device configuration] *******************************************************************************************************************
+changed: [clab-lab2-leaf2]
+
+PLAY [Apply dynamic network configuration to leaf switches] *****************************************************************************************
+
+TASK [Apply Ethernet11 configuration to leaf switches] **********************************************************************************************
+[WARNING]: To ensure idempotency and correct diff the input configuration lines should be similar to how they appear if present in the running
+configuration on device
+changed: [clab-lab2-leaf1]
+changed: [clab-lab2-leaf2]
+
+TASK [Apply Ethernet12 configuration to leaf switches] **********************************************************************************************
+changed: [clab-lab2-leaf2]
+changed: [clab-lab2-leaf1]
+
+PLAY RECAP ******************************************************************************************************************************************
+clab-lab2-leaf1            : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab2-leaf2            : ok=3    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+
+* Validate config
+```     
+$ grep leaf1 inventory
+clab-lab2-leaf1 ansible_host=172.20.20.14
+$ ssh admin@172.20.20.14
+...
+```       
+</p>
+</details>
 
 ### 2.7.3 Using the config module to load dynamic config files into devices
 
