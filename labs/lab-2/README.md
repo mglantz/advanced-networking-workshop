@@ -6,11 +6,24 @@ At the end of this section, you will have learned about the three main approache
 This is what we will learn about in this first section of the workshop.
 
 ```
-2.1: Building a new containerlab environment
-2.2: Reviewing the desired configuration state
-2.3: Using specific modules to configure devices
-2.3.1: Assessing the use of the command module.
-2.4: Using config modules to configure devices
+2.1 Building a new containerlab environment
+2.2 Reviewing the initial desired configuration state
+2.3 Using the command module to accomplish our desired state
+2.3.1 Assessing the use of the command module.
+2.4 Learning about purpose specific configuration modules
+2.4.1: module state: "merged" (often the default)
+2.4.2: module state: "replaced"
+2.4.3: module state: "overridden"
+2.4.4: module state: "deleted"
+2.4.5: module state: "gathered"
+2.4.6: module state: "rendered" / "parsed"
+2.5 Reset your lab environment
+2.6 Using purpose specific modules to archieve the desired configuration state
+2.6.1 Assessing the use of purpose specific configuration modules
+2.7 Using config modules to make changes
+2.7.1 Using the config module to load static config files into devices
+2.7.2 Using the config module to inject lines of config into devices
+2.7.3 Using the config module to load dynamic config files into devices
 ```
 ## 2.1 Building a new containerlab environment
 Before we get started with configuring our switches, we need to build a new containerlab environment. This time, it will include some more switches in a traditional leaf-spine setup. As such:
@@ -414,6 +427,11 @@ In the example above, we have done some work to separate static and dynamic conf
 * What happens if the cli syntax changes?
 * How do you see when configuration is actually changed on a device?
 * Is this easy to maintain?
+
+The answers to above questions are:
+* Your automation breaks and you may not know when that happens.
+* That is very complicated to see at all.
+* No.
 
 ## 2.4 Learning about purpose specific configuration modules
 In your Ansible toolbox, there are a lot of modules built to manage specific configuration for your device, such as interface and VLAN configuration.
@@ -1020,13 +1038,19 @@ $ ssh admin@172.20.20.14
 
 ### 2.7.2 Using the config module to inject lines of config into devices
 In this section we're going to use the config modules ability to inject specific lines of configuration into devices, in a specific place.
-The lines features of the config module allows you to inject specific lines of configuration in specific places such as:
+The lines features of the config module allows you to inject specific lines of configuration in specific places. Such as below where we use it to manage an access list on a device:
+
 ```
-config:
-  lines:
-    - ip address 1.2.3.4/31
-  parents: Interface Ethernet5
-  after: no switchport
+- name: load an acl into the device
+  arista.eos.eos_config:
+    lines:
+      - 10 permit ip host 192.0.2.1 any log
+      - 20 permit ip host 192.0.2.2 any log
+      - 30 permit ip host 192.0.2.3 any log
+      - 40 permit ip host 192.0.2.4 any log
+    parents: ip access-list test
+    before: no ip access-list test
+    replace: block
 ```
 
 But before we do this, let's reset the environment again.
@@ -1184,99 +1208,155 @@ $ ssh admin@172.20.20.14
 </details>
 
 ### 2.7.3 Using the config module to load dynamic config files into devices
-Now that we have
+Now it's time to review how we can use the powerful templating language jinja to dynamically create configuration, which we load using the config module. Basically, a template allows us to refer to things such as variables and features such as loops, to effectively create multiple variants of a network device configuration file out of a single template.
 
-
-
-# 1.2. Create MLAG VLAN and place it in a trunk group
-
-Now that that we are fully briefed on how we can configure the VLANs on our switches, we're ready to start setting up our network.
-Configure the two initial leaf switches as follows, using the eos_vlan module and other required modules which you find in the arista.eos collection, which you find here: https://docs.ansible.com/ansible/latest/collections/arista/eos/index.html. Such as:
-* arista.eos.eos_vlans
-* arista.eos.eos_interfaces
-* arista.eos.eos_l3_interfaces
-* arista.eos.eos_lag_interfaces
-* arista.eos.eos_config
-
-* Target state: leaf1
+Example template file:
 ```
-vlan 4090
-   name mlag-peer
-   trunk group mlag-peer
-!
-interface Vlan4090
-   no autostate
-   ip address 10.0.199.254/31
-   no shut
-!
-interface Ethernet9
-   description mlag peer link
-   channel-group 999 mode active
-!
-interface Ethernet10
-   description mlag peer link
-   channel-group 999 mode active
-!
-interface Port-Channel999
-   description MLAG Peer
-   switchport mode trunk
-   switchport trunk group mlag-peer
-   spanning-tree link-type point-to-point
-!
-exit
- no spanning-tree vlan 4090
-!
-ip routing
-!
-mlag configuration					      
-   domain-id leafs					      
-   local-interface Vlan4090				      
-   peer-address 10.0.199.255				      
-   peer-link Port-Channel999				      
-   no shut
-!
-ip virtual-router mac-address c0:01:ca:fe:ba:be
-!
-exit
+{% for vlan in vlans %}
+vlan {{ vlan.vlanid }}
+   name {{ vlan.name }}
+{% endfor %} 
 ```
 
-* Target state: leaf2
+Translates into:
 ```
-vlan 4090
-   name mlag-peer
-   trunk group mlag-peer
-!
-interface Vlan4090
-   no autostate
-   ip address 10.0.199.255/31
-!
-interface Ethernet9
-   description mlag peer link
-   channel-group 999 mode active
-!
-interface Ethernet10
-   description mlag peer link
-   channel-group 999 mode active
-!
-exit
- no spanning-tree vlan 4090
-!
-!
-ip routing
-!
-mlag configuration
-   domain-id leafs
-   local-interface Vlan4090
-   peer-address 10.0.199.254
-   peer-link Port-Channel999
-!
-ip virtual-router mac-address c0:01:ca:fe:ba:be
-!
-exit
+vlan 15
+   name app-blue
+vlan 16
+   name app-green
 ```
 
+WHEN we have a variable file which looks like this:
+```
+---
+vlans:
+ - vlanid: 15
+   name: app-blue
+ - vlanid: 16
+   name: app-green
+```
 
+The benefit of templates is to be able to use variables / facts in the rendering of the finished file which ends up on the managed device. It allows us to set these variables or facts for a specific group of devices, or a specific device, to govern what the device should look like.
 
+If you are not familiar with the template concept in Ansible, you will need to read up on it to affectively use the config template functionality. It's not a prerequisite to pass this lab though. For now, have a brief look through below webpages to get a better idea:
 
+* [Introduction to templating @ ansible.com](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_templating.html)
+* [Template designer documentation @ jinja ](https://jinja.palletsprojects.com/en/3.1.x/templates/)
+* [Filters and data transformation @ ansible.com](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_filters.html)
+* [Arista EOS config template information](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_config_module.html#parameter-src)
 
+Now that you are an expert at jinja and Ansible templating, let's begin.
+
+:boom: Create a playbook called config_template.yml and replace the leaf1.cfg and leaf2.cfg files we used previously with a single template.
+* Name the template leafs.j2
+* Look at the example in this chapter for inspiration (on how to use for loops and lists).
+* Use the "template: src" function to upload the configuration to said devices.
+* Use variables stored in host_vars/clab-lab2-leaf1/2 files to set device unique information (read: ip address) and use group_vars/all to set common variables for the VLANs.
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+* Create the config_template.yml playbook as such:
+```
+- name: "Apply desired static network configuration to leaf switches"
+  hosts: leafs
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Apply device configuration
+      arista.eos.eos_config:
+        src: leafs.j2
+```
+
+* Create the leafs.j2 template as such:
+```
+{% for vlan in vlans %}
+vlan {{ vlan.vlanid }}
+   name {{ vlan.name }}
+{% endfor %} 
+
+{% for intf in interfaces %}
+interface {{ intf.name }}
+   description {{ intf.description }}
+   mtu 9214 
+   no switchport
+   ip address {{ intf.address }}
+{% endfor %}
+```
+
+* Create host_vars/clab-lab2-leaf1 as such:
+```
+---
+interfaces:
+  - name: Ethernet11
+    description: spine1
+    address: 10.0.1.1/31
+  - name: Ethernet12
+    description: spine2
+    address: 10.0.2.1/31
+```
+
+* Create host_vars/clab-lab2-leaf2 as such:
+```
+---
+interfaces:
+  - name: Ethernet11
+    description: spine1
+    address: 10.0.1.3/31
+  - name: Ethernet12
+    description: spine2
+    address: 10.0.2.3/31
+```
+
+* Create group_vars/all as such:
+```
+---
+vlans:
+ - vlanid: 39
+   name: prod
+ - vlanid: 40
+   name: test-l2-vxlan
+```
+</p>
+</details>
+
+:boom: Now run the config_template.yml playbook and validate the result using "ssh admin@Switch-IP-address"
+
+<details>
+<summary>Show solution</summary>
+<p>
+
+```
+$ ansible-playbook -i inventory config_template.yml
+
+PLAY [Apply desired static network configuration to leaf1] ******************************************************************************************
+
+TASK [Apply device configuration] *******************************************************************************************************************
+[WARNING]: ansible-pylibssh not installed, falling back to paramiko
+[WARNING]: To ensure idempotency and correct diff the input configuration lines should be similar to how they appear if present in the running
+configuration on device including the indentation
+changed: [clab-lab2-leaf2]
+changed: [clab-lab2-leaf1]
+
+PLAY RECAP ******************************************************************************************************************************************
+clab-lab2-leaf1            : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab2-leaf2            : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0  
+
+$ grep leaf1 inventory 
+clab-lab2-leaf1 ansible_host=172.20.20.36
+$ ssh admin@172.20.20.36
+...
+```
+</p>
+</details>
+
+Well done. If you passed all the exercises, you now have experience with a lot of useful Ansible related technology which you need to know when it comes to network automation.
+
+:star: If this was easy, you may be ready for a deep dive, in lab-3. Otherwise, you are now done with the workshop.
+
+```
+End-of-lab
+```
+[Go to the next lab, lab 3](../lab-3/README.md)
 
