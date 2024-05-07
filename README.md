@@ -29,10 +29,23 @@ Work in progress, everything is a draft.
 ### [Section 2: Applying configuration to devices](labs/lab-2/README.md)
 ```
 2.1: Building a new containerlab environment
-2.2: Reviewing the desired configuration state
-2.3: Using specific modules to configure devices
-2.4: Using config modules to configure devices
-2.5: Using templates to configure devices
+2.2: Reviewing the initial desired configuration state
+2.3: Using the command module to accomplish our desired state
+2.3.1: Assessing the use of the command module.
+2.4: Learning about purpose specific configuration modules
+2.4.1: module state: "merged" (often the default)
+2.4.2: module state: "replaced"
+2.4.3: module state: "overridden"
+2.4.4: module state: "deleted"
+2.4.5: module state: "gathered"
+2.4.6: module state: "rendered" / "parsed"
+2.5: Reset your lab environment
+2.6: Using purpose specific modules to archieve the desired configuration state
+2.6.1: Assessing the use of purpose specific configuration modules
+2.7: Using config modules to make changes
+2.7.1: Using the config module to load static config files into devices
+2.7.2: Using the config module to inject lines of config into devices
+2.7.3: Using the config module to load dynamic config files into devices
 ```
 
 ### Section 3: Applying best practices to build a BGP EVPN architecture?
