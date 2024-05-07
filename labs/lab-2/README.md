@@ -1020,6 +1020,14 @@ $ ssh admin@172.20.20.14
 
 ### 2.7.2 Using the config module to inject lines of config into devices
 In this section we're going to use the config modules ability to inject specific lines of configuration into devices, in a specific place.
+The lines features of the config module allows you to inject specific lines of configuration in specific places such as:
+```
+config:
+  lines:
+    - ip address 1.2.3.4/31
+  parents: Interface Ethernet5
+  after: no switchport
+```
 
 But before we do this, let's reset the environment again.
 
@@ -1176,6 +1184,7 @@ $ ssh admin@172.20.20.14
 </details>
 
 ### 2.7.3 Using the config module to load dynamic config files into devices
+Now that we have
 
 
 
