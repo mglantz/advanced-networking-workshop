@@ -1,16 +1,11 @@
 # advanced-networking-workshop
 Hello and welcome to this more advanced Ansible workshop on the topic of network automation.
 
-Scroll down past the overview if you want information about how to setup this workshop.
+Scroll down past the overview if you want information about how to install this workshop.
+
+:boom: If you are a person who are performing this workshop, click on the link of Section 0: Instroduction to the lab.
 
 :exclamation: If you find any issues, please consider to contribute a fix.
-
-## Development status:
-* Section 0: Completed
-* Section 1: Completed
-* Section 2: Completed
-* Section 3: Work in progress
-* Infrastructure: Manual setup described, automation missing.
 
 ## Overview of lab excercises
 ### [Section 0: Introduction to the lab](labs/lab-0/README.md)
@@ -59,26 +54,11 @@ Scroll down past the overview if you want information about how to setup this wo
 2.7.3: Using the config module to load dynamic config files into devices
 ```
 
-### Section 3: Applying best practices to build a BGP EVPN architecture
+### [Section 3: Applying best practices to build a BGP EVPN architecture](labs/lab-3/README.md)
 ```
 3.1 Review of containerlab and desired state device configuration
-3.2 Option 1: Hackathon: Setup your network
-3.3 TODO: Option 2: Step-by-step setup using Ansible
-3.3.1. Configure Multi-Chassis Link Aggregation (MLAG)
-3.3.2. Configure MLAG – Dual-Active Detection (aka Peer Keepalive)
-3.3.3 Configure Underlay Point-to-Point Interfaces
-3.3.4. Configure Underlay Point-to-Point Interfaces - Leaf-to-Leaf
-3.3.5. Configure Loopbacks for BGP Peering
-3.3.6. Configure BGP Process
-3.3.7. Configure Underlay EBGP Neighbors
-3.3.8. Configure Underlay IBGP Neighbors
-3.3.9. Activating BGP
-3.3.10. Enable EVPN Capability
-3.3.11. Configure BGP EVPN Overlays - Leaf-to-Spine
-3.3.12. Configure BGP EVPN Overlay - Spines-to-Leafs
-3.3.13. Validating EVPN Neighbors
-3.3.14. Configure VXLAN Tunnel Endpoints (VTEP)
-3.3.15. Validating host to host communication
+3.2 Automating your network
+3.3. Validating your setup
 ```
 
 # Installation of lab infrastructure
