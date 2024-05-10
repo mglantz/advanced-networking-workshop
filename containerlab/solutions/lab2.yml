@@ -1,0 +1,26 @@
+name: lab2
+topology:
+  kinds:
+    ceos:
+      image: localhost/ceos:4.32.0F
+  nodes:
+    leaf1:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg
+    leaf2:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-start.cfg
+    spine1:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine1-full.cfg
+    spine2:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine2-full.cfg
+  links:
+    - endpoints: ["leaf1:eth9", "leaf2:eth9"]
+    - endpoints: ["leaf1:eth10", "leaf2:eth10"]
+    - endpoints: ["leaf1:eth11", "spine1:eth1"]
+    - endpoints: ["leaf1:eth12", "spine2:eth1"]
+    - endpoints: ["leaf2:eth11", "spine1:eth2"]
+    - endpoints: ["leaf2:eth12", "spine2:eth2"]
+
