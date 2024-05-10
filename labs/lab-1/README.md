@@ -66,7 +66,7 @@ In addition to native containerized NOSes, containerlab can launch traditional v
 based routers using vrnetlab or boxen integration
 ```
 
-:boom: If you can. [Click here, to have a look at this introductionary video on YouTube, for containerlab](https://www.youtube.com/watch?v=xdi7rwdJgkg).
+:boom: Task 1: If you can. [Click here, to have a look at this introductionary video on YouTube, for containerlab](https://www.youtube.com/watch?v=xdi7rwdJgkg).
 
 ## 1.1.2.1 Creating a containerlab environment
 In this section, you will learn how to create your first containerlab environment, which we will use to test against.
@@ -123,12 +123,12 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 Now that you understand a bit better about containerlab, it's time to create your own network test environment.
 
-:boom: Go to your $LABDIR/containerlab directory.
+:boom: Task 1: Go to your $LABDIR/containerlab directory.
 ```
 $ cd $LABDIR/containerlab
 ```
 
-:boom: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
+:boom: Task 2: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
 * Save your work in the containerlab directory and name the file lab1.yml.
 * kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
 * Call your nodes leaf1 and leaf2
@@ -137,10 +137,12 @@ $ cd $LABDIR/containerlab
 
 :exclamation: To get an idea of the basic structure of your YAML based topology file, [click here: https://containerlab.dev/quickstart/](https://containerlab.dev/quickstart/).
 
+
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
   
+* Create lab1.yml as follows:
 ```
 name: lab1
 topology:
@@ -158,13 +160,18 @@ topology:
     - endpoints: ["leaf1:eth9", "leaf2:eth9"]
     - endpoints: ["leaf1:eth10", "leaf2:eth10"]
 ```
+
+```
+End of solution: Task 2.
+```
 </p>
 </details>
 
-:boom: Now, let's review the configuration used to start up our switches. Run the "cat" command on your leaf1/2.cfg files to view them.
+:boom: Task 3: Now, let's review the configuration used to start up our switches. Run the "cat" command on your leaf1/2.cfg files to view them.
+
 
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 3</summary>
 <p>
 
 ```
@@ -218,6 +225,10 @@ no ip routing
 !
 end
 ```
+
+```
+End of solution: Task 3.
+```
 </p>
 </details>
 
@@ -228,14 +239,15 @@ end
 
 If you SSH to a device in your setup, you will authenticate automatically, that is because the SSH key has been added in your environment.
 
-:boom: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, accordingly:
+:boom: Task 4: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, accordingly:
 * Use --runtime podman
 * If you have already tried to deploy the lab once, add the --reconfigure parameter.
 * Run "sudo containerlab --help" to get more information.
 * We need to use sudo, because the workloads are very priviledged in nature.
 
+
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 4</summary>
 <p>
 
 ```
@@ -257,23 +269,27 @@ INFO[0018] Adding ssh config for containerlab nodes
 | 2 | clab-containerlab-basic-leaf2 | 684d465b58a4 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.145/24 | 2001:172:20:20::91/64 |
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 ```
+
+```
+End of solution: Task 4
+```
 </p>
 </details>
 
-:boom: Run the "scripts/ansibe_hosts.sh basic" command to generate a properly configured Ansible inventory ($LABDIR/inventory) and accept SSH fingerprints
+:boom: Task 5: Run the "scripts/ansibe_hosts.sh basic" command to generate a properly configured Ansible inventory ($LABDIR/inventory) and accept SSH fingerprints
 ```
 $ ../scripts/ansible_hosts.sh basic
 ```
 Please note that a successful run of the command does not generate any output. 
 
-:boom: Validate that your have a correctly configured inventory file.
+:boom: Task 6: Validate that your have a correctly configured inventory file.
 ```
 $ cd $LABDIR
 $ cat inventory
 ```
 
 <details>
-<summary>Show example inventory file</summary>
+<summary>:unlock: Show example inventory file</summary>
 <p>
 
 ```
@@ -291,13 +307,17 @@ clab-containerlab-basic-leaf2 ansible_host=172.20.20.145
 
 Please note that IP addresses in your inventory file likely will differ.
 
+```
+End of solution.
+```
 </p>
 </details>
 
-:boom: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected.
+:boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected.
+
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution</summary>
 <p>
 
 ```
@@ -313,15 +333,19 @@ Ma0               connected    routed   a-full a-1G   10/100/1000
 leaf1>exit
 Connection to 172.20.20.144 closed.
 ```
+
+```
+End of solution: Task 7.
+```
 </p>
 </details>
 
 :star: If you have time, you can also validate that the overall running configuration is correct.
 
-:boom: Next create a simple playbook which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
+:boom: Task 8: Next create a simple playbook which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 8</summary>
 
 ```
 cat << 'EOF' >$LABDIR/ping.yml
@@ -333,28 +357,36 @@ cat << 'EOF' >$LABDIR/ping.yml
         data: pong
 EOF
 ```
+
+```
+End of solution: Task 8.
+```
 </p>
 </details>
 
-:boom: Next, run a static code analysis on your playbook, using the "ansible-lint" command.
+:boom: Task 9: Next, run a static code analysis on your playbook, using the "ansible-lint" command.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 9</summary>
 
 ```
 $ ansible-lint ping.yml 
 
 Passed: 0 failure(s), 0 warning(s) on 1 files. Last profile that met the validation criteria was 'production'.
 ```
+
+```
+End of solution: Task 9.
+```
 </p>
 </details>
 
 :exclamation: If you had 0 failures and 0 warnings, you can go on to the next task, otherwise, fix your issues.
 
-:boom: Next, run the basic playbook stored in $LABDIR/ping.yml against our new switches.
+:boom: Task 10: Next, run the basic playbook stored in $LABDIR/ping.yml against our new switches.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 9</summary>
 <p>
 
 ```
@@ -376,6 +408,10 @@ PLAY RECAP *********************************************************************
 clab-containerlab-basic-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+```
+End of solution: Task 9.
+```
 </p>
 </details>
 
@@ -387,11 +423,16 @@ Well done! You successfully executed most parts of what we would expected to see
 
 :star: If you like, you can re-deploy your environment and do the test over again.
 
+
 <details>
-<summary>Show helpful clues on re-deployment</summary>
+<summary>:unlock: Show helpful clues on re-deployment</summary>
 <p>
 
 Don't forget to add --reconfigure to your "sudo containerlab" command and re-run the "scripts/ansible_host.sh basic" command doing so.
+
+```
+End of clue.
+```
 </p>
 </details>
 
@@ -434,10 +475,10 @@ With this said, a time when the command module often is very useful in your Ansi
 * show arp int Xx0
 * show ip route
 
-:boom: Create a playbook which displays a to you useful piece of information using the eos_command module and a show command. Print that information out to the screen using the debug module. Name the playbook show_info.yml and store it in the $LABDIR root directory.
+:boom: Task 1: Create a playbook which displays a to you useful piece of information using the eos_command module and a show command. Print that information out to the screen using the debug module. Name the playbook show_info.yml and store it in the $LABDIR root directory.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
 ```
@@ -455,13 +496,17 @@ With this said, a time when the command module often is very useful in your Ansi
       debug:
         msg: "{{ sh_int_stat.stdout_lines }}"
 ```
+
+```
+End of solution: Task 1.
+```
 </p>
 </details> 
 
-:boom: Now, let's run the playbook you created.
+:boom: Task 2: Now, let's run the playbook you created.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -500,6 +545,10 @@ PLAY RECAP *********************************************************************
 clab-containerlab-basic-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
@@ -514,12 +563,12 @@ A very common scenario when we are pulling information from the network devices 
 
 Now it's time to do something.
 
-:boom: Read up on the Arista config module and create a playbook called arista_backup.yml which backups the documentation to the backups folder located in the lab home directory.
+:boom: Task 1: Read up on the Arista config module and create a playbook called arista_backup.yml which backups the documentation to the backups folder located in the lab home directory.
 
 :exclamation: You will need to use "become: yes" for this operation.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
 ```
@@ -544,18 +593,27 @@ Now it's time to do something.
         src: "{{ backup_eos_location.backup_path }}"
         dest: "~/advanced-networking-workshop/backups/{{ inventory_hostname }}/{{ inventory_hostname }}.cfg"
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Now, let's review the backed up configuration, it's located in $LABDIR/backups
+:boom: Task 2: Now, let's review the backed up configuration, it's located in $LABDIR/backups
+
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Task 2: Show solution</summary>
 <p>
 
 ```
 $ cat $LABDIR/backups/clab-containerlab-basic-leaf1/clab-containerlab-basic-leaf1.cfg
 ...
+```
+
+```
+End of solution: Task 2
 ```
 </p>
 </details>
@@ -567,7 +625,7 @@ Ansibles ability to pull information from your network devices allows you to aut
 
 We will review a more basic example of creating network documentation, where we write information about our network devices to a plain text file. With that said, this information may as well be written to your CMDB system, using the ansible.builtin.uri module (or more specific one) to do a API call to some external system.
 
-:boom: Create a playbook called network_documentation.yml which uses the "arista.eos.eos_facts" module to gather facts from your switches, then use the copy module and jinja templating to save facts you care about, to the file network-documentation.txt. 
+:boom: Task 1: Create a playbook called network_documentation.yml which uses the "arista.eos.eos_facts" module to gather facts from your switches, then use the copy module and jinja templating to save facts you care about, to the file network-documentation.txt. 
 
 An example of how to write information to a file using copy and jinja:
 ```
@@ -589,7 +647,7 @@ $ ansible -i inventory leafs -m arista.eos.eos_facts
 :exclamation: This is an advanced ask and there is no shame in copying the solution below in true open source fashion.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
 ```
@@ -622,13 +680,18 @@ cat << 'EOF' >$LABDIR/network_documentation.yml
       run_once: yes
 EOF
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Next, let's run the playbook and have a look at the output.
+:boom: Task 2: Next, let's run the playbook and have a look at the output.
+
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -672,6 +735,10 @@ Serial: DBE6E09113B567834960A5C72C3DD844
 
 $
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
@@ -680,7 +747,7 @@ Now that you have learned about different methods to pull information from your 
 
 First off, let's review the different useful tools which helps us to process information gathered by facts and commands.
 
-:boom: Have a brief look at the different tools below and imagine how they may be useful.
+:boom: Task 1: Have a brief look at the different tools below and imagine how they may be useful.
 
 Ansible modules:
 * [assert](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/assert_module.html)
@@ -697,7 +764,7 @@ Managing error handling:
 
 Now, let's create some smarter versions of the playbooks we have previously create.
 
-:boom: Create a version of below playbook which only uses the eos_facts module when you have detected that it is an Arista switch.
+:boom: Task 2: Create a version of below playbook which only uses the eos_facts module when you have detected that it is an Arista switch.
 ```
 - name: "Gather facts from Arista switches"
   hosts: leafs 
@@ -709,7 +776,7 @@ Now, let's create some smarter versions of the playbooks we have previously crea
 ```
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -722,10 +789,14 @@ Now, let's create some smarter versions of the playbooks we have previously crea
       arista.eos.eos_facts:
       when: ansible_net_system == 'eos'
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
-:boom: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
+:boom: Task 3: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
 
 :exclamation: Because of the output we get from the "show version" command, we need to process the output and used search to find what we are looking for, like so:
 ```
@@ -739,7 +810,7 @@ ansible.builtin.assert:
 :star: Use a fail_msg and success_msg.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 3</summary>
 <p>
 
 ```
@@ -768,13 +839,17 @@ ansible.builtin.assert:
         fail_msg: "Oh no"
         success_msg: "All is well"
 ```
+
+```
+End of solution: Task 3
+```
 </p>
 </details>
 
-:boom: And now you run the playbook against your inventory
+:boom: Task 4: And now you run the playbook against your inventory
 
 <details>
-<summary>Show solution and expected output</summary>
+<summary>:unlock: Show solution and expected output: Task 4</summary>
 <p>
 
 ```
@@ -813,10 +888,14 @@ PLAY RECAP *********************************************************************
 clab-containerlab-basic-leaf1 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 clab-containerlab-basic-leaf2 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+```
+End of solution: Task 4
+```
 </p>
 </details>
 
-:boom: Finally you are going to use variable file naming and the fail module. Do this:
+:boom: Task 5: Finally you are going to use variable file naming and the fail module. Do this:
 * Load a variable file, using a task which runs after the eos_facts task.
 * Use the ansible.builtin.include_vars module to load your variable file. 
 * Use the {{ ansible_net_system }} fact (it will be set to "eos") in the name of your vars file.
@@ -829,7 +908,7 @@ clab-containerlab-basic-leaf2 : ok=4    changed=0    unreachable=0    failed=0  
 
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 5</summary>
 <p>
 
 ```
@@ -871,13 +950,18 @@ switch_sla: "premium"
         msg: "Warning: SLA is {{ switch_sla }}"
       when: switch_sla != "premium"
 ```
+
+```
+End of solution: Task 5
+```
 </p>
 </details>
 
-:boom: And now you run your updated playbook. After having done that, try and change the switch_sla variable to something else than "premium" to see that your fail and when task does work.
+:boom: Task 6: And now you run your updated playbook. After having done that, try and change the switch_sla variable to something else than "premium" to see that your fail and when task does work.
+
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 6</summary>
 <p>
 
 ```
@@ -932,6 +1016,10 @@ PLAY RECAP *********************************************************************
 clab-containerlab-basic-leaf1 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
 clab-containerlab-basic-leaf2 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0  
 ```
+
+```
+End of solution: Task 6
+```
 </p>
 </details>
 
@@ -943,14 +1031,14 @@ Armed with knowledge about how we can pull information from devices and also how
 A very common operational task which fits what we have learned like a glove, is troubleshooting.
 Let's have a look at a practical example, which is helping to troubleshoot connectivity issues for a server to a leaf/access switch. The idea is that we get a playbook which will print out the ARP table for a given port.
 
-:boom: Create a playbook which use the arista.eos.eos_command module to display the ARP table on a specific port, also ensure that:
+:boom: Task 1: Create a playbook which use the arista.eos.eos_command module to display the ARP table on a specific port, also ensure that:
 * Call the playbook arp_check.yml
 * The name of the port we look at should be set using a variable called interface_name, allowing us to set it at runtime.
 * Name the variable interface_name set it to be Ethernet9 by default.
 * You print out the registered result using the debug module.
 
 <details>
-<summary>Show hint</summary>
+<summary>:unlock: Show hint: Task 1</summary>
 <p>
 
 Use the Arista CLI command:
@@ -972,9 +1060,10 @@ Set variable with default value like so:
 
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
+* Create playbook arp_check.yml as such:
 ```
 ---
 - name: Check ARP table on port
@@ -991,13 +1080,17 @@ Set variable with default value like so:
       ansible.builtin.debug:
         msg: " {{ arp_table.stdout_lines }}"
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Now, run the troubleshooting playbook. For it to be useful, pass -e "interface_name=Ma0" and --limit nodename_from_inventory to the ansible-playbook command, allowing you to target what switch and what port to run against.
+:boom: Task 2: Now, run the troubleshooting playbook. For it to be useful, pass -e "interface_name=Ma0" and --limit nodename_from_inventory to the ansible-playbook command, allowing you to target what switch and what port to run against.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -1020,17 +1113,21 @@ ok: [clab-containerlab-basic-leaf1] => {
 PLAY RECAP **************************************************************************************************************************************************************************
 clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
-:boom: Next, let's create a troubleshooting playbook which detects ports which are in a "notconnect" state. As follows:
+:boom: Task 3: Next, let's create a troubleshooting playbook which detects ports which are in a "notconnect" state. As follows:
 * Name the playbook: check_port.yml
 * Use the arista.eos.eos_command module and print out the result using debug.
 * Use the ansible.builtin.assert module to assess that ports are not in a "notconnect" state.
 * :star: If you have time: If a port is in notconnect, gather further debug information about all ports.
 
 <details>
-<summary>Show hints</summary>
+<summary>:unlock: Show hints: Task 3</summary>
 <p>
 
 1. Use: "show int stat" to find status of all ports.
@@ -1041,7 +1138,7 @@ clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0  
 </details>
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 3</summary>
 <p>
 
 ```
@@ -1081,13 +1178,18 @@ clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0  
             msg: "{{ port_status.stdout_lines }}"
       when: port_assessment is failed
 ```
+
+```
+End of solution: Task 3
+```
 </p>
 </details>
 
-:boom: Now let's run the troubleshooting playbook we just created. Limit what switch it runs on using the --limit command.
+:boom: Task 4: Now let's run the troubleshooting playbook we just created. Limit what switch it runs on using the --limit command.
+
 
 <details>
-<summary>Show solution and output</summary>
+<summary>:unlock: Show solution and output: Task 4</summary>
 <p>
 
 ```
@@ -1116,6 +1218,10 @@ skipping: [clab-containerlab-basic-leaf1]
 
 PLAY RECAP **************************************************************************************************************************************************************************
 clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+```
+
+```
+End of solution: Task 4
 ```
 </p>
 </details>
