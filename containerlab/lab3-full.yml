@@ -1,0 +1,88 @@
+# https://overlaid.net/2019/01/27/arista-bgp-evpn-configuration-example/
+name: lab3
+topology:
+  kinds:
+    ceos:
+      image: localhost/ceos:4.32.0F
+    linux:
+      image: ghcr.io/hellt/network-multitool
+  nodes:
+    leaf1:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-full.cfg
+    leaf2:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-full.cfg
+    leaf3:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf3-full.cfg
+    leaf4:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf4-full.cfg
+    leaf5:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf5-full.cfg
+    leaf6:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf6-full.cfg
+    leaf7:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf7-full.cfg
+    leaf8:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf8-full.cfg
+    spine1:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine1-full.cfg
+    spine2:
+      kind: ceos
+      startup-config: ~/advanced-networking-workshop/containerlab/configs/spine2-full.cfg
+    host1:
+      kind: linux
+    host2:
+      kind: linux
+    host3:
+      kind: linux
+    host4:
+      kind: linux
+  links:
+    - endpoints: ["leaf1:eth7", "host1:eth1"]
+    - endpoints: ["leaf1:eth8", "host1:eth2"]
+    - endpoints: ["leaf2:eth7", "host1:eth3"]
+    - endpoints: ["leaf2:eth8", "host1:eth4"]
+    - endpoints: ["leaf1:eth9", "leaf2:eth9"]
+    - endpoints: ["leaf1:eth10", "leaf2:eth10"]
+    - endpoints: ["leaf1:eth11", "spine1:eth1"]
+    - endpoints: ["leaf1:eth12", "spine2:eth1"]
+    - endpoints: ["leaf2:eth11", "spine1:eth2"]
+    - endpoints: ["leaf2:eth12", "spine2:eth2"]
+    - endpoints: ["leaf3:eth7", "host2:eth1"]
+    - endpoints: ["leaf3:eth8", "host2:eth2"]
+    - endpoints: ["leaf4:eth7", "host2:eth3"]
+    - endpoints: ["leaf4:eth8", "host2:eth4"]
+    - endpoints: ["leaf3:eth9", "leaf4:eth9"]
+    - endpoints: ["leaf3:eth10", "leaf4:eth10"]
+    - endpoints: ["leaf3:eth11", "spine1:eth3"]
+    - endpoints: ["leaf3:eth12", "spine2:eth3"]
+    - endpoints: ["leaf4:eth11", "spine1:eth4"]
+    - endpoints: ["leaf4:eth12", "spine2:eth4"]
+    - endpoints: ["leaf5:eth7", "host3:eth1"]
+    - endpoints: ["leaf5:eth8", "host3:eth2"]
+    - endpoints: ["leaf6:eth7", "host3:eth3"]
+    - endpoints: ["leaf6:eth8", "host3:eth4"]
+    - endpoints: ["leaf5:eth9", "leaf6:eth9"]
+    - endpoints: ["leaf5:eth10", "leaf6:eth10"]
+    - endpoints: ["leaf5:eth11", "spine1:eth5"]
+    - endpoints: ["leaf5:eth12", "spine2:eth5"]
+    - endpoints: ["leaf6:eth11", "spine1:eth6"]
+    - endpoints: ["leaf6:eth12", "spine2:eth6"]
+    - endpoints: ["leaf7:eth7", "host4:eth1"]
+    - endpoints: ["leaf7:eth8", "host4:eth2"]
+    - endpoints: ["leaf8:eth7", "host4:eth3"]
+    - endpoints: ["leaf8:eth8", "host4:eth4"]
+    - endpoints: ["leaf7:eth9", "leaf8:eth9"]
+    - endpoints: ["leaf7:eth10", "leaf8:eth10"]
+    - endpoints: ["leaf7:eth11", "spine1:eth7"]
+    - endpoints: ["leaf7:eth12", "spine2:eth7"]
+    - endpoints: ["leaf8:eth11", "spine1:eth8"]
+    - endpoints: ["leaf8:eth12", "spine2:eth8"]
