@@ -6,7 +6,7 @@ This is the last and final part of the workshop, in which you will get to apply 
 If you want to read up on BGP EVPN based architectures, you can read David Varnum's excellent writup on the topic, here:
 * [Arista BGP EVPN Overview and concepts](https://overlaid.net/2018/08/27/arista-bgp-evpn-overview-and-concepts/)
 
-And this blog, where David Varnum walks through the required configuration:
+And this blog, where David Varnum step-by-step reviews a setup:
 * [Arista BGP EVPN - Configuration example](https://overlaid.net/2019/01/27/arista-bgp-evpn-configuration-example/)
 
 ## Overview
@@ -30,14 +30,16 @@ For this lab, there are two already prepared containerlab files:
 * The -start version will setup your starting point for automation, switches with only auth and a management interface setup, like we before in our labs.
 * The -full version will setup everything fully configured, allowing you to explore the setup in details.
 
-:boom: Setup our starting point by running below commands:
+:boom: Task 1: Setup our starting point by running below commands:
 ```
 $ cd $LABDIR/containerlab
 $ sudo containerlab --runtime podman deploy -t lab3-start.yml --reconfigure
 $ ../scripts/ansible_hosts.sh lab3
 ```
 
-:boom: Review the desired state configuration of each and every switch by looking at their running configurations:
+---
+
+:boom: Task 2: Review the desired state configuration of each and every switch by looking at their running configurations:
 ```
 $ cd $LABDIR/containerlab/configs
 $ ls *full*
@@ -52,11 +54,13 @@ That is how your switches should look like when you are done.
 ## 3.2 Automating your network
 Now it's time for you to decide on how you will use Ansible to accomplish a working version of the EVPN BPG architecture. The easiest way to accomplish this will be to use the arista.eos.eos_config module and push the working running configs to each switch. In real life, that is not always the best approach. Consider what parts of this network's configuration which you may be changing more often. Are there parts of the network configuration which you would rather manage separately? 
 
-:boom: Decide on how you will setup the network, create your Ansible automation and run it.
+:boom: Task 1: Decide on how you will setup the network, create your Ansible automation and run it.
 :exclamation: If you end up in a dead end, you can always recreate the network by running the commands you ran to set it up first.
 :exclamation: To tips on validating the setup, see next section 3.3.
 
-:boom: Explore different approaches and consider how it would be to maintain this network more long term. As an example, if you push complete device configuration files initially, consider breaking off parts of it into separate plays, playbooks or even roles.  
+---
+
+:boom: Task 2: Explore different approaches and consider how it would be to maintain this network more long term. As an example, if you push complete device configuration files initially, consider breaking off parts of it into separate plays, playbooks or even roles.  
 
 ## 3.3 Validating your setup
 
@@ -86,7 +90,9 @@ Loopback1 is up, line protocol is up (connected)
   Up 1 hour, 37 minutes, 13 seconds
 ```
 
-:boom Show Type-5 EVPN routes which are the VRFs we are transporting across the EVPN fabric:
+---
+
+:boom: Show Type-5 EVPN routes which are the VRFs we are transporting across the EVPN fabric:
 ```
 leaf1#show bgp evpn route-type ip-prefix ipv4
 BGP routing table information for VRF default
@@ -107,6 +113,7 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
                                  10.0.255.14           -       100     0       65000 65004 i
 ``` 
 
+---
 
 :boom: Connect to the Linux systems by using podman, such as:
 ```
