@@ -215,7 +215,7 @@ rtt min/avg/max/mdev = 0.036/0.044/0.057/0.009 ms
 bash-5.0#
 ```
 
-11. Now you are ready to start the lab. Goto lab-0/README.md.
+11. Now you are ready to start the lab. [Goto lab-0/README.md](labs/lab-0/README.md).
 
 
 
