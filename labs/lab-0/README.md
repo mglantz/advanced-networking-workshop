@@ -26,9 +26,11 @@ This work assumes a few things from the student of the workshop, such as:
 * The person has intermediate to expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
 
 # 0.3: What this workshop is NOT about
-This workshop will not explain networking concepts as such. As such, this is not a workshop which attempts to teach networking, routing or switching.
+This workshop will not explain networking concepts. This is not a workshop which attempts to teach networking, routing or switching.
 
-This workshop neither tries to explain the basics of Ansible, you are expected to understand what roles, playbooks, collections are and know the differences between the different Ansible CLI and management tools such as Ansible Automation Platform.
+How to implement network automation for production environents, which includes an enterprise framework such as Ansible Automation Platform.
+
+This workshop neither tries to explain the basics of Ansible, you are expected to understand what roles, playbooks, collections, variables, inventories are and know the differences between the different Ansible CLI and management tools such as Ansible Automation Platform.
 
 # 0.4 Lab graphics
 
