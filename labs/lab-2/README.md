@@ -32,10 +32,9 @@ Before we get started with configuring our switches, we need to build a new cont
 
 This means you will need to create a new containerlab topology file, which creates a setup with the spine switches in place as well.
 
-:boom: Create a new containerlab topology file, which reflects above setup. Also, more specifically:
-
-:boom: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
-* Save your work in the containerlab directory and name the file lab1.yml.
+:boom: Task 1: Create a new containerlab topology file, which reflects above setup. Also, more specifically:
+* Save your work in a the containerlab dictory and name the file lab1.yml
+* You should have two Arista cEOS switches which are connected to each other, as follows:
 * kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
 * Call your nodes: leaf1, leaf2, spine1, spine2
 * The leaf switches should be connected to each other via ports eth9 on and eth10 (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
@@ -44,7 +43,7 @@ This means you will need to create a new containerlab topology file, which creat
 * startup-config should be ~/advanced-networking-workshop/containerlab/configs/spine1-start.cfg for spine1 and spine2-start.cfg for spine2.
 
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 1</summary>
 <p>
   
 ```
@@ -77,10 +76,12 @@ topology:
 </p>
 </details>
 
-:boom: Now it's time to rebuild the lab environment to our new setup. Use the "sudo containerlab" command like you did before, but add a --reconfigure flag at the end.
+---
+
+:boom: Task 2: Now it's time to rebuild the lab environment to our new setup. Use the "sudo containerlab" command like you did before, but add a --reconfigure flag at the end.
 
 <details>
-<summary>Show example solution</summary>
+<summary>Show example solution: Task 2</summary>
 <p>
 
 ```
@@ -114,24 +115,32 @@ INFO[0032] Adding ssh config for containerlab nodes
 | 4 | clab-lab2-spine2 | b029cb180307 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.159/24 | 2001:172:20:20::9f/64 |
 +---+------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
 Now that we have a new lab environment, we need to re-generateour Ansible inventory as well.
 
-:boom: Run below command to generate a new Ansible inventory and accept SSH keys for your systems.
+---
+
+:boom: Task 3: Run below command to generate a new Ansible inventory and accept SSH keys for your systems.
 ```
 $ cd $LABDIR
 $ scripts/ansible_hosts.sh lab2
 ```
 
-:boom: Validate that the inventory was generated corrected using the cat command.
+---
+
+:boom: Task 4: Validate that the inventory was generated corrected using the cat command.
 ```
 $ cd $LABDIR 
 $ cat inventory
 ```
 <details>
-<summary>Show example output</summary>
+<summary>:unlock: Show example output: Task 4</summary>
 <p>
 
 ```
@@ -155,6 +164,10 @@ clab-lab2-spine2 ansible_host=172.20.20.154
 [switches:children]
 leafs
 spines
+```
+
+```
+End of example output: Task 4
 ```
 </p>
 </details>
@@ -190,7 +203,7 @@ Don't worry though, we will try out all the different methods, so you can decide
 
 We will start off trying out what in essence is a not-recommended approach to applying configuration changes - which is using the command module directly. The main reason why we cover it is because the command module to some is easier to understand, which may lure you to use it. We will see it's limitations on full display in this exercise.
 
-:boom: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
+:boom: Task 1: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
 :thumbsup: Hints:
 1. Use host_vars variable files for the unique configuration.
 2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually.
@@ -238,7 +251,7 @@ interface Ethernet12
 :exclamation: As there is not large value in learning how to use the command module to accomplish configuration changes, feel free to copy the solution below.
 
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 1</summary>
 <p>
 
 * Create a directory in $LABDIR called host_vars
@@ -302,13 +315,19 @@ eth12_ip_address: "10.0.2.3/31"
           - no switchport
           - ip address {{ eth12_ip_address }}
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details> 
 
-:boom: Now, run the playbook and validate that the configuration state of the switches is correct using 'ssh admin@IP-OF-SWITCH' (password: admin).
+---
+
+:boom: Task 2: Now, run the playbook and validate that the configuration state of the switches is correct using 'ssh admin@IP-OF-SWITCH' (password: admin).
 
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 2</summary>
 <p>
 
 ```
@@ -366,16 +385,22 @@ vlan 40
    name test-l2-vxlan
 leaf1#
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
-:boom: Re-run the automation and see if you can make some conclusions based on that.
+---
+
+:boom: Task 3: Re-run the automation and see if you can make some conclusions based on that.
 
 ## 2.3.1 Assessing the use of the command module.
 Depending on your approach, you will have ended up with a playbook similiar to below:
 
 <details>
-<summary>Show example playbook solution</summary>
+<summary>:unlock: Show example playbook solution</summary>
 <p>
 
 ```
@@ -623,7 +648,7 @@ And "parsed" works in the opposite way.
 ## 2.5 Reset your lab environment
 Now, before we start using some of the purpose specific configuration modules, we need to reset the lab (2) environment your built to it's default state.
 
-:boom: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
+:boom: Task 1: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
 
 ```
 $ cd $LABDIR
@@ -635,7 +660,7 @@ $ scripts/ansible_hosts.sh lab2
 
 
 <details>
-<summary>Expected output</summary>
+<summary>:unlock: Expected output: Task 1</summary>
 <p>
 
 ```
@@ -678,7 +703,7 @@ $
 Now we're going to use the L3 and VLAN specific configuration modules to archieve our desired state.
 
 <details>
-<summary>Show desired state for your leaf switches</summary>
+<summary>:exclamation: Show desired state for your leaf switches</summary>
 <p>
 
 * Leaf1 desired state:
@@ -723,14 +748,14 @@ interface Ethernet12
 </p>
 </details>
 
-:boom: Use the three below listed modules in a playbook you name modules_config.yml, to archieve the above desired state for the leaf1 and leaf2 switches. Modules to use are:
+:boom: Task 1: Use the three below listed modules in a playbook you name modules_config.yml, to archieve the above desired state for the leaf1 and leaf2 switches. Modules to use are:
 * :exclamation: Re-use the host_vars directory and host variable files you created in 2.3.
 * [arista.eos.eos_vlans](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_vlans_module.html#ansible-collections-arista-eos-eos-vlans-module) 
 * [arista.eos.eos_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_interfaces_module.html#ansible-collections-arista-eos-eos-interfaces-module)
 * [arista.eos.eos_l3_interface](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_l3_interfaces_module.html#ansible-collections-arista-eos-eos-l3-interfaces-module)
 
 <details>
-<summary>Show example solution playbook</summary>
+<summary>:unlock: Show example solution playbook: Task 1</summary>
 <p>
 
 ```
@@ -769,13 +794,19 @@ interface Ethernet12
             ipv4:
               - address: "{{ eth12_ip_address }}"
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Now it's time for you to run the playbook and validate the result using "ssh admin@IP-of-switch"
+---
+
+:boom: Task 2: Now it's time for you to run the playbook and validate the result using "ssh admin@IP-of-switch"
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -828,10 +859,16 @@ vlan 40
    name test-l2-vxlan
 leaf1#
 ```
+
+```
+End of solution: Task 2
+```
 </p>
 </details>
 
-:boom: Now run the playbook again. Do you see any differences compared to last time?
+---
+
+:boom: Task 3: Now run the playbook again. Do you see any differences compared to last time?
 
 ### 2.6.1 Assessing the use of purpose specific configuration modules
 Well done so far. Now you have accomplished the same configuration result, using two different methods. Before we start with the third, let's assess how this worked.
@@ -839,7 +876,7 @@ Well done so far. Now you have accomplished the same configuration result, using
 You should have created something similiar as below as a playbook:
 
 <details>
-<summary>Show example solution playbook</summary>
+<summary>:unlock: Show example solution playbook</summary>
 <p>
 
 ```
@@ -915,7 +952,7 @@ Now, it's time to try out some different ways to use the "config" module.
 ### 2.7.1 Using the config module to load static config files into devices
 The first thing we'll do is to load device specific static config files into the devices. This is easily done, as the config files, are the actual switch configuration we get from "sh run". That means we can quickly go to an automated approach of managing devices, from a manual one. This requires the creators of the automation to have to learn less about Ansible as well.
 
-:boom: Apply the below desired state (the one we used before) to the leaf1 and leaf2 switches, using the arista.eos.eos_config module and static configuration files.
+:boom: Task 1: Apply the below desired state (the one we used before) to the leaf1 and leaf2 switches, using the arista.eos.eos_config module and static configuration files.
 * Name the playbook config_static.yml
 * Use two separate plays in your playbook, where each play targets a separate switch (leaf1 or leaf2).
 :exclamation: If you do not create separate plays or otherwise manage targeting, you will misconfigure your switches.
@@ -923,7 +960,7 @@ The first thing we'll do is to load device specific static config files into the
 :exclamation: The formatting should follow the vendor standard, when it comes to normal config intendation. For Arista, that is 3 spaces for intendation.
 
 <details>
-<summary>Show desired running config for switches</summary>
+<summary>:exclamation: Show desired running config for switches</summary>
 <p>
 
 * Leaf1 running config to use: 
@@ -971,7 +1008,7 @@ interface Ethernet12
 </details>
 
 <details>
-<summary>Show solution</summary>
+<summary>Show solution: Task 1</summary>
 <p>
 
 * Save leaf1/leaf2 running config above into two separate files called leaf1.cfg and leaf2.cfg in the $LABDIR directory.
@@ -996,13 +1033,19 @@ interface Ethernet12
       arista.eos.eos_config:
         src: leaf2.cfg
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Run the config_static.yml playbook and validate that configuration was applied properly using "ssh admin@IP-of-switch".
+---
+
+:boom: Task 2: Run the config_static.yml playbook and validate that configuration was applied properly using "ssh admin@IP-of-switch".
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
 ```
@@ -1033,6 +1076,10 @@ clab-lab2-leaf1 ansible_host=172.20.20.14
 $ ssh admin@172.20.20.14
 ...
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
@@ -1055,7 +1102,7 @@ The lines features of the config module allows you to inject specific lines of c
 
 But before we do this, let's reset the environment again.
 
-:boom: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
+:boom: Task 1: Run below commands to reset the lab environment to it's default state you created in "Section: 2.1":
 
 ```
 $ cd $LABDIR
@@ -1065,17 +1112,21 @@ $ cd $LABDIR
 $ scripts/ansible_hosts.sh lab2
 ```
 
-:boom: Copy your previously created config_static.yml playbook to the file config_lines.yml.
+---
+
+:boom: Task 2: Copy your previously created config_static.yml playbook to the file config_lines.yml.
 ```
 $ cp config_static.yml config_lines.yml
 ```
 
-:boom: Edit config_lines.yml and related device config files so that the Ethernet11/22 "ip address 1.2.3.4/31" configuration line is injected using the config: lines feature, while the rest of the static configuration loaded as previously using config: src.
+---
+
+:boom: Task 3: Edit config_lines.yml and related device config files so that the Ethernet11/22 "ip address 1.2.3.4/31" configuration line is injected using the config: lines feature, while the rest of the static configuration loaded as previously using config: src.
 * Use the "parents:" and "after:" options to define where the lines should end up.
 * Re-use the host_vars/clab-lab2-leaf1,clab-lab2-leaf2 variable files from previous excercises.
 
 <details>
-<summary>Show example solution</summary>
+<summary>:unlock: Show example solution: Task 3</summary>
 <p>
 
 * Create the config_lines.yml playbook as below:
@@ -1155,13 +1206,19 @@ interface Ethernet12
    mtu 9214
    no switchport
 ```
+
+```
+End of solution: Task 3
+```
 </p>
 </details>
 
-:boom: Run the playbook you just created to apply the configuration and validate the result using "ssh admin@Switch-IP-address"
+---
+
+:boom: Task 4: Run the playbook you just created to apply the configuration and validate the result using "ssh admin@Switch-IP-address"
 
 <details>
-<summary>Show solution and example output</summary>
+<summary>:unlock: Show solution and example output: Task 4</summary>
 <p>
 
 ```
@@ -1203,6 +1260,10 @@ $ grep leaf1 inventory
 clab-lab2-leaf1 ansible_host=172.20.20.14
 $ ssh admin@172.20.20.14
 ...
+```
+
+```
+End of solution: Task 4
 ```       
 </p>
 </details>
@@ -1247,14 +1308,14 @@ If you are not familiar with the template concept in Ansible, you will need to r
 
 Now that you are an expert at jinja and Ansible templating, let's begin.
 
-:boom: Create a playbook called config_template.yml and replace the leaf1.cfg and leaf2.cfg files we used previously with a single template.
+:boom: Task 1: Create a playbook called config_template.yml and replace the leaf1.cfg and leaf2.cfg files we used previously with a single template.
 * Name the template leafs.j2
 * Look at the example in this chapter for inspiration (on how to use for loops and lists).
 * Use the "template: src" function to upload the configuration to said devices.
 * Use variables stored in host_vars/clab-lab2-leaf1/2 files to set device unique information (read: ip address) and use group_vars/all to set common variables for the VLANs.
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 1</summary>
 <p>
 
 * Create the config_template.yml playbook as such:
@@ -1318,13 +1379,19 @@ vlans:
  - vlanid: 40
    name: test-l2-vxlan
 ```
+
+```
+End of solution: Task 1
+```
 </p>
 </details>
 
-:boom: Now run the config_template.yml playbook and validate the result using "ssh admin@Switch-IP-address"
+---
+
+:boom: Task 2: Now run the config_template.yml playbook and validate the result using "ssh admin@Switch-IP-address"
 
 <details>
-<summary>Show solution</summary>
+<summary>:unlock: Show solution: Task 2</summary>
 <p>
 
 ```
@@ -1347,6 +1414,10 @@ $ grep leaf1 inventory
 clab-lab2-leaf1 ansible_host=172.20.20.36
 $ ssh admin@172.20.20.36
 ...
+```
+
+```
+End of solution: Task 2
 ```
 </p>
 </details>
