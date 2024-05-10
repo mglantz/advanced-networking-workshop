@@ -204,7 +204,7 @@ Don't worry though, we will try out all the different methods, so you can decide
 We will start off trying out what in essence is a not-recommended approach to applying configuration changes - which is using the command module directly. The main reason why we cover it is because the command module to some is easier to understand, which may lure you to use it. We will see it's limitations on full display in this exercise.
 
 :boom: Task 1: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
-:thumbsup: Hints:
+* :thumbsup: Hints:
 1. Use host_vars variable files for the unique configuration.
 2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually.
 
