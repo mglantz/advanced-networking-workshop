@@ -22,17 +22,11 @@ This workshop uses Arista cEOS, because it is so very easy to work with. If you 
 # 0.2 Knowledge prerequisites
 This work assumes a few things from the student of the workshop, such as:
 * The person has intermediate knowledge about Ansible
-* The person has intermediate or expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
-* It's helpful if the person understands what goes into common a common networking Spine-Leaf architectures, such as:
-- VLAN
-- VXLAN
-- MLAG
-- EVPN
-- BGP
+* You have basic knowledge of how to navigate and edit files in a Linux shell.
+* The person has intermediate to expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
 
 # 0.3: What this workshop is NOT about
-This workshop will not explain networking concepts as such, but will when possible, link to external reading materials.
-As such, this is not a workshop which attempts to teach networking, routing or switching.
+This workshop will not explain networking concepts as such. As such, this is not a workshop which attempts to teach networking, routing or switching.
 
 This workshop neither tries to explain the basics of Ansible, you are expected to understand what roles, playbooks, collections are and know the differences between the different Ansible CLI and management tools such as Ansible Automation Platform.
 
@@ -43,6 +37,7 @@ In this lab, we use some basic graphics to make the lab easier to understand. Su
 :boom: This is something which you have to do.
 :star: If you have time, you can also do this.
 :exclamation: Take careful notice of this, or you may fall on your face.
+:unlock: Show solution
 :thumbsup: This text contains information about a best practice.
 ```
 Here is some code that you need to run
@@ -58,19 +53,19 @@ If by some reason you get stuck in a lab - then here's what you should do. **Fol
 2. This lab has seen plenty of use, so chances are that you have simply not followed the lab instructions. Start by reading the lab instructions again, carefully.
 3. If you are sure that you are doing things as described in the labs, perhaps you typed something wrong or had a copy-paste accident. Double checking your files content and comparing them with the content described here in the lab. If you typed things manually, try doing a clean copy-paste from the lab page instead.
 4. Ask the person beside you if that person also had an issue with what you are doing. If so, that may indicate there is actually something wrong.
-5. Raise your hand and someone will come and help you :)
+5. If you are doing this as a part of teacher lead workshop. Raise your hand and someone will come and help you... Otherwise, find the issue, and contribute a fix. You can do it.
 
 # 0.6 Preparations to do the lab
 
-:exclamation: To get started with the labs, you first need to get your assigned username and servers. This will be provided to you by the people who operate this lab. 
+:exclamation: To get started with the labs, you first need to get your assigned username and servers. This will be provided to you by the people who operate this lab. If you have deployed the lab yourself, well, then you know where to login. 
 
-:exclamation: Do not skip any labs, the labs depend on the previous ones to be completed. You need to do them in order, 0-10.
+:exclamation: Do not skip any labs, the labs depend on the previous ones to be completed. You need to do them in sequencial order.
 
 :exclamation: On purpose, security in this lab has not been made a priority, that is so you as a student get more freedom to learn. You have passwordless admin access on all systems. With that said, if you do something which is outside of the labs and break your systems, _you get to keep all the pieces_ ;) 
 
 :boom: Make sure you have the required tools to do the lab. The tools are listed below:
 * An SSH client. On Linux and Mac, use the native ssh client in a terminal. On Windows, you can use PuTTy https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) if nothing else is available.
-* A web browser. Ansible Automation Platform officially supports latest version of Firefox and Chrome, so if you bump into any issues, try one of those web browsers.
+* A web browser (to view this page).
 
 :boom: Review the overview of the lab environment.
 
