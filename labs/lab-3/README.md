@@ -55,8 +55,8 @@ That is how your switches should look like when you are done.
 Now it's time for you to decide on how you will use Ansible to accomplish a working version of the EVPN BPG architecture. The easiest way to accomplish this will be to use the arista.eos.eos_config module and push the working running configs to each switch. In real life, that is not always the best approach. Consider what parts of this network's configuration which you may be changing more often. Are there parts of the network configuration which you would rather manage separately? 
 
 :boom: Task 1: Decide on how you will setup the network, create your Ansible automation and run it.
-:exclamation: If you end up in a dead end, you can always recreate the network by running the commands you ran to set it up first.
-:exclamation: To tips on validating the setup, see next section 3.3.
+* :exclamation: If you end up in a dead end, you can always recreate the network by running the commands you ran to set it up first.
+* :exclamation: To tips on validating the setup, see next section 3.3.
 
 ---
 
