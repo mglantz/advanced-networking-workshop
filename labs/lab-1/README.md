@@ -127,6 +127,7 @@ Now that you understand a bit better about containerlab, it's time to create you
 ```
 $ cd $LABDIR/containerlab
 ```
+---
 
 :boom: Task 2: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
 * Save your work in the containerlab directory and name the file lab1.yml.
@@ -166,6 +167,8 @@ End of solution: Task 2.
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 3: Now, let's review the configuration used to start up our switches. Run the "cat" command on your leaf1/2.cfg files to view them.
 
@@ -239,6 +242,8 @@ End of solution: Task 3.
 
 If you SSH to a device in your setup, you will authenticate automatically, that is because the SSH key has been added in your environment.
 
+---
+
 :boom: Task 4: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, accordingly:
 * Use --runtime podman
 * If you have already tried to deploy the lab once, add the --reconfigure parameter.
@@ -276,11 +281,15 @@ End of solution: Task 4
 </p>
 </details>
 
+---
+
 :boom: Task 5: Run the "scripts/ansibe_hosts.sh basic" command to generate a properly configured Ansible inventory ($LABDIR/inventory) and accept SSH fingerprints
 ```
 $ ../scripts/ansible_hosts.sh basic
 ```
 Please note that a successful run of the command does not generate any output. 
+
+---
 
 :boom: Task 6: Validate that your have a correctly configured inventory file.
 ```
@@ -313,6 +322,8 @@ End of solution.
 </p>
 </details>
 
+---
+
 :boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected.
 
 
@@ -342,6 +353,8 @@ End of solution: Task 7.
 
 :star: If you have time, you can also validate that the overall running configuration is correct.
 
+---
+
 :boom: Task 8: Next create a simple playbook which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
 
 <details>
@@ -364,6 +377,8 @@ End of solution: Task 8.
 </p>
 </details>
 
+---
+
 :boom: Task 9: Next, run a static code analysis on your playbook, using the "ansible-lint" command.
 
 <details>
@@ -382,6 +397,8 @@ End of solution: Task 9.
 </details>
 
 :exclamation: If you had 0 failures and 0 warnings, you can go on to the next task, otherwise, fix your issues.
+
+---
 
 :boom: Task 10: Next, run the basic playbook stored in $LABDIR/ping.yml against our new switches.
 
@@ -415,6 +432,8 @@ End of solution: Task 9.
 </p>
 </details>
 
+---
+
 Well done! You successfully executed most parts of what we would expected to see in an automated CI/CD pipeline, meaning:
 * Creation of an Ansible playbook
 * Run static code analysis on Ansible playbook
@@ -422,7 +441,6 @@ Well done! You successfully executed most parts of what we would expected to see
 * Run playbook against test environment
 
 :star: If you like, you can re-deploy your environment and do the test over again.
-
 
 <details>
 <summary>:unlock: Show helpful clues on re-deployment</summary>
@@ -502,6 +520,8 @@ End of solution: Task 1.
 ```
 </p>
 </details> 
+
+---
 
 :boom: Task 2: Now, let's run the playbook you created.
 
@@ -600,6 +620,8 @@ End of solution: Task 1
 </p>
 </details>
 
+---
+
 :boom: Task 2: Now, let's review the backed up configuration, it's located in $LABDIR/backups
 
 
@@ -687,6 +709,8 @@ End of solution: Task 1
 </p>
 </details>
 
+---
+
 :boom: Task 2: Next, let's run the playbook and have a look at the output.
 
 
@@ -764,6 +788,8 @@ Managing error handling:
 
 Now, let's create some smarter versions of the playbooks we have previously create.
 
+---
+
 :boom: Task 2: Create a version of below playbook which only uses the eos_facts module when you have detected that it is an Arista switch.
 ```
 - name: "Gather facts from Arista switches"
@@ -795,6 +821,8 @@ End of solution: Task 2
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 3: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
 
@@ -846,6 +874,8 @@ End of solution: Task 3
 </p>
 </details>
 
+---
+
 :boom: Task 4: And now you run the playbook against your inventory
 
 <details>
@@ -894,6 +924,8 @@ End of solution: Task 4
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 5: Finally you are going to use variable file naming and the fail module. Do this:
 * Load a variable file, using a task which runs after the eos_facts task.
@@ -956,6 +988,8 @@ End of solution: Task 5
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 6: And now you run your updated playbook. After having done that, try and change the switch_sla variable to something else than "premium" to see that your fail and when task does work.
 
@@ -1087,6 +1121,8 @@ End of solution: Task 1
 </p>
 </details>
 
+---
+
 :boom: Task 2: Now, run the troubleshooting playbook. For it to be useful, pass -e "interface_name=Ma0" and --limit nodename_from_inventory to the ansible-playbook command, allowing you to target what switch and what port to run against.
 
 <details>
@@ -1119,6 +1155,8 @@ End of solution: Task 2
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 3: Next, let's create a troubleshooting playbook which detects ports which are in a "notconnect" state. As follows:
 * Name the playbook: check_port.yml
@@ -1184,6 +1222,8 @@ End of solution: Task 3
 ```
 </p>
 </details>
+
+---
 
 :boom: Task 4: Now let's run the troubleshooting playbook we just created. Limit what switch it runs on using the --limit command.
 
