@@ -22,5 +22,10 @@ ssh-add ~/.ssh/advanced-networking-workshop
 echo "export LABDIR=~/advanced-networking-workshop" >>~/.bashrc
 export LABDIR=~/advanced-networking-workshop
 
+echo 'eval $(ssh-agent -s)' >>~/.bashrc
+
 read -p "Transfer cEOS image file to home directory. Press enter when done." donenow
+
+sudo podman import ~/cEOS64-lab-4.32.0F.tar.tar ceos:4.32.0F
+
 
