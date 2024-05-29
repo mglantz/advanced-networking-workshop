@@ -81,6 +81,7 @@ An example deployment is shown below. When running the containerlab command to d
 $ sudo containerlab --runtime podman deploy -t containerlab-basic.yml
 INFO[0000] Containerlab v0.54.2 started                 
 INFO[0000] Parsing & checking topology file: containerlab-basic.yml 
+WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_tables failed: exec format error" 
 INFO[0000] Destroying lab: containerlab-basic           
 INFO[0010] Removing containerlab host entries from /etc/hosts file 
 INFO[0010] Removing ssh config for containerlab nodes   
@@ -250,6 +251,11 @@ If you SSH to a device in your setup, you will authenticate automatically, that 
 * Run "sudo containerlab --help" to get more information.
 * We need to use sudo, because the workloads are very priviledged in nature.
 
+:exclamation: :exclamation: Below error message is expected and is nothing to worry about. :exclamation: :exclamation:
+```
+WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_tables failed: exec format error" 
+```
+
 
 <details>
 <summary>:unlock: Show example solution: Task 4</summary>
@@ -259,6 +265,7 @@ If you SSH to a device in your setup, you will authenticate automatically, that 
 $ sudo containerlab --runtime podman deploy -t lab1.yml --reconfigure
 INFO[0000] Containerlab v0.54.2 started                 
 INFO[0000] Parsing & checking topology file: containerlab-basic.yml 
+WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_tables failed: exec format error" 
 INFO[0000] Removing /home/mglantz/advanced-networking-workshop/containerlab/clab-lab1 directory... 
 INFO[0000] Creating lab directory: /home/mglantz/advanced-networking-workshop/containerlab/clab-lab1 
 INFO[0000] Running postdeploy actions for Arista cEOS 'leaf1' node 
