@@ -1,0 +1,30 @@
+---
+type: ec2
+instance_name: studentlab
+instance_flavor: c5.4xlarge
+#instance_disk_size: 10
+instance_group: containerlab
+instance_wait_for_connection: true
+instance_additional_port: "3000"
+ec2_image_name: "RHEL-9.4.0_HVM-*x86_64*"
+ec2_key_pair: ""
+
+dns_update: true
+
+# the DNS sub domain <dns_suffix>.ansible-labs.de
+# MANDATORY if dns_update is true
+dns_suffix: mglantz
+
+# the key used to interact with the DNS server
+# NOTE: This is the content of the file, not the path to the file
+# MANDATORY if dns_update is true
+dns_key: ""
+
+# the private key to interact with the DNS server
+# NOTE: This is the content of the file, not the path to the file
+# MANDATORY if dns_update is true
+dns_private: ""
+
+rhn_user: ""
+rhn_pass: ""
+rhn_pool_id: ""

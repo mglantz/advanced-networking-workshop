@@ -1,0 +1,11 @@
+- name: Install RHEL 9 instances
+  hosts: localhost
+  connection: local
+  vars_files:
+    - vars/vars.yml
+  tasks:
+  - name: Create VMs where Containerlab runs
+    ansible.builtin.include_role:
+      name: ansible_ssa.general.instance
+    vars:
+      instance_name: labsystem2

@@ -1,0 +1,8 @@
+- name: Install Grafana instance
+  hosts: containerlab
+  vars_files:
+    - vars/vars.yml
+  tasks:
+  - name: Setup Containerlab environment
+    ansible.builtin.include_role:
+      name: containerlab

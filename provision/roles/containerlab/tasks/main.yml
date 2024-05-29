@@ -1,0 +1,110 @@
+---
+# tasks file for containerlab
+
+- name: Add Ansible Automation Platform subscription pool
+  community.general.redhat_subscription:
+    state: present
+    username: "{{ rhn_user }}"
+    password: "{{ rhn_pass }}"
+    pool_ids:
+      - "{{ rhn_pool_id }}"
+  become: yes
+
+- name: Install RPM dependencies
+  ansible.builtin.dnf:
+    name:
+      - podman
+      - podman-docker
+      - git
+      - python3
+      - python3-pip
+      - curl
+      - ansible-core
+      - ansible-test
+  become: yes
+
+- name: Enable podman service
+  ansible.builtin.service:
+    name:
+      podman.socket
+    state: started
+    enabled: true
+  become: yes
+
+- name: Check for containerlab installation
+  ansible.builtin.stat:
+    path: /usr/bin/containerlab
+  register: c_install
+  ignore_errors: yes
+
+- block:
+  - name: Install containerlab
+    ansible.builtin.shell: bash -c "$(curl -sL https://get.containerlab.dev)"
+    become: yes
+
+  - name: Containerlab relabling
+    ansible.builtin.command: semanage fcontext -a -t textrel_shlib_t /usr/bin/containerlab
+    become: yes
+
+  - name: Containerlab restorecon
+    ansible.builtin.command: restorecon /usr/bin/containerlab
+    become: yes
+  when: c_install.stat.exists is false
+
+- name: Create student user
+  ansible.builtin.user: 
+    name: student
+    password: "rh adv workshop"
+  become: yes
+
+- name: Check for cloned repo
+  ansible.builtin.stat:
+    path: /home/student/advanced-networking-workshop
+  register: git_cloned
+  become: yes
+
+- name: Clone advanced networking workshop git repo
+  ansible.builtin.git:
+    repo: "https://github.com/mglantz/advanced-networking-workshop"
+    dest: /home/student/advanced-networking-workshop
+    clone: yes
+  become: yes
+  when: git_cloned.stat.exists is false
+
+- name: Change ownership of cloned repo
+  ansible.builtin.command: "chown student:student /home/student/advanced-networking-workshop -R"
+  become: yes
+
+- name: Configure student sudoers rights
+  ansible.builtin.copy:
+    src: files/student
+    dest: /etc/sudoers.d/student
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+
+- name: Copy student bash_profile
+  ansible.builtin.copy:
+    src: files/bash_profile
+    dest: /home/student/.bash_profile
+    owner: student
+    group: student
+    mode: 0644
+  become: yes
+
+- name: Ensure correct rights on SSH key
+  command: chmod 400 /home/student/advanced-networking-workshop/scripts/id_rsa
+  become: yes
+
+- name: Copy Arista cEOS container file to systems
+  ansible.builtin.copy:
+    src: files/cEOS64-lab-4.32.0F.tar.tar
+    dest: /home/student/cEOS64-lab-4.32.0F.tar.tar
+    owner: student
+    group: student
+  become: yes
+
+- name: Podman import on cEOS container file
+  command: podman import /home/student/cEOS64-lab-4.32.0F.tar.tar ceos:4.32.0F
+  become: yes

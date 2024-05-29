@@ -1,0 +1,10 @@
+---
+- name: Install advanced networking workshop
+  hosts: localhost
+
+- name: Create RHEL 9 instances
+  ansible.builtin.import_playbook: rhel9-instance.yml
+
+- name: Setup Containerlab environment
+  ansible.builtin.import_playbook: containerlab-setup.yml
+ 
