@@ -8,4 +8,6 @@
     ansible.builtin.include_role:
       name: ansible_ssa.general.instance
     vars:
-      instance_name: labsystem2
+      instance_name: "{{lab_name}}{{item}}"
+    with_sequence:
+      - "1-{{ lab_system_nr }}"

@@ -1,4 +1,11 @@
 ---
+
+# Name of your lab (becomes your hostname, when using DNS)
+lab_name: networklab
+
+# Number of lab systems to spin up
+lab_system_nr: 1
+
 type: ec2
 instance_name: studentlab
 instance_flavor: c5.4xlarge
