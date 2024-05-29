@@ -115,7 +115,7 @@ This is where you can browse files in the lab.
 11. Finally, we will open up a terminal to the underlying Linux operating system. Click on the three stripes on the top of the left hand side menu, then: Terminal > New Terminal.
 ![Terminal](images/10_terminal.png)
 
-12. Please observe that if you are asked to run commands during the lab, this is where that happens. As shown below.
+12. Please observe that if you are asked to run commands during the lab, this is where that happens. As shown below. Also observe that you can adjust how large part the various things in the browser (file browser, open files and the terminal) takes up.
 ![Terminal](images/11_terminal.png)
 
 You are now done with the introduction to the lab and are ready to start learn about advanced networking automation using Ansible.
