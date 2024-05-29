@@ -1,0 +1,14 @@
+server {
+    listen 80;
+    listen [::]:80;
+{% for host in groups['containerlab'] %}
+    server_name {{ hostvars[host]['ansible_host']|default(host) }}
+{% endfor %}
+    location / {
+      proxy_pass http://localhost:8080/;
+      proxy_set_header Host $http_host;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection upgrade;
+      proxy_set_header Accept-Encoding gzip;
+    }
+}

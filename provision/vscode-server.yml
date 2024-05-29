@@ -1,0 +1,8 @@
+- name: Install vscode-server
+  hosts: containerlab
+  vars_files:
+    - vars/vars.yml
+  tasks:
+  - name: Create VMs where Containerlab runs
+    ansible.builtin.include_role:
+      name: vscodeserver

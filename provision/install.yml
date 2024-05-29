@@ -7,4 +7,7 @@
 
 - name: Setup Containerlab environment
   ansible.builtin.import_playbook: containerlab-setup.yml
+
+- name: Setup VScode-server
+  ansible.builtin.import_playbook: vscode-server.yml
  
