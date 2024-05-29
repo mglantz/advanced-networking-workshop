@@ -16,6 +16,7 @@ Scroll down past the overview if you want information about how to install this 
 0.4: Lab graphics
 0.5: If something goes wrong
 0.6: Preparing to do the lab
+0.7: Accessing the lab for the first time
 ```
 
 ### [Section 1: Fundamentals, test automation, information related tasks](labs/lab-1/README.md)

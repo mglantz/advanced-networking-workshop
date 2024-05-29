@@ -6,6 +6,7 @@
 0.4: Lab graphics
 0.5: If something goes wrong
 0.6: Preparing to do the lab
+0.7: Accessing the lab for the first time
 ```
 
 # 0.1 Introduction to the workshop 
