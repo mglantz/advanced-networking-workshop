@@ -67,21 +67,57 @@ If by some reason you get stuck in a lab - then here's what you should do. **Fol
 :exclamation: On purpose, security in this lab has not been made a priority, that is so you as a student get more freedom to learn. You have passwordless admin access on all systems. With that said, if you do something which is outside of the labs and break your systems, _you get to keep all the pieces_ ;) 
 
 :boom: Make sure you have the required tools to do the lab. The tools are listed below:
-* An SSH client. On Linux and Mac, use the native ssh client in a terminal. On Windows, you can use PuTTy https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) if nothing else is available.
-* A web browser (to view this page).
+* A web browser (to view this page and the code-server / terminal).
 
-:boom: Review the overview of the lab environment.
-
-:exclamation: PLEASE NOTE. DO NOT execute any of the labs from your local laptop as that will not work out of the box.
-
-:exclamation: The systems you will be working on runs Fedora Linux 39, if you are new to Linux, see below for a simple guide for common commands: 
+:exclamation: The systems you will be working on runs Red Hat Enterprise Linux 9.4, if you are new to Linux, see below for a simple guide for common commands: 
 * **Linux cheat sheet**: https://files.fosswire.com/2007/08/fwunixref.pdf
 
-:exclamation: Once in the system, you have to use one of the text based text editors (nano, vim, emacs, joe) available.
+:exclamation: If you edit files in the terminal, you have to use one of the text based text editors (nano, vim, emacs, joe) available.
 Use below links as reference when needed. For now, continue on:
 * **nano**: https://wiki.gentoo.org/wiki/Nano/Basics_Guide
 * **vi/vim**: https://vim.rtorr.com/ 
 * **emacs** Congratulations, you obviously know what you are doing already
+
+# 0.7 Accessing the lab for the first time
+
+1. Ensure you have received an URL which you access the lab using your web browser. Please note. This lab has been tested using Chrome and Firefox. If you use anything else, you are on your own.
+
+2. Open up your web browser and access the web based Visual Studio code environment, as shown below and enter in the workshop password.
+The workshop password is _rhadvnetworkshop2024_
+![Logging in](images/1_welcome.png)
+
+3. Next, you select a visual theme and also ensure to click on "Rich support for all your language". After that click "Mark as done".
+![Selection](images/2_selection.png)
+
+4. Now we will install the Ansible extention as well. Click on the three stripes on the left hand side menu and select View > Extentions.
+![Extensions](images/3_extensions.png)
+
+5. Type in "ansible" in the search field and click "Install" on the one labeled _redhat_.
+![Extensions](images/4_extensions.png)
+
+6. Validate that once the Ansible extension has been installed - it look as below.
+![Extensions](images/5_extensions.png)
+
+7. Next, click on the left hand side menu item symbolized by two documents, and select "Open Folder". Then select "/home/student/advanced-networking-workshop" in the windows which opens in the middle of the window and click on "OK".
+This is where you can browse files in the lab.
+![Folder](images/6_folder.png)
+
+8. Select "Yes, I trust the authors" to if you want to do that.
+![Trust](images/7_trust.png)
+
+9. You create new files by clicking on the "New file" symbol with a + superimposed over a document. Remember this for when you are asked to create files during the lab.
+![Files](images/8_file.png)
+
+10. Observe how files opened or created appears as separate tabs, just like in a web browser.
+![Files](images/9_file.png)
+
+11. Finally, we will open up a terminal to the underlying Linux operating system. Click on the three stripes on the top of the left hand side menu, then: Terminal > New Terminal.
+![Terminal](images/10_terminal.png)
+
+12. Please observe that if you are asked to run commands during the lab, this is where that happens. As shown below.
+![Terminal](images/11_terminal.png)
+
+You are now done with the introduction to the lab and are ready to start learn about advanced networking automation using Ansible.
 
 ```
 End-of-lab
