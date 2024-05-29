@@ -65,6 +65,10 @@ If by some reason you get stuck in a lab - then here's what you should do. **Fol
 
 :exclamation: Do not skip any labs, the labs depend on the previous ones to be completed. You need to do them in sequencial order.
 
+The lab environment which is provided to each student runs in a single Linux server, which you are provided access to, as shown below:
+
+![Overview](images/0_overview.png)
+
 :exclamation: On purpose, security in this lab has not been made a priority, that is so you as a student get more freedom to learn. You have passwordless admin access on all systems. With that said, if you do something which is outside of the labs and break your systems, _you get to keep all the pieces_ ;) 
 
 :boom: Make sure you have the required tools to do the lab. The tools are listed below:
