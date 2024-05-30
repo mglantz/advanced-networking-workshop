@@ -268,7 +268,7 @@ WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_table
 ```
 $ sudo containerlab --runtime podman deploy -t lab1.yml --reconfigure
 INFO[0000] Containerlab v0.54.2 started                 
-INFO[0000] Parsing & checking topology file: containerlab-basic.yml 
+INFO[0000] Parsing & checking topology file: lab1.yml 
 WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_tables failed: exec format error" 
 INFO[0000] Removing /home/mglantz/advanced-networking-workshop/containerlab/clab-lab1 directory... 
 INFO[0000] Creating lab directory: /home/mglantz/advanced-networking-workshop/containerlab/clab-lab1 
@@ -281,8 +281,8 @@ INFO[0018] Adding ssh config for containerlab nodes
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 | # |             Name              | Container ID |         Image          | Kind |  State  |   IPv4 Address   |     IPv6 Address      |
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
-| 1 | clab-containerlab-basic-leaf1 | 0bc156845e92 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.144/24 | 2001:172:20:20::90/64 |
-| 2 | clab-containerlab-basic-leaf2 | 684d465b58a4 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.145/24 | 2001:172:20:20::91/64 |
+| 1 | clab-lab1-leaf1 | 0bc156845e92 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.144/24 | 2001:172:20:20::90/64 |
+| 2 | clab-lab1-leaf2 | 684d465b58a4 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.145/24 | 2001:172:20:20::91/64 |
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 ```
 
@@ -296,7 +296,7 @@ End of solution: Task 4
 
 :boom: Task 5: Run the "scripts/ansibe_hosts.sh basic" command to generate a properly configured Ansible inventory ($LABDIR/inventory) and accept SSH fingerprints
 ```
-../scripts/ansible_hosts.sh basic
+../scripts/ansible_hosts.sh lab1
 ```
 Please note that a successful run of the command does not generate any output. 
 
@@ -321,8 +321,8 @@ ansible_network_os=arista.eos.eos
 ansible_connection=ansible.netcommon.network_cli
 
 [leafs]
-clab-containerlab-basic-leaf1 ansible_host=172.20.20.144
-clab-containerlab-basic-leaf2 ansible_host=172.20.20.145
+clab-lab1-leaf1 ansible_host=172.20.20.144
+clab-lab1-leaf2 ansible_host=172.20.20.145
 ```
 
 Please note that IP addresses in your inventory file likely will differ.
