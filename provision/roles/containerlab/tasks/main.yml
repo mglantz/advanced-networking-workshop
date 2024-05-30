@@ -57,7 +57,7 @@
   become_user: student
 
 - name: Install pip3 dependency
-  command: pip3 install ansible-pylibssh
+  command: pip3 install ansible-pylibssh ansible-lint
   become: yes
   become_user: student
 
