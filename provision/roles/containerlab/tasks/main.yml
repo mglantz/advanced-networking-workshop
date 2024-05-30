@@ -1,6 +1,11 @@
 ---
 # tasks file for containerlab
 
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ ansible_host }}"
+  become: yes
+
 - name: Add Ansible Automation Platform subscription pool
   community.general.redhat_subscription:
     state: present
@@ -54,7 +59,7 @@
 - name: Create student user
   ansible.builtin.user: 
     name: student
-    password: "rh adv workshop"
+    password: "{{ student_pass }}"
   become: yes
 
 - name: Check for cloned repo
@@ -93,8 +98,31 @@
     mode: 0644
   become: yes
 
+- name: Make .ssh directory for student user
+  ansible.builtin.file:
+    path: /home/student/.ssh
+    state: directory
+    owner: student
+    group: student
+    mode: 0700
+  become: yes
+
 - name: Ensure correct rights on SSH key
-  command: chmod 400 /home/student/advanced-networking-workshop/scripts/id_rsa
+  ansible.builtin.command: chmod 400 /home/student/advanced-networking-workshop/scripts/id_rsa
+  become: yes
+
+- name: New sshd configuration
+  ansible.builtin.copy:
+    src: files/sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+  become: yes
+
+- name: Restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
   become: yes
 
 - name: Copy Arista cEOS container file to systems

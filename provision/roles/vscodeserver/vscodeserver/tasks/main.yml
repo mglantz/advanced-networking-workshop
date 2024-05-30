@@ -1,0 +1,85 @@
+---
+# tasks file for vscodeserver
+
+- name: Enable EPEL 9
+  ansible.builtin.dnf:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    disable_gpg_check: true
+    state: present
+  become: yes
+
+- name: Install nginx and certbot
+  ansible.builtin.dnf:
+    name:
+      - nginx
+      - certbot
+      - python3-certbot-nginx
+  become: yes
+
+- name: Check for vscode-server
+  ansible.builtin.stat:
+    path: /usr/bin/code-server
+  register: vscode_server
+  ignore_errors: yes
+
+- name: Ugly install of vscode-server
+  ansible.builtin.shell: "curl -fsSL https://code-server.dev/install.sh | sh"
+  when: vscode_server.stat.exists is false
+  become: yes
+
+- name: Create vscode-server config directory
+  ansible.builtin.file:
+    path: /home/student/.config/code-server
+    state: directory
+    recurse: yes
+  become: yes
+
+- name: Install vscode-server config
+  ansible.builtin.copy:
+    src: files/config.yaml
+    dest: /home/student/.config/code-server/config.yaml
+    owner: student
+    group: student
+  become: yes
+
+- name: Start vscode-server for student user
+  ansible.builtin.command: systemctl enable --now code-server@student
+  become: yes
+
+- name: Copy default nginx.conf configuration
+  ansible.builtin.template:
+    src: templates/nginx-default.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+  become: yes
+
+- name: Get letsencrypt certficate
+  command: "certbot --non-interactive --redirect --agree-tos --nginx -d {{ ansible_host }} -m {{ lab_email }}"
+  become: yes
+
+- name: Copy proper nginx.conf configuration
+  ansible.builtin.template:
+    src: templates/nginx.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+  become: yes
+
+- name: Ugly nginx hack
+  ansible.builtin.command: killall -9 nginx
+  become: yes
+
+- name: Enable nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+  become: yes
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  ansible.builtin.seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+  become: yes
