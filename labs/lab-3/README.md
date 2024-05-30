@@ -30,10 +30,11 @@ For this lab, there are two already prepared containerlab files:
 * The -start version will setup your starting point for automation, switches with only auth and a management interface setup, like we before in our labs.
 * The -full version will setup everything fully configured, allowing you to explore the setup in details.
 
-:boom: Task 1: Setup our starting point by running below commands:
+:boom: Task 1: Destroy the previous environment and setup our starting point by running below commands:
 ```
 $ cd $LABDIR/containerlab
-$ sudo containerlab --runtime podman deploy -t lab3-start.yml --reconfigure
+$ sudo containerlab --runtime podman destroy -t lab2.yml
+$ sudo containerlab --runtime podman deploy -t lab3-start.yml
 $ ../scripts/ansible_hosts.sh lab3
 ```
 
