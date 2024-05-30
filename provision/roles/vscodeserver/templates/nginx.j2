@@ -12,9 +12,7 @@ http {
 
     server {
         listen       80;
-{% for host in groups['containerlab'] %}
-        server_name {{ hostvars[host]['ansible_host']|default(host) }};
-{% endfor %}
+        server_name {{ hostvars[inventory_hostname]['ansible_host']|default(host) }};
 
         location / {
         rewrite ^ https://$host$request_uri? permanent;
@@ -27,16 +25,12 @@ http {
     }
 
     server {
-{% for host in groups['containerlab'] %}
-        server_name {{ hostvars[host]['ansible_host']|default(host) }};
-{% endfor %}
+        server_name {{ hostvars[inventory_hostname]['ansible_host']|default(host) }};
 
         listen [::]:443 ssl ipv6only=on; # managed by Certbot
         listen 443 ssl; # managed by Certbot
-{% for host in groups['containerlab'] %}
-        ssl_certificate /etc/letsencrypt/live/{{ hostvars[host]['ansible_host']|default(host) }}/fullchain.pem; # managed by Certbot
-        ssl_certificate_key /etc/letsencrypt/live/{{ hostvars[host]['ansible_host']|default(host) }}/privkey.pem; # managed by Certbot
-{% endfor %}
+        ssl_certificate /etc/letsencrypt/live/{{ hostvars[inventory_hostname]['ansible_host']|default(host) }}/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/{{ hostvars[inventory_hostname]['ansible_host']|default(host) }}/privkey.pem; # managed by Certbot
         include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 

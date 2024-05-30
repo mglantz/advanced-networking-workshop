@@ -33,9 +33,7 @@ http {
 
     server {
         listen       80;
-{% for host in groups['containerlab'] %}
-        server_name {{ hostvars[host]['ansible_host']|default(host) }};
-{% endfor %}
+        server_name {{ hostvars[inventory_hostname]['ansible_host']|default(host) }};
 
 
         #charset koi8-r;

@@ -27,6 +27,24 @@
       - ansible-core
       - ansible-test
   become: yes
+  ignore_errors: yes
+
+- name: Clear cache
+  command: dnf clean all -y
+  become: yes
+
+- name: Install RPM dependencies
+  ansible.builtin.dnf:
+    name:
+      - podman
+      - podman-docker
+      - git
+      - python3
+      - python3-pip
+      - curl
+      - ansible-core
+      - ansible-test
+  become: yes
 
 - name: Enable podman service
   ansible.builtin.service:
