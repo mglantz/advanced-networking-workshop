@@ -151,6 +151,8 @@ exit
 $
 ```
 
+If you made it all the way here, what else is there to learn? Well, plenty ofcourse. But you are well on your way already to be able to call yourself an Ansible network automation specialist.
+
 ```
 End-of-workshop
 ```
