@@ -296,7 +296,7 @@ End of solution: Task 4
 
 :boom: Task 5: Run the "scripts/ansibe_hosts.sh basic" command to generate a properly configured Ansible inventory ($LABDIR/inventory) and accept SSH fingerprints
 ```
-$ ../scripts/ansible_hosts.sh basic
+../scripts/ansible_hosts.sh basic
 ```
 Please note that a successful run of the command does not generate any output. 
 
@@ -304,8 +304,8 @@ Please note that a successful run of the command does not generate any output.
 
 :boom: Task 6: Validate that your have a correctly configured inventory file.
 ```
-$ cd $LABDIR
-$ cat inventory
+cd $LABDIR
+cat inventory
 ```
 
 <details>
