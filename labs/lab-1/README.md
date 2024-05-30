@@ -37,16 +37,16 @@ Main differences between network vendors are:
 
 ## 1.1.2 Network test automation (using ContainerLab)
 Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. A fundamental of programming is testing your code.
-The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test or molecule.
+The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test, flake8 and more.
 You can read more about this on the [ansible.com dev-guide for testing](https://docs.ansible.com/ansible/latest/dev_guide/testing.html).
 
-When things becomes specific for networking, is when we are doing more proper integration tests, where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not common that people use virtualized or containerized test environments for router or switch related configuration changes.
+When things becomes specific for networking, is when we are doing more proper integration tests, where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not as common that people use virtualized or containerized test environments to test changes to their network elements.
 
 With this said, allow us to introduce, [containerlab](https://containerlab.dev), which is a tool which allows you to spin up container based working environments, using a CLI. [Containerlab is also open source, distributed with a BSD license](https://github.com/srl-labs/containerlab/).
 
 In order for you to be able to create an CI/CD flow, where newly created network automation is automatically tested and pushed to your environments, you will need to resolve automated testing. Of course, in order to be 100% certain of what a change does, you will need an actual physical test environment to test switch or routing related configuration. But as that is still fairly rare, starting with a containerized test environment goes faster and requires little budget for upfront purcheses of equipment, as containerlab can run on a normal virtual machine.
 
-![Overview of test workflow](ansible_working_testing.png)
+![Overview of test workflow](ansible_network_testing.png)
 
 Quoting from the containerlab webpage, the more specifically state:
 ```
