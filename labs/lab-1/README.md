@@ -819,7 +819,7 @@ Now, let's create some smarter versions of the playbooks we have previously crea
 ```
 - name: "Gather facts from Arista switches"
   hosts: leafs
-  gather_facts: no
+  gather_facts: yes
 
   tasks:
     - name: Gather facts (eos)
