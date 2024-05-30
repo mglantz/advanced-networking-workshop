@@ -48,7 +48,7 @@ In order for you to be able to create an CI/CD flow, where newly created network
 
 ![Overview of test workflow](ansible_network_testing.png)
 
-Quoting from the containerlab webpage, the more specifically state:
+Quoting from the containerlab webpage, that more specifically state:
 ```
 Containerlab focuses on the containerized Network Operating Systems,
 which are typically used to test network features and designs, such as:
@@ -122,7 +122,11 @@ aboot			boot-config  fastpkttx.backup  if-wait.sh	 persist   SsuRestoreLegacy.lo
 AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuRestore.log	 system_mac_address
 ```
 
-Now that you understand a bit better about containerlab, it's time to create your own network test environment.
+:exclamation: Now that you understand a bit better about containerlab, it's time to create your own network test environment. To do so, you need to go to your terminal, shown below.
+
+![Terminal](terminal.png)
+
+:exclamation: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
 
 :boom: Task 1: Go to your $LABDIR/containerlab directory.
 ```
