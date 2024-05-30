@@ -970,9 +970,9 @@ The first thing we'll do is to load device specific static config files into the
 :boom: Task 1: Apply the below desired state (the one we used before) to the leaf1 and leaf2 switches, using the arista.eos.eos_config module and static configuration files.
 * Name the playbook config_static.yml
 * Use two separate plays in your playbook, where each play targets a separate switch (leaf1 or leaf2).
-:exclamation: If you do not create separate plays or otherwise manage targeting, you will misconfigure your switches.
-:exclamation: Normally, you would fetch the running config with a simple "sh run" or etc. As you have reset the lab environment you will be provided with the required static
-:exclamation: The formatting should follow the vendor standard, when it comes to normal config intendation. For Arista, that is 3 spaces for intendation.
+* :exclamation: If you do not create separate plays or otherwise manage targeting, you will misconfigure your switches.
+* :exclamation: You can fetch the running config with a simple "sh run" or fetch it below. PS. You do not need the complete running config. Only the sections you need to accomplish the target state.
+* :exclamation: The formatting should follow the vendor standard, when it comes to normal config intendation. For Arista, that is 3 spaces for intendation.
 
 <details>
 <summary>:exclamation: Show desired running config for switches</summary>
