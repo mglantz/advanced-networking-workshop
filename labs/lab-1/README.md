@@ -21,12 +21,12 @@ This is what we will learn about in this first section of the workshop.
 1.1.6: Using templates
 ```
 ## 1.1: Different Ansible approaches to automating network devices
-Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what vendor you may be using.
+Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what thing you use Ansible to automate.
 
 :thumbsup: With that said, we would like to remind you of Ansible's three guiding development principles:
 * Complexity kills productivity (keep it simple, it makes it robust, scalable and easy to maintain)
 * Optimize for readability (makes for easier collaboration, maintenance and makes it more robust)
-* Think declaratively (Ansible is a state engine, do not try to 'code' with playbooks)
+* Think declaratively (Ansible is a state engine, do not try to 'code' with playbooks, that you can do with modules)
 
 ## 1.1.1: Vendor differences
 When doing Ansible automation outside of the domain of networking, we are used to use the same settings and the same modules, even when we automate against different operating systems. When it comes to networking, this is not always true.
