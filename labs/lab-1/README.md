@@ -96,8 +96,8 @@ INFO[0029] Adding ssh config for containerlab nodes
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 | # |             Name              | Container ID |         Image          | Kind |  State  |   IPv4 Address   |     IPv6 Address      |
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
-| 1 | clab-containerlab-basic-leaf1 | bebd3333ec69 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.147/24 | 2001:172:20:20::93/64 |
-| 2 | clab-containerlab-basic-leaf2 | c5ca2e2609e5 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.146/24 | 2001:172:20:20::92/64 |
+| 1 | clab-lab1-leaf1 | bebd3333ec69 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.147/24 | 2001:172:20:20::93/64 |
+| 2 | clab-lab1-leaf2 | c5ca2e2609e5 | localhost/ceos:4.32.0F | ceos | running | 172.20.20.146/24 | 2001:172:20:20::92/64 |
 +---+-------------------------------+--------------+------------------------+------+---------+------------------+-----------------------+
 ```
 
@@ -425,16 +425,16 @@ PLAY [Ping leaf switches] ******************************************************
 
 TASK [Gathering Facts] **************************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf2]
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf2]
+ok: [clab-lab1-leaf1]
 
 TASK [Validate that we have a working connection to each switch] ********************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
-ok: [clab-containerlab-basic-leaf2]
+ok: [clab-lab1-leaf1]
+ok: [clab-lab1-leaf2]
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+clab-lab1-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab1-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ```
@@ -547,11 +547,11 @@ PLAY [Show int stat on leaf switches] ******************************************
 
 TASK [Show summary of interface statuses] *******************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf2]
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf2]
+ok: [clab-lab1-leaf1]
 
 TASK [Print collected interface information] ****************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": [
         [
             "Port       Name   Status       Vlan     Duplex Speed  Type            Flags Encapsulation",
@@ -561,7 +561,7 @@ ok: [clab-containerlab-basic-leaf1] => {
         ]
     ]
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "msg": [
         [
             "Port       Name   Status       Vlan     Duplex Speed  Type            Flags Encapsulation",
@@ -573,8 +573,8 @@ ok: [clab-containerlab-basic-leaf2] => {
 }
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
+clab-lab1-leaf1 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab1-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0 
 ```
 
 ```
@@ -641,7 +641,7 @@ End of solution: Task 1
 <p>
 
 ```
-$ cat $LABDIR/backups/clab-containerlab-basic-leaf1/clab-containerlab-basic-leaf1.cfg
+$ cat $LABDIR/backups/clab-lab1-leaf1/clab-lab1-leaf1.cfg
 ...
 ```
 
@@ -737,23 +737,23 @@ PLAY [Document Arista switches] ************************************************
 
 TASK [Gather facts (eos)] ***********************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf1]
-ok: [clab-containerlab-basic-leaf2]
+ok: [clab-lab1-leaf1]
+ok: [clab-lab1-leaf2]
 
 TASK [Display some facts] ***********************************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": "Collecting information about leaf1 running eos 4.32.0F-36401836.4320F (engineering build)"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "msg": "Collecting information about leaf2 running eos 4.32.0F-36401836.4320F (engineering build)"
 }
 
 TASK [Write facts to disk using a template] *****************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf1]
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-clab-containerlab-basic-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab1-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab1-leaf2 : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 $ cat network-documentation.txt 
 Hostname: leaf1
@@ -900,34 +900,34 @@ PLAY [Gather facts from Arista switches] ***************************************
 
 TASK [Gather facts (eos)] ***********************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf2]
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf2]
+ok: [clab-lab1-leaf1]
 
 TASK [Tell user we found an Arista switch] ******************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": "Arista switch detected"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "msg": "Arista switch detected"
 }
 
 TASK [Collect show version information] *********************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
-ok: [clab-containerlab-basic-leaf2]
+ok: [clab-lab1-leaf1]
+ok: [clab-lab1-leaf2]
 
 TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "changed": false,
     "msg": "All is well"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "changed": false,
     "msg": "All is well"
 }
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
-clab-containerlab-basic-leaf2 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+clab-lab1-leaf1 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+clab-lab1-leaf2 : ok=4    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ```
@@ -1016,50 +1016,50 @@ PLAY [Gather facts from Arista switches] ***************************************
 
 TASK [Gather facts (eos)] ***********************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf2]
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf2]
+ok: [clab-lab1-leaf1]
 
 TASK [Load vars file based on ansible_net_system] ***********************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
-ok: [clab-containerlab-basic-leaf2]
+ok: [clab-lab1-leaf1]
+ok: [clab-lab1-leaf2]
 
 TASK [Tell user we found an Arista switch] ******************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": "Arista switch detected"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "msg": "Arista switch detected"
 }
 
 TASK [Collect show version information] *********************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
-ok: [clab-containerlab-basic-leaf2]
+ok: [clab-lab1-leaf1]
+ok: [clab-lab1-leaf2]
 
 TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "changed": false,
     "msg": "All is well"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "changed": false,
     "msg": "All is well"
 }
 
 TASK [debug] ************************************************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": "premium"
 }
-ok: [clab-containerlab-basic-leaf2] => {
+ok: [clab-lab1-leaf2] => {
     "msg": "premium"
 }
 
 TASK [Fail if SLA is not premium] ***************************************************************************************************************************************************
-skipping: [clab-containerlab-basic-leaf1]
-skipping: [clab-containerlab-basic-leaf2]
+skipping: [clab-lab1-leaf1]
+skipping: [clab-lab1-leaf2]
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
-clab-containerlab-basic-leaf2 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0  
+clab-lab1-leaf1 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+clab-lab1-leaf2 : ok=6    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0  
 ```
 
 ```
@@ -1141,24 +1141,24 @@ End of solution: Task 1
 <p>
 
 ```
-$ ansible-playbook -i inventory arp-check.yml -e "interface_name=Ma0" --limit "clab-containerlab-basic-leaf1"
+$ ansible-playbook -i inventory arp-check.yml -e "interface_name=Ma0" --limit "clab-lab1-leaf1"
 
 PLAY [Check ARP table on port] ******************************************************************************************************************************************************
 
 TASK [Gathering Facts] **************************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf1]
 
 TASK [Fetch ARP table for Ma0] ******************************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf1]
 
 TASK [Printing ARP table for Ma0] ***************************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "msg": " [['Address         Age (sec)  Hardware Addr   Interface', '172.20.20.1       0:00:00  72a0.ec69.8301  Management0']]"
 }
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+clab-lab1-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 
 ```
@@ -1244,31 +1244,31 @@ End of solution: Task 3
 <p>
 
 ```
-$ ansible-playbook -i inventory port_check.yml --limit "clab-containerlab-basic-leaf1"
+$ ansible-playbook -i inventory port_check.yml --limit "clab-lab1-leaf1"
 
 PLAY [Check for port issues] ********************************************************************************************************************************************************
 
 TASK [Gathering Facts] **************************************************************************************************************************************************************
 [WARNING]: ansible-pylibssh not installed, falling back to paramiko
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf1]
 
 TASK [Fetch port status on switch] **************************************************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1]
+ok: [clab-lab1-leaf1]
 
 TASK [Checking so that we DO NOT have notconnect port states on switch] *************************************************************************************************************
-ok: [clab-containerlab-basic-leaf1] => {
+ok: [clab-lab1-leaf1] => {
     "changed": false,
     "msg": "All ports are connected."
 }
 
 TASK [Fetch interface information] **************************************************************************************************************************************************
-skipping: [clab-containerlab-basic-leaf1]
+skipping: [clab-lab1-leaf1]
 
 TASK [Print interface information] **************************************************************************************************************************************************
-skipping: [clab-containerlab-basic-leaf1]
+skipping: [clab-lab1-leaf1]
 
 PLAY RECAP **************************************************************************************************************************************************************************
-clab-containerlab-basic-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
+clab-lab1-leaf1 : ok=3    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 ```
 
 ```
