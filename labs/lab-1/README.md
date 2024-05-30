@@ -128,9 +128,9 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 :exclamation: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
 
-:boom: Task 1: Go to your $LABDIR/containerlab directory.
+:boom: Task 1: Go to your $LABDIR/containerlab directory and run below command:
 ```
-$ cd $LABDIR/containerlab
+cd $LABDIR/containerlab
 ```
 ---
 
