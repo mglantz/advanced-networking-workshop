@@ -32,8 +32,8 @@ Ansible is versatile, meaning you can approach automating your network in many d
 When doing Ansible automation outside of the domain of networking, we are used to use the same settings and the same modules, even when we automate against different operating systems. When it comes to networking, this is not always true.
 
 Main differences between network vendors are:
-* How you connected to the devices. [See list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html)
-* What modules you use to perform tasks like, fact gathering, configuration changes, command execution. [See list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html#settings-by-platform)
+* How you connected to the devices. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html)
+* What modules you use to perform tasks like, fact gathering, configuration changes, command execution. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html#settings-by-platform)
 
 ## 1.1.2 Network test automation (using ContainerLab)
 Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. A fundamental of programming is testing your code.
