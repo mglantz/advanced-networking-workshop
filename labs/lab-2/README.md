@@ -32,6 +32,21 @@ Before we get started with configuring our switches, we need to build a new cont
 
 This means you will need to create a new containerlab topology file, which creates a setup with the spine switches in place as well.
 
+:boom: Task 0: Before you create the new setup, let's destroy the previous environment. You do that by runing below commands:
+```
+cd $LABDIR/containerlab
+sudo containerlab --runtime podman destroy -t lab1.yml
+```
+
+Expected output is:
+```
+$ sudo containerlab --runtime podman destroy -t lab1.yml
+INFO[0000] Parsing & checking topology file: lab1.yml   
+INFO[0000] Destroying lab: lab1                         
+INFO[0010] Removing containerlab host entries from /etc/hosts file 
+INFO[0010] Removing ssh config for containerlab nodes 
+```
+
 :boom: Task 1: Create a new containerlab topology file, which reflects above setup. Also, more specifically:
 * Save your work in a the containerlab dictory and name the file lab1.yml
 * You should have two Arista cEOS switches which are connected to each other, as follows:
