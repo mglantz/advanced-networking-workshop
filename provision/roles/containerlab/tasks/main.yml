@@ -141,22 +141,13 @@
     mode: 0700
   become: yes
 
-- name: Ensure correct rights on SSH key
-  ansible.builtin.command: chmod 400 /home/student/advanced-networking-workshop/scripts/id_rsa
-  become: yes
-
-- name: New sshd configuration
-  ansible.builtin.copy:
-    src: files/sshd_config
-    dest: /etc/ssh/sshd_config
-    owner: root
-    group: root
-  become: yes
-
-- name: Restart sshd
-  ansible.builtin.service:
-    name: sshd
-    state: restarted
+- name: Put in-place the SSH key file for the student user
+  copy:
+    src: files/advanced-networking-workshop_id_rsa
+    dest: /home/student/.ssh/advanced-networking-workshop_id_rsa
+    user: student
+    group: student
+    mode: 0400
   become: yes
 
 - name: Copy Arista cEOS container file to systems
