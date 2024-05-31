@@ -10,4 +10,11 @@
 
 - name: Setup VScode-server
   ansible.builtin.import_playbook: vscode-server.yml
+
+- name: Print list of lab systems
+  hosts: all
+  tasks:
+    - name: Labsystems
+      ansible.builtin.debug:
+        msg: "https://{{ ansible_host }}"
  

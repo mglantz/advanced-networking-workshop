@@ -46,20 +46,12 @@
       - ansible-test
   become: yes
 
-- name: Install ansible.netcommon collection
-  command: ansible-galaxy collection install ansible.netcommon
-  become: yes
-  become_user: student
-
-- name: Install arista.eos collection
-  command: ansible-galaxy collection install arista.eos
-  become: yes
-  become_user: student
-
 - name: Install pip3 dependency
-  command: pip3 install ansible-pylibssh ansible-lint
+  ansible.builtin.pip:
+    name:
+      - ansible-pylibssh
+      - ansible-lint
   become: yes
-  become_user: student
 
 - name: Enable podman service
   ansible.builtin.service:
@@ -93,6 +85,15 @@
   ansible.builtin.user: 
     name: student
     password: "{{ student_pass }}"
+  become: yes
+
+- name: Pre-install collections for student user
+  ansible.builtin.unarchive:
+    copy: true
+    src: files/collections.tar.gz
+    dest: /home/student/
+    owner: student
+    group: student
   become: yes
 
 - name: Check for cloned repo
