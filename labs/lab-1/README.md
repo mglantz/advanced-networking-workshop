@@ -126,6 +126,10 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 ![Terminal](terminal.png)
 
+:exclatmation: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
+
+![Paste](accept.png)
+
 :exclamation: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
 
 :boom: Task 1: Go to your $LABDIR/containerlab directory and run below command:
