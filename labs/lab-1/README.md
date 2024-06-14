@@ -126,27 +126,27 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 ![Terminal](terminal.png)
 
+---
+
 :boom: Task 2: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
 
 ![Paste](accept.png)
 
-:boom: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
-
-:boom: Task 3: Go to your $LABDIR/containerlab directory and run below command:
-```
-cd $LABDIR/containerlab
-```
 ---
 
-:boom: Task 4: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
+:boom: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
+
+---
+
+:boom: Task 4: Create a simple containerlab definition, as follows:
+* Two Arista switches which are connected to each other
 * Save your work in the containerlab directory and name the file lab1.yml.
-* kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
+* To get an idea of the basic structure of your YAML based topology file, [click here: https://containerlab.dev/quickstart/](https://containerlab.dev/quickstart/)
 * Call your nodes leaf1 and leaf2
-* The switches should be connected to each other via ports eth9 on and eth10 (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
-* startup-config should be ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg for leaf1 and leaf2-start.cfg for leaf2.
-
-:exclamation: To get an idea of the basic structure of your YAML based topology file, [click here: https://containerlab.dev/quickstart/](https://containerlab.dev/quickstart/).
-
+* kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
+* The switches should be connected to each other: (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
+* startup-config should be ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg for leaf1
+* startup-config should be ~/advanced-networking-workshop/containerlab/configs/leaf2-start.cfg for leaf2.
 
 <details>
 <summary>:unlock: Show solution: Task 2</summary>
@@ -179,8 +179,7 @@ End of solution: Task 2.
 
 ---
 
-:boom: Task 3: Now, let's review the configuration used to start up our switches. Run the "cat" command on your leaf1/2.cfg files to view them.
-
+:boom: Task 3: Now, let's review the configuration used to start up our switches. Run the "cat" command in your Linux terminal, to view the ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg/leaf2-start.cfg files, or open them up in VScode.
 
 <details>
 <summary>:unlock: Show example solution: Task 3</summary>
@@ -247,23 +246,22 @@ End of solution: Task 3.
 :exclamation: As you can see, there are a few things we need to setup for us to use the devices for testing, namely:
 * A configured management interface which we can connect to
 * An initial user which we can connect with
-* Means to authenticate with our user (in this case, both a password and a SSH key is configured).
+* Means to authenticate our user (in this case, both a password and a SSH key is configured).
 
 If you SSH to a device in your setup, you will authenticate automatically, that is because the SSH key has been added in your environment.
 
 ---
 
-:boom: Task 4: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, accordingly:
+:boom: Task 4: Next, you are ready to start your lab environment. Use the "sudo containerlab" CLI command, in your terminal, accordingly:
 * Use --runtime podman
 * If you have already tried to deploy the lab once, add the --reconfigure parameter.
 * Run "sudo containerlab --help" to get more information.
-* We need to use sudo, because the workloads are very priviledged in nature.
+* Please note: we need to use sudo, because the workloads are very priviledged in nature.
 
 :exclamation: :exclamation: Below error message is expected and is nothing to worry about. :exclamation: :exclamation:
 ```
 WARN[0004] Unable to load kernel module "ip_tables" automatically "load ip_tables failed: exec format error" 
 ```
-
 
 <details>
 <summary>:unlock: Show example solution: Task 4</summary>
@@ -306,7 +304,7 @@ Please note that a successful run of the command does not generate any output.
 
 ---
 
-:boom: Task 6: Validate that your have a correctly configured inventory file.
+:boom: Task 6: Validate that your have a correctly configured inventory file, by opening it in VScode, or enter below commands in your terminal:
 ```
 cd $LABDIR
 cat inventory
@@ -339,8 +337,10 @@ End of solution.
 
 ---
 
-:boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected.
-
+:boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected. Do so by entering the SSH command in your terminal as shown below:
+```
+$ ssh admin@IP-address
+```
 
 <details>
 <summary>:unlock: Show solution</summary>
