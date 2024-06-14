@@ -107,7 +107,7 @@ The workshop password is _rhadvnetworkshop2024_
 This is where you can browse files in the lab.
 ![Folder](images/6_folder.png)
 
-8. Select "Yes, I trust the authors" to if you want to do that.
+8. Check the "Trust the authors of all files in the parent folder "student" and click "Yes, I trust the authors".
 ![Trust](images/7_trust.png)
 
 9. You create new files by clicking on the "New file" symbol with a + superimposed over a document. Remember this for when you are asked to create files during the lab.
