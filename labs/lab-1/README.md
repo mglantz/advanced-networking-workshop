@@ -370,20 +370,18 @@ End of solution: Task 7.
 
 ---
 
-:boom: Task 8: Next create a simple playbook which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
+:boom: Task 8: Next create a simple playbook (call it ping.yml) which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
 
 <details>
-<summary>:unlock: Show solution: Task 8</summary>
+<summary>:unlock: Show example playbook solution: Task 8</summary>
 
 ```
-cat << 'EOF' >$LABDIR/ping.yml
 - name: Ping leaf switches
   hosts: leafs
   tasks:
     - name: Validate that we have a working connection to each switch
       ansible.builtin.ping:
         data: pong
-EOF
 ```
 
 ```
@@ -415,7 +413,7 @@ End of solution: Task 9.
 
 ---
 
-:boom: Task 10: Next, run the basic playbook stored in $LABDIR/ping.yml against our new switches.
+:boom: Task 10: Next, run the playbook your created (ping.yml) against our new switches. Use the inventory file which was created earlier.
 
 <details>
 <summary>:unlock: Show solution: Task 9</summary>
@@ -450,10 +448,9 @@ End of solution: Task 9.
 ---
 
 Well done! You successfully executed most parts of what we would expected to see in an automated CI/CD pipeline, meaning:
-* Creation of an Ansible playbook
-* Run static code analysis on Ansible playbook
-* Create test environment
-* Run playbook against test environment
+* Runing a static code analysis on Ansible playbook
+* Create of a test environment
+* Runing playbook against test environment
 
 :star: If you like, you can re-deploy your environment and do the test over again.
 
@@ -477,7 +474,8 @@ Next thing which is something you often do when you automate against network ele
 * Performing backups
 * Documenting the network
 * Operational use-cases
-* Adding intelligence to your playbooks
+
+And is also important when you add a little intelligence to your playbooks.
 
 :exclamation: What's special to facts gathering for network devices is that most vendors has their own facts gathering modules. For example:
 * [Cisco IOS Facts gathering](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_facts_module.html)
@@ -587,7 +585,7 @@ End of solution: Task 2
 </p>
 </details>
 
-Well done, later on in the workshop, you will learn some different methods where you can use this type of information to automate various common tasks.
+Well done, later on in the workshop, you will learn some different methods where you can use this type of information to automate common tasks.
 
 ### 1.1.3.2 Performing backups
 A very common scenario when we are pulling information from the network devices is when we are performing backups. You can use the various facts gathering modules to perform a backup, but normally there is a config module you can use for this specific purpose, which is simpler to use. Again, like the fact gathering module, there are unique versions of the config modules for different network vendors. For example:
@@ -598,7 +596,9 @@ A very common scenario when we are pulling information from the network devices 
 
 Now it's time to do something.
 
-:boom: Task 1: Read up on the Arista config module and create a playbook called arista_backup.yml which backups the documentation to the backups folder located in the lab home directory.
+:boom: Task 1: Read up on the Arista config module and create a playbook called arista_backup.yml as follows:
+* create a task which creates a directory called /home/student/advanced-networking-workshop/backups
+* backup the device configuration to the backups directory you created.
 
 :exclamation: You will need to use "become: yes" for this operation.
 
@@ -610,23 +610,18 @@ Now it's time to do something.
 - name: "Backup Arista switches"
   hosts: leafs
   gather_facts: no
-  become: yes
   tasks:
+    - name: Create backup dir
+      file:
+        path: "/home/student/advanced-networking-workshop/backups"
+        state: directory
+
     - name: Backup switch (eos)
       arista.eos.eos_config:
         backup: yes
-      register: backup_eos_location
-
-    - name: Create backup dir
-      file:
-        path: "~/advanced-networking-workshop/backups/{{ inventory_hostname }}"
-        state: directory
-        recurse: yes
-
-    - name: Copy backup files into backups directory
-      copy:
-        src: "{{ backup_eos_location.backup_path }}"
-        dest: "~/advanced-networking-workshop/backups/{{ inventory_hostname }}/{{ inventory_hostname }}.cfg"
+        backup_options:
+          dir_path: /home/student/advanced-networking-workshop/backups
+      become: yes
 ```
 
 ```
@@ -637,11 +632,10 @@ End of solution: Task 1
 
 ---
 
-:boom: Task 2: Now, let's review the backed up configuration, it's located in $LABDIR/backups
-
+:boom: Task 2: Now, let's review the backed up configuration, it's located in $LABDIR/backups. Review it using the terminal or by opening the backup files using VScode.
 
 <details>
-<summary>:unlock: Task 2: Show solution</summary>
+<summary>:unlock: Task 2: Terminal solution</summary>
 <p>
 
 ```
@@ -674,9 +668,10 @@ An example of how to write information to a file using copy and jinja:
           Hostname: {{ hostvars[host].ansible_net_hostname }}
           {% endfor %}
         dest: ~/advanced-networking-workshop/network-documentation.txt
+      run_once: yes
 ```
 
-An example of how to use the "ansible" command to review facts.
+An example of how to use the "ansible" command to review existing facts:
 ```
 $ ansible -i inventory leafs -m arista.eos.eos_facts
 ```
@@ -688,7 +683,6 @@ $ ansible -i inventory leafs -m arista.eos.eos_facts
 <p>
 
 ```
-cat << 'EOF' >$LABDIR/network_documentation.yml
 - name: "Document Arista switches"
   hosts: leafs
   gather_facts: no
@@ -715,7 +709,6 @@ cat << 'EOF' >$LABDIR/network_documentation.yml
           {% endfor %}
         dest: ~/advanced-networking-workshop/network-documentation.txt
       run_once: yes
-EOF
 ```
 
 ```
@@ -805,12 +798,11 @@ Now, let's create some smarter versions of the playbooks we have previously crea
 
 ---
 
-:boom: Task 2: Create a version of below playbook which only uses the eos_facts module when you have detected that it is an Arista switch.
+:boom: Task 2: Create a version of below playbook (eos_facts.yml) which only uses the eos_facts module when you have detected that it is an Arista switch.
 ```
 - name: "Gather facts from Arista switches"
   hosts: leafs 
   gather_facts: yes
-
   tasks:
     - name: Gather facts (eos)
       arista.eos.eos_facts:
@@ -824,7 +816,6 @@ Now, let's create some smarter versions of the playbooks we have previously crea
 - name: "Gather facts from Arista switches"
   hosts: leafs
   gather_facts: yes
-
   tasks:
     - name: Gather facts (eos)
       arista.eos.eos_facts:
@@ -839,14 +830,14 @@ End of solution: Task 2
 
 ---
 
-:boom: Task 3: Next, add a eos_command task which runs "show version", save the output using register and then add an assert tas which validates that the output from "show version" DOES NOT include "Architecture: s390"
+:boom: Task 3: Next, add a eos_command task to previous playbook which runs "show version", save the output using register and then add an assert which validates that the output from "show version" DOES NOT include the content of the variable strange_things, which you set to "Kernel version: 6.5.0-9-generic".
 
 :exclamation: Because of the output we get from the "show version" command, we need to process the output and used search to find what we are looking for, like so:
 ```
 # Below is true, if we DO NOT find it. Eg, list of hits less than 1.
 ansible.builtin.assert:
   that:
-    - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+    - "show_version.stdout_lines | select('search', '{{ strange_things }}') | list | count < 1"
 
 # To construct something which is true, IF we find it, use: count > 0. Eg, list of hits is more than 0.
 ```
@@ -859,11 +850,13 @@ ansible.builtin.assert:
 ```
 - name: "Gather facts from Arista switches"
   hosts: leafs
-  gather_facts: no
-
+  gather_facts: yes
+  vars:
+    strange_thing: "Kernel version: 6.5.0-9-generic"
   tasks:
     - name: Gather facts (eos)
       arista.eos.eos_facts:
+      when: ansible_net_system == 'eos'
 
     - name: Tell user we found an Arista switch
       debug:
@@ -875,10 +868,10 @@ ansible.builtin.assert:
         commands: "show version"
       register: show_version
 
-    - name: Ensure no strange CPU architectures are detected
+    - name: Ensure no strange things are detected
       ansible.builtin.assert:
         that:
-          - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+          - "show_version.stdout_lines | select('search', '{{ strange_thing }}') | list | count < 1"
         fail_msg: "Oh no"
         success_msg: "All is well"
 ```
@@ -891,7 +884,7 @@ End of solution: Task 3
 
 ---
 
-:boom: Task 4: And now you run the playbook against your inventory
+:boom: Task 4: And now you run the playbook against your inventory.
 
 <details>
 <summary>:unlock: Show solution and expected output: Task 4</summary>
@@ -919,7 +912,7 @@ TASK [Collect show version information] ****************************************
 ok: [clab-lab1-leaf1]
 ok: [clab-lab1-leaf2]
 
-TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
+TASK [Ensure no strange things are detected] *****************************************************************************************************************************
 ok: [clab-lab1-leaf1] => {
     "changed": false,
     "msg": "All is well"
@@ -942,17 +935,18 @@ End of solution: Task 4
 
 ---
 
+:star: Try set the strange_things variable to something else on the command line, adding this to your ansible-playbook command: -e strange_things=somethingelse
+
+---
+
 :boom: Task 5: Finally you are going to use variable file naming and the fail module. Do this:
-* Load a variable file, using a task which runs after the eos_facts task.
-* Use the ansible.builtin.include_vars module to load your variable file. 
+* Load a variable file, using ansible.builtin.include_vars in a task which runs after the eos_facts task.
 * Use the {{ ansible_net_system }} fact (it will be set to "eos") in the name of your vars file.
 * Set the following variable in your vars file: switch_sla: "premium"
 * Use the fail module and a when statement to check if switch_sla was set to anything but "premium"
 * Make up a suitable msg for the fail module.
 
 :exclamation: Get some clues of how to do this by reading here: [include_vars module examples](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/include_vars_module.html#examples) and also here [fail module examples](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fail_module.html#examples)
-:exclamation: Please note that 
-
 
 <details>
 <summary>:unlock: Show solution: Task 5</summary>
@@ -966,14 +960,13 @@ switch_sla: "premium"
 # Your playbook:
 - name: "Gather facts from Arista switches"
   hosts: leafs
-  gather_facts: no
-
+  gather_facts: yes
+  vars:
+    strange_thing: "Kernel version: 6.5.0-9-generic"
   tasks:
     - name: Gather facts (eos)
       arista.eos.eos_facts:
-
-    - name: Load vars file based on ansible_net_system
-      ansible.builtin.include_vars: "vars/{{ ansible_net_system }}.yml"
+      when: ansible_net_system == 'eos'
 
     - name: Tell user we found an Arista switch
       debug:
@@ -985,10 +978,10 @@ switch_sla: "premium"
         commands: "show version"
       register: show_version
 
-    - name: Ensure no strange CPU architectures are detected
+    - name: Ensure no strange things are detected
       ansible.builtin.assert:
         that:
-          - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+          - "show_version.stdout_lines | select('search', '{{ strange_thing }}') | list | count < 1"
         fail_msg: "Oh no"
         success_msg: "All is well"
 
@@ -1039,7 +1032,7 @@ TASK [Collect show version information] ****************************************
 ok: [clab-lab1-leaf1]
 ok: [clab-lab1-leaf2]
 
-TASK [Ensure no strange CPU architectures are detected] *****************************************************************************************************************************
+TASK [Ensure no strange things are detected] *****************************************************************************************************************************
 ok: [clab-lab1-leaf1] => {
     "changed": false,
     "msg": "All is well"
