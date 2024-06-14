@@ -30,4 +30,4 @@ else
 fi
 
 echo "Adding advanced networking workshop ssh key"
-ssh-add "$HOME/advanced-networking-workshop/scripts/id_rsa"
+ssh-add "$HOME/.ssh/advanced-networking-workshop_id_rsa"
