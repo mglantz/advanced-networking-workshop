@@ -122,23 +122,23 @@ aboot			boot-config  fastpkttx.backup  if-wait.sh	 persist   SsuRestoreLegacy.lo
 AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuRestore.log	 system_mac_address
 ```
 
-:exclamation: Now that you understand a bit better about containerlab, it's time to create your own network test environment. To do so, you need to go to your terminal, shown below.
+:boom: Task 1: Now that you understand a bit better about containerlab, it's time to create your own network test environment. To do so, you need to go to your terminal, shown below.
 
 ![Terminal](terminal.png)
 
-:exclamation: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
+:boom: Task 2: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
 
 ![Paste](accept.png)
 
-:exclamation: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
+:boom: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
 
-:boom: Task 1: Go to your $LABDIR/containerlab directory and run below command:
+:boom: Task 3: Go to your $LABDIR/containerlab directory and run below command:
 ```
 cd $LABDIR/containerlab
 ```
 ---
 
-:boom: Task 2: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
+:boom: Task 4: Create a simple containerlab definition, which spins up two Arista cEOS switches which are connected to each other, as follows:
 * Save your work in the containerlab directory and name the file lab1.yml.
 * kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
 * Call your nodes leaf1 and leaf2
