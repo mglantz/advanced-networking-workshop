@@ -145,7 +145,7 @@
   copy:
     src: files/advanced-networking-workshop_id_rsa
     dest: /home/student/.ssh/advanced-networking-workshop_id_rsa
-    user: student
+    owner: student
     group: student
     mode: 0400
   become: yes
