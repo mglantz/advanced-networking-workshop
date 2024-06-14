@@ -935,7 +935,7 @@ End of solution: Task 4
 
 ---
 
-:star: Try set the strange_things variable to something else on the command line, adding this to your ansible-playbook command: -e strange_things=somethingelse
+:star: Try set the strange_things variable to something else on the command line, adding this to your ansible-playbook command: -e "strange_things=somethingelse" --limit "clab-lab1-leaf1"
 
 ---
 
