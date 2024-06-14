@@ -126,7 +126,7 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 ![Terminal](terminal.png)
 
-:exclatmation: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
+:exclamation: When you paste information in from this page to your terminal the first time, you will be asked by your browser to allow this. Do so.
 
 ![Paste](accept.png)
 
