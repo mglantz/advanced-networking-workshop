@@ -21,7 +21,7 @@ This is what we will learn about in this first section of the workshop.
 1.1.6: Using templates
 ```
 ## 1.1: Different Ansible approaches to automating network devices
-Ansible is versatile, meaning you can approach automating your network in many different ways, with that said, there are some fundamental likeness which you will find, also across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what thing you use Ansible to automate.
+Ansible is versatile, meaning you can approach automating your network in many different ways. With that said there are some fundamental likeness  across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what thing you use Ansible to automate.
 
 :thumbsup: With that said, we would like to remind you of Ansible's three guiding development principles:
 * Complexity kills productivity (keep it simple, it makes it robust, scalable and easy to maintain)
@@ -29,26 +29,26 @@ Ansible is versatile, meaning you can approach automating your network in many d
 * Think declaratively (Ansible is a state engine, do not try to 'code' with playbooks, that you can do with modules)
 
 ## 1.1.1: Vendor differences
-When doing Ansible automation outside of the domain of networking, we are used to use the same settings and the same modules, even when we automate against different operating systems. When it comes to networking, this is not always true.
+When doing Ansible automation outside of the domain of networking, we are accustomed to use the same settings and the same modules, even when we automate against different operating systems. When it comes to networking, this is not always true.
 
-Main differences between network vendors are:
-* How you connected to the devices. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html)
-* What modules you use to perform tasks like, fact gathering, configuration changes, command execution. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html#settings-by-platform)
+:exclamation: Task 1: Review main differences between network vendors:
+* How you connect to the devices. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html)
+* What modules you use to perform tasks like, fact gathering, configuration changes and command execution. [Explore the list of options here](https://docs.ansible.com/ansible/latest/network/user_guide/platform_index.html#settings-by-platform)
 
 ## 1.1.2 Network test automation (using ContainerLab)
-Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. A fundamental of programming is testing your code.
+Writing Ansible automation may not feel like programming, but make no misstake, that is what you are doing. With that said, a fundamental of programming is testing your code.
 The basics of testing your Ansible code includes static code analysis using standard Ansible tools such as ansible-lint, yamllint, ansible-test, flake8 and more.
 You can read more about this on the [ansible.com dev-guide for testing](https://docs.ansible.com/ansible/latest/dev_guide/testing.html).
 
-When things becomes specific for networking, is when we are doing more proper integration tests, where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not as common that people use virtualized or containerized test environments to test changes to their network elements.
+When Ansible testing becomes specific for networking, is when we are doing more proper integration tests - where we test to see if the Ansible automation actually does what it's supposed to do. In the world of normal operating systems, this is normally done by spinning up test VMs or containers and testing if your playbooks works against those. But in the world of networking, things are not as far ahead yet and it's not as common that people use virtualized or containerized test environments to test changes to their network elements.
 
 With this said, allow us to introduce, [containerlab](https://containerlab.dev), which is a tool which allows you to spin up container based working environments, using a CLI. [Containerlab is also open source, distributed with a BSD license](https://github.com/srl-labs/containerlab/).
 
-In order for you to be able to create an CI/CD flow, where newly created network automation is automatically tested and pushed to your environments, you will need to resolve automated testing. Of course, in order to be 100% certain of what a change does, you will need an actual physical test environment to test switch or routing related configuration. But as that is still fairly rare, starting with a containerized test environment goes faster and requires little budget for upfront purcheses of equipment, as containerlab can run on a normal virtual machine.
+In order for you to be able to create an CI/CD pipeline, where newly created network automation is automatically tested and pushed to your environments, you will need to implement automated testing. Of course, in order to be 100% certain of what a change does, you may need an actual physical test environment to test switch or routing related configuration. But as that is still fairly rare, starting with a containerized test environment goes faster and requires little budget for upfront purcheses of equipment. Containerlab can run on a normal virtual machine, even a laptop.
 
 ![Overview of test workflow](ansible_network_testing.png)
 
-Quoting from the containerlab webpage, that more specifically state:
+Quoting from the containerlab webpage, that more specifically states:
 ```
 Containerlab focuses on the containerized Network Operating Systems,
 which are typically used to test network features and designs, such as:
@@ -72,7 +72,7 @@ based routers using vrnetlab or boxen integration
 In this section, you will learn how to create your first containerlab environment, which we will use to test against.
 Containerlab uses a few main components:
 * The containerlab cli tool
-* The containerlab yml definition which decides how to build things
+* The containerlab yml definition which decides how to build the network test environment
 * A container engine, such as podman or docker.
 * A Linux operating system to run it all on
 

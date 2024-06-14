@@ -22,8 +22,8 @@ This workshop uses Arista cEOS, because it is so very easy to work with. If you 
 
 # 0.2 Knowledge prerequisites
 This work assumes a few things from the student of the workshop, such as:
-* The person has intermediate knowledge about Ansible
-* You have basic knowledge of how to navigate and edit files in a Linux shell.
+* The person has intermediate knowledge about Ansible.
+* It's good if you have basic knowledge of how to navigate in a Linux shell.
 * The person has intermediate to expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
 
 # 0.3: What this workshop is NOT about
@@ -103,7 +103,7 @@ The workshop password is _rhadvnetworkshop2024_
 6. Validate that once the Ansible extension has been installed - it look as below.
 ![Extensions](images/5_extensions.png)
 
-7. Next, click on the left hand side menu item symbolized by two documents, and select "Open Folder". Then select "/home/student/advanced-networking-workshop" in the windows which opens in the middle of the window and click on "OK".
+7. Next, click on the left hand side menu item symbolized by two documents, and select "Open Folder". Then select "/home/student/advanced-networking-workshop" in the drop-down which opens up and click on "OK".
 This is where you can browse files in the lab.
 ![Folder](images/6_folder.png)
 
@@ -128,8 +128,3 @@ You are now done with the introduction to the lab and are ready to start learn a
 End-of-lab
 ```
 [Go to the next lab, lab 1](../lab-1/README.md)
-
-
-
-
-
