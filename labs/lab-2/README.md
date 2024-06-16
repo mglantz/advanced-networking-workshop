@@ -221,7 +221,16 @@ We will start off trying out what in essence is a not-recommended approach to ap
 :boom: Task 1: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
 * :thumbsup: Hints:
 1. Use host_vars/clab-lab2-leaf1|clab-lab2-leaf2 variable files for switch unique configuration.
-2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually.
+2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually, like this:
+```
+- name: Apply VLAN 39 configuration
+  arista.eos.eos_command:
+    commands:
+      - config
+      - vlan 39
+      - name prod
+```
+3. Accomplish below configuration state:
 
 * Leaf1 desired state:
 ```
