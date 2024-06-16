@@ -1145,9 +1145,15 @@ $ cp config_static.yml config_lines.yml
 
 ---
 
-:boom: Task 3: Edit config_lines.yml and related device config files so that the Ethernet11/22 "ip address 1.2.3.4/31" configuration line is injected using the config: lines feature, while the rest of the static configuration loaded as previously using config: src.
+:boom: Task 3: Edit config_lines.yml and related device config files (leaf1.cfg and leaf2.cfg) so that the Ethernet11/22 "ip address ..." configuration line is injected using the config: lines feature, while the rest of the static configuration loaded as previously using config: src.
 * Use the "parents:" and "after:" options to define where the lines should end up.
 * Re-use the host_vars/clab-lab2-leaf1,clab-lab2-leaf2 variable files from previous excercises.
+
+:exclamation: You can ignore below warning message.
+```
+[WARNING]: To ensure idempotency and correct diff the input configuration lines should be similar to how they
+appear if present in the running configuration on device
+```
 
 <details>
 <summary>:unlock: Show example solution: Task 3</summary>
@@ -1193,26 +1199,7 @@ $ cp config_static.yml config_lines.yml
         after: no switchport
 ```
 
-* Create the leaf1.cfg file as follows:
-```
-vlan 39
-   name prod
-!
-vlan 40
-   name test-l2-vxlan
-!
-interface Ethernet11
-   description spine1
-   mtu 9214
-   no switchport
-!
-interface Ethernet12
-   description spine2
-   mtu 9214
-   no switchport
-```
-
-* Create the leaf2.cfg file as follows:
+* Modify leaf1.cfg and leaf2.cfg or create a single leaf.cfg (which we use for both switches):
 ```
 vlan 39
    name prod
@@ -1293,7 +1280,7 @@ End of solution: Task 4
 </details>
 
 ### 2.7.3 Using the config module to load dynamic config files into devices
-Now it's time to review how we can use the powerful templating language jinja to dynamically create configuration, which we load using the config module. Basically, a template allows us to refer to things such as variables and features such as loops, to effectively create multiple variants of a network device configuration file out of a single template.
+Now it's time to review how we can use the powerful templating language jinja to dynamically create configuration, which we load using the config module. Basically, a template allows us to use things variables and features such as loops, to effectively create multiple variants of a network device configuration file out of a single template.
 
 Example template file:
 ```

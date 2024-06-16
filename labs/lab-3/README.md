@@ -32,10 +32,10 @@ For this lab, there are two already prepared containerlab files:
 
 :boom: Task 1: Destroy the previous environment and setup our starting point by running below commands:
 ```
-$ cd $LABDIR/containerlab
-$ sudo containerlab --runtime podman destroy -t lab2.yml
-$ sudo containerlab --runtime podman deploy -t lab3-start.yml
-$ ../scripts/ansible_hosts.sh lab3
+cd $LABDIR/containerlab
+sudo containerlab --runtime podman destroy -t lab2.yml
+sudo containerlab --runtime podman deploy -t lab3-start.yml
+../scripts/ansible_hosts.sh lab3
 ```
 
 ---
