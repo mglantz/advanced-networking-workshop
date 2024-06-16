@@ -11,20 +11,20 @@
 
 # 0.1 Introduction to the workshop 
 This workshop teaches advanced Ansible automation techniques for managing networking, meaning, switches and routers mainly.
-This lab is based on [https://containerlab.dev/](https://containerlab.dev), which will allows us to spin up different container based [Arista](https://www.arista.com) environments.
+This lab is based on [https://containerlab.dev/](https://containerlab.dev), which will allows us to spin up network test environments which we perform the workshop on.
 
 A lot of the workshop material is inspired from:
 * [Arista Ansible getting started](https://arista.my.site.com/AristaCommunity/s/article/arista-ansible-getting-started)
 * [David Varnum's Arista BPG EVPN Configuration Example](https://overlaid.net/2019/01/27/arista-bgp-evpn-configuration-example/)
 * [Dharmesh Shah's and Dave Varnum's Arista BGP EVPN ContainerLab configs](https://clabs.netdevops.me/rs/arista-bgp-evpn/)
 
-This workshop uses Arista cEOS, because it is so very easy to work with. If you are using Cisco, Arista will feel very familiar, most commands are similiar between the two.
+This workshop uses Arista cEOS, because it is so very easy to work with. If you are using Cisco, Arista will feel very familiar, most commands are similiar between the two. If you are using some other network OS, don't worry, as techniques tought by this workshop can be re-used for any network vendor.
 
 # 0.2 Knowledge prerequisites
 This work assumes a few things from the student of the workshop, such as:
 * The person has intermediate knowledge about Ansible.
-* It's good if you have basic knowledge of how to navigate in a Linux shell.
 * The person has intermediate to expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
+* It's useful (not required) if you have basic knowledge of how to navigate in a Linux shell.
 
 # 0.3: What this workshop is NOT about
 This workshop will not explain networking concepts. This is not a workshop which attempts to teach networking, routing or switching.
