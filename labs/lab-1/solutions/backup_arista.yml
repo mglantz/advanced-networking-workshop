@@ -1,21 +1,10 @@
 - name: "Backup Arista switches"
   hosts: leafs
   gather_facts: no
-  become: yes
   tasks:
     - name: Backup switch (eos)
       arista.eos.eos_config:
         backup: yes
-      register: backup_eos_location
-
-    - name: Create backup dir
-      file:
-        path: "~/advanced-networking-workshop/backups/{{ inventory_hostname }}"
-        state: directory
-        recurse: yes
-
-    - name: Copy backup files into backups directory
-      copy:
-        src: "{{ backup_eos_location.backup_path }}"
-        dest: "~/advanced-networking-workshop/backups/{{ inventory_hostname }}/{{ inventory_hostname }}.cfg"
-
+        backup_options:
+          dir_path: /home/student/advanced-networking-workshop/backups
+      become: yes

@@ -1,28 +1,30 @@
 - name: "Gather facts from Arista switches"
   hosts: leafs
-  gather_facts: no
-
+  gather_facts: yes
+  vars:
+    strange_thing: "Kernel version: 6.5.0-9-generic"
   tasks:
     - name: Gather facts (eos)
       arista.eos.eos_facts:
-  
+      when: ansible_net_system == 'eos'
+
     - name: Load vars file based on ansible_net_system
       ansible.builtin.include_vars: "vars/{{ ansible_net_system }}.yml"
-    
+
     - name: Tell user we found an Arista switch
       debug:
         msg: "Arista switch detected"
       when: ansible_net_system == 'eos'
- 
+
     - name: Collect show version information
       arista.eos.eos_command:
         commands: "show version"
       register: show_version
-        
-    - name: Ensure no strange CPU architectures are detected
+
+    - name: Ensure no strange things are detected
       ansible.builtin.assert:
         that:
-          - "show_version.stdout_lines | select('search', 'Architecture: s390') | list | count < 1"
+          - "show_version.stdout_lines | select('search', strange_thing) | list | count < 1"
         fail_msg: "Oh no"
         success_msg: "All is well"
 

@@ -337,7 +337,7 @@ End of solution.
 
 ---
 
-:boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected. Do so by entering the SSH command in your terminal as shown below:
+:boom: Task 7: Next, SSH to your switches using the admin user and validate ports Ethernet9 and 10 are connected. SSH to your switches by entering the SSH command in your terminal as shown below. After this enter the correct show command to display port status.
 ```
 $ ssh admin@IP-address
 ```
@@ -370,7 +370,7 @@ End of solution: Task 7.
 
 ---
 
-:boom: Task 8: Next create a simple playbook (call it ping.yml) which you save in the advanced-networking-workshop directory, which uses the ansible.builtin.ping module to ping the switches.
+:boom: Task 8: Next create a simple playbook (call it ping.yml) which you save in the advanced-networking-workshop directory, which uses the [ansible.builtin.ping](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/ping_module.html) module to ping the switches.
 
 <details>
 <summary>:unlock: Show example playbook solution: Task 8</summary>
@@ -482,7 +482,7 @@ And is also important when you add a little intelligence to your playbooks.
 * [Arista EOS Facts gathering](https://docs.ansible.com/ansible/latest/collections/arista/eos/eos_facts_module.html)
 * [Juniper JunOS Facts gathering](https://docs.ansible.com/ansible/latest/collections/junipernetworks/junos/junos_facts_module.html)
 
-Let's dive into some of the basic use-cases and how we can implement them. First off, is performing backups.
+Let's dive into some of the basic use-cases and how we can implement them. First off, is using the command module.
 
 ## 1.1.3.1 Using the command module
 The command module allows you to inject any number of commands into a network device. This allows you to directly use existing knowledge about network device CLIs, in your Ansible automation. Different network vendors will have their own versions of the command module. For example:
@@ -597,8 +597,7 @@ A very common scenario when we are pulling information from the network devices 
 Now it's time to do something.
 
 :boom: Task 1: Read up on the Arista config module and create a playbook called arista_backup.yml as follows:
-* create a task which creates a directory called /home/student/advanced-networking-workshop/backups
-* backup the device configuration to the backups directory you created.
+* Backups are made to /home/student/advanced-networking-workshop/backups
 
 :exclamation: You will need to use "become: yes" for this operation.
 
@@ -611,11 +610,6 @@ Now it's time to do something.
   hosts: leafs
   gather_facts: no
   tasks:
-    - name: Create backup dir
-      file:
-        path: "/home/student/advanced-networking-workshop/backups"
-        state: directory
-
     - name: Backup switch (eos)
       arista.eos.eos_config:
         backup: yes
@@ -830,14 +824,14 @@ End of solution: Task 2
 
 ---
 
-:boom: Task 3: Next, add a eos_command task to previous playbook which runs "show version", save the output using register and then add an assert which validates that the output from "show version" DOES NOT include the content of the variable strange_things, which you set to "Kernel version: 6.5.0-9-generic".
+:boom: Task 3: Next, add a eos_command task to previous playbook which runs "show version", save the output using register and then add an assert which validates that the output from "show version" DOES NOT include the content of the variable strange_thing, which you set to "Kernel version: 6.5.0-9-generic".
 
 :exclamation: Because of the output we get from the "show version" command, we need to process the output and used search to find what we are looking for, like so:
 ```
 # Below is true, if we DO NOT find it. Eg, list of hits less than 1.
 ansible.builtin.assert:
   that:
-    - "show_version.stdout_lines | select('search', '{{ strange_things }}') | list | count < 1"
+    - "show_version.stdout_lines | select('search', strange_thing) | list | count < 1"
 
 # To construct something which is true, IF we find it, use: count > 0. Eg, list of hits is more than 0.
 ```
@@ -871,7 +865,7 @@ ansible.builtin.assert:
     - name: Ensure no strange things are detected
       ansible.builtin.assert:
         that:
-          - "show_version.stdout_lines | select('search', '{{ strange_thing }}') | list | count < 1"
+          - "show_version.stdout_lines | select('search', strange_thing) | list | count < 1"
         fail_msg: "Oh no"
         success_msg: "All is well"
 ```
@@ -935,11 +929,11 @@ End of solution: Task 4
 
 ---
 
-:star: Try set the strange_things variable to something else on the command line, adding this to your ansible-playbook command: -e "strange_things=somethingelse" --limit "clab-lab1-leaf1"
+:star: Try set the strange_thing variable to something else on the command line, adding this to your ansible-playbook command: -e "strange_thing=somethingelse" --limit "clab-lab1-leaf1"
 
 ---
 
-:boom: Task 5: Finally you are going to use variable file naming and the fail module. Do this:
+:boom: Task 5: Finally you are going to add variable file naming and the fail module to the eos_facts.yml playbook. Do this:
 * Load a variable file, using ansible.builtin.include_vars in a task which runs after the eos_facts task.
 * Use the {{ ansible_net_system }} fact (it will be set to "eos") in the name of your vars file.
 * Set the following variable in your vars file: switch_sla: "premium"
@@ -968,6 +962,9 @@ switch_sla: "premium"
       arista.eos.eos_facts:
       when: ansible_net_system == 'eos'
 
+    - name: Load vars file based on ansible_net_system
+      ansible.builtin.include_vars: "vars/{{ ansible_net_system }}.yml"
+
     - name: Tell user we found an Arista switch
       debug:
         msg: "Arista switch detected"
@@ -981,7 +978,7 @@ switch_sla: "premium"
     - name: Ensure no strange things are detected
       ansible.builtin.assert:
         that:
-          - "show_version.stdout_lines | select('search', '{{ strange_thing }}') | list | count < 1"
+          - "show_version.stdout_lines | select('search', strange_thing) | list | count < 1"
         fail_msg: "Oh no"
         success_msg: "All is well"
 
