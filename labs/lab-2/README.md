@@ -48,14 +48,14 @@ INFO[0010] Removing ssh config for containerlab nodes
 ```
 
 :boom: Task 1: Create a new containerlab topology file, which reflects above setup. Also, more specifically:
-* Save your work in a the containerlab dictory and name the file lab1.yml
-* You should have two Arista cEOS switches which are connected to each other, as follows:
+* Save your work in a the containerlab dictory and name the file lab2.yml
 * kinds: should be ceos and image needs to be set to: localhost/ceos:4.32.0F
 * Call your nodes: leaf1, leaf2, spine1, spine2
-* The leaf switches should be connected to each other via ports eth9 on and eth10 (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
-* The leaf switches should be connected to the spine switches as such: leaf1:eth11 to spine1:eth1, leaf1:eth12 to spine2:eth1. AND leaf2:eth11 to spine1:eth2 and leaf2:eth12 to spine2:eth2.
 * startup-config should be ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg for leaf1 and leaf2-start.cfg for leaf2.
 * startup-config should be ~/advanced-networking-workshop/containerlab/configs/spine1-start.cfg for spine1 and spine2-start.cfg for spine2.
+* Your four switches should be connected to each other as follows:
+* The leaf switches should be connected to each other via ports eth9 on and eth10 (leaf1:eth9 to leaf2:eth9 and leaf1:eth10 to leaf2:eth10).
+* The leaf switches should be connected to the spine switches as such: leaf1:eth11 to spine1:eth1, leaf1:eth12 to spine2:eth1. AND leaf2:eth11 to spine1:eth2 and leaf2:eth12 to spine2:eth2.
 
 <details>
 <summary>:unlock: Show example solution: Task 1</summary>
@@ -93,7 +93,7 @@ topology:
 
 ---
 
-:boom: Task 2: Now it's time to rebuild the lab environment to our new setup. Use the "sudo containerlab" command like you did before, but add a --reconfigure flag at the end.
+:boom: Task 2: Now it's time to rebuild the lab environment to our new setup. Use the "sudo containerlab" command like you did before.
 
 <details>
 <summary>Show example solution: Task 2</summary>
@@ -101,7 +101,7 @@ topology:
 
 ```
 $ cd $LABDIR/containerlab
-$ sudo containerlab --runtime podman deploy -t lab2.yml --reconfigure
+$ sudo containerlab --runtime podman deploy -t lab2.yml
 INFO[0000] Containerlab v0.54.2 started                 
 INFO[0000] Parsing & checking topology file: lab2.yml   
 INFO[0000] Destroying lab: lab2                         
@@ -197,7 +197,7 @@ Don't worry, once you have learned these basics, you will get to work with more 
 
 Above we can see what switch configuration we will start working with. It represents a commonality in most networks, which is that some configuration is static across devices and some varies across devices. In our example, the VLAN configuration is the same across our two leaf switches, while the Ethernet interface configuration is differs more between the two. As we review different approaches to applying configuration, you will find that some methods works better for different types of configuration (static vs unique).
 
-In general you have four different main approaches you can select from when applying configuration to network devices:
+In general you have three different main approaches you can select from when applying configuration to network devices:
 1. Using the command module to send litteral cli commands (not recommended if it can be avoided).
 2. Using Ansible specific modules to manage specific tasks such as VLAN configuration, interface configuration, etc.
 3. Using a config module, to push specific static lines of configuration or dynamic lines of configuration using Ansible templating. 
@@ -210,7 +210,7 @@ To inform your choices, there are three main questions you can ask yourself:
 * Infrastructure as Code (IaC) - as a part of a larger initiative, you deliver network configuration in an automatic fashion, scope for what you start focusing on gets dictated by the scope of your IaC project.
 * Security - You deliver automation which supports security use-cases such as threat hunting (gathering information) and security incident management (isolating breaches, etc).
 2. What configuration will you manage? (Considering the use-case(s)). What configuration will you need to manage with your automation and on what devices? It's here that you start diving into the nature of the related configuration, if it's static or dynamic across devices, networks, etc.
-3. At what scale will you manage different types of configuration? If there is dynamic configuration across many devices to be dealt with, you will benefit more from approaches where you automatically generate configuring using templates for example. At the same time, creating unique static like definitions for each devices may no longer work.
+3. At what scale will you manage different types of configuration? If there is dynamic configuration across many devices to be dealt with, you will benefit more from approaches where you automatically generate configuration using templates - as creating unique static like definitions for each devices may scale badly.
 
 Don't worry though, we will try out all the different methods, so you can decide yourself what works and what doesn't.
 
@@ -220,7 +220,7 @@ We will start off trying out what in essence is a not-recommended approach to ap
 
 :boom: Task 1: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
 * :thumbsup: Hints:
-1. Use host_vars variable files for the unique configuration.
+1. Use host_vars/clab-lab2-leaf1|clab-lab2-leaf2 variable files for switch unique configuration.
 2. You have to state "config" on a separate line before start feeding cli command input, just as you would do if you do this manually.
 
 * Leaf1 desired state:
