@@ -1135,7 +1135,7 @@ End of solution: Task 1
 <p>
 
 ```
-$ ansible-playbook -i inventory arp-check.yml -e "interface_name=Ma0" --limit "clab-lab1-leaf1"
+$ ansible-playbook -i inventory arp_check.yml -e "interface_name=Ma0" --limit "clab-lab1-leaf1"
 
 PLAY [Check ARP table on port] ******************************************************************************************************************************************************
 
