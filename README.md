@@ -64,7 +64,10 @@ Scroll down past the overview if you want information about how to install this 
 
 # Installation of lab infrastructure
 
-To get the containerlab setup working on Fedora 39, using podman.
+:exclamation: Below instructions are only for people who need to install the lab environment themselves, not for people who are students in a pre-setup workshop.
+:exclamation: The playbooks in the provision directory are for setting this workshop up at scale on AWS and may have to be adjusted if you are to use them. Below instructions allows you to setup this workshop on a local system, without a VScode instance.
+
+To get the containerlab setup working on Fedora 39 or Red Hat Enterprise Linux 9.4, using podman:
 1. Install podman
 ```
 $ sudo dnf install podman podman-docker git ansible
