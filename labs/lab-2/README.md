@@ -280,8 +280,8 @@ interface Ethernet12
 
 * Create a directory in $LABDIR called host_vars
 ```
-$ cd $LABDIR
-$ mkdir host_vars
+cd $LABDIR
+mkdir host_vars
 ```
 
 * Create a host_vars/clab-lab2-leaf1 file which contains:
