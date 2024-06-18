@@ -1,5 +1,4 @@
 # Section 0: Introduction to the workshop
----
 #### Table of Contents
 [0.1: Introduction to the workshop](#01-introduction-to-the-workshop)<br>
 [0.2: Technical prerequisites](#02-technical-prerequisites)<br>
