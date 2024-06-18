@@ -10,15 +10,12 @@ This is what we will learn about in this first section of the workshop.
 [1.1.1: Vendor differences](#111-vendor-differences)<br>
 [1.1.2: Network test automation using ContainerLab](#112-network-test-automation-using-containerlab)<br>
 [1.1.2.1: Creating a containerlab test environment](#1121-creating-a-containerlab-test-environment)<br>
-[1.1.3: Gathering information](#113-gathering-information)<br>
+[1.1.3: Gathering information about your devices](#113-gathering-information-about-your-devices)<br>
 [1.1.3.1: Using the command module](#1131-using-the-command-module)<br>
 [1.1.3.2: Performing backups](#1132-performing-backups)<br>
 [1.1.3.3: Documenting your network](#1133-documenting-your-network)<br>
 [1.1.3.4: Adding intelligence to your playbooks](#1134-adding-intelligence-to-your-playbooks)<br>
 [1.1.3.5: Operational use-cases](#1135-operational-use-cases)<br>
-[1.1.4: Using specific modules to configure devices](#114-using-specific-modules-to-configure-devices)<br>
-[1.1.5: Using config modules to configure devices](#115-using-config-modules-to-configure-devices)<br>
-[1.1.6: Using templates](#116-using-templates)<br>
 
 ## 1.1: Different Ansible approaches to automating network devices
 Ansible is versatile, meaning you can approach automating your network in many different ways. With that said there are some fundamental likeness  across different network vendors which we will deal with in this part of the workshop. Except for there being some general approaches which applies to your actual automation of network devices, the development approach is very much similiar, no matter what thing you use Ansible to automate.
@@ -68,7 +65,7 @@ based routers using vrnetlab or boxen integration
 
 :boom: Task 1: If you can. [Click here, to have a look at this introductionary video on YouTube, for containerlab](https://www.youtube.com/watch?v=xdi7rwdJgkg).
 
-## 1.1.2.1 Creating a containerlab environment
+## 1.1.2.1 Creating a containerlab test environment
 In this section, you will learn how to create your first containerlab environment, which we will use to test against.
 Containerlab uses a few main components:
 * The containerlab cli tool
@@ -645,7 +642,7 @@ End of solution: Task 2
 
 Well done, creating backups does not have to be more difficult. Of course, normally you would put them somewhere special, a location also backed up by some backup software.
 
-### 1.1.3.1 Documenting the network
+### 1.1.3.1 Documenting your network
 Ansibles ability to pull information from your network devices allows you to automate something which not all organizations has - network documentation.
 
 We will review a more basic example of creating network documentation, where we write information about our network devices to a plain text file. With that said, this information may as well be written to your CMDB system, using the ansible.builtin.uri module (or more specific one) to do a API call to some external system.
