@@ -931,6 +931,8 @@ End of solution: Task 4
 
 :star: Try set the strange_thing variable to something else on the command line, adding this to your ansible-playbook command: -e "strange_thing=somethingelse" --limit "clab-lab1-leaf1"
 
+:thumbup: Using this method, you can create a playbook which troubleshoots a device for different issues.
+
 ---
 
 :boom: Task 5: Finally you are going to add variable file naming and the fail module to the eos_facts.yml playbook. Do this:
