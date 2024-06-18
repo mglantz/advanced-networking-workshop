@@ -1,4 +1,5 @@
 # Section 0: Introduction to the workshop
+---
 #### Table of Contents
 [0.1: Introduction to the workshop](#01-introduction-to-the-workshop)<br>
 [0.2: Technical prerequisites](#02-technical-prerequisites)<br>
@@ -8,6 +9,7 @@
 [0.6: If something goes wrong](#06-if-something-goes-wrong)<br>
 [0.7 Preparations to do the lab](#07-preparations-to-do-the-lab)<br>
 [0.8: Accessing the lab for the first time](#08-accessing-the-lab-for-the-first-time)<br>
+---
 
 # 0.1 Introduction to the workshop 
 This workshop teaches advanced Ansible automation techniques for managing networking, meaning, switches and routers mainly.
