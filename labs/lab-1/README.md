@@ -134,7 +134,7 @@ AsuFastPktTransmit.log	debug	     Fossil	       kickstart-config  schedule  SsuR
 
 ---
 
-:boom: When you are asked to run commands as displayed in Task 1, that is always done in your terminal.
+:exclamation: When you are asked to run commands, that is always done in your terminal.
 
 ---
 
@@ -506,7 +506,7 @@ With this said, a time when the command module often is very useful in your Ansi
 * show arp int Xx0
 * show ip route
 
-:boom: Task 1: Create a playbook which displays a to you useful piece of information using the eos_command module and a show command. Print that information out to the screen using the debug module. Name the playbook show_info.yml and store it in the $LABDIR root directory.
+:boom: Task 1: Create a playbook which displays a to you useful piece of information using the eos_command module and a show command. Print that information out to the screen using the [ansible.builtin.debug module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/debug_module.html). Name the playbook show_info.yml and store it in the $LABDIR root directory.
 
 <details>
 <summary>:unlock: Show solution: Task 1</summary>
