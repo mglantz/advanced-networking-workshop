@@ -5,26 +5,26 @@ At the end of this section, you will have learned about the three main approache
 ## Overview
 This is what we will learn about in this first section of the workshop.
 
-```
-2.1 Building a new containerlab environment
-2.2 Reviewing the initial desired configuration state
-2.3 Using the command module to accomplish our desired state
-2.3.1 Assessing the use of the command module.
-2.4 Learning about purpose specific configuration modules
-2.4.1: module state: "merged" (often the default)
-2.4.2: module state: "replaced"
-2.4.3: module state: "overridden"
-2.4.4: module state: "deleted"
-2.4.5: module state: "gathered"
-2.4.6: module state: "rendered" / "parsed"
-2.5 Reset your lab environment
-2.6 Using purpose specific modules to archieve the desired configuration state
-2.6.1 Assessing the use of purpose specific configuration modules
-2.7 Using config modules to make changes
-2.7.1 Using the config module to load static config files into devices
-2.7.2 Using the config module to inject lines of config into devices
-2.7.3 Using the config module to load dynamic config files into devices
-```
+#### Table of Contents
+[2.1: Building a new containerlab environment](#21-building-a-new-containerlab-environment)<br>
+[2.2: Reviewing the initial desired configuration state](#22-reviewing-the-initial-desired-configuration-state)<br>
+[2.3: Using the command module to accomplish our desired state](#23-using-the-command-module-to-accomplish-our-desired-state)<br>
+[2.3.1: Assessing the use of the command module](#231-assessing-the-use-of-the-command-module)<br>
+[2.4: Learning about purpose specific configuration modules](#24-learning-about-purpose-specific-configuration-modules)<br>
+[2.4.1: module state: "merged" (often the default)](#241-module-state-merged-often-the-default)<br>
+[2.4.2: module state: "replaced"](#242-module-state-replaced)<br>
+[2.4.3: module state: "overridden"](#243-module-state-overridden)<br>
+[2.4.4: module state: "deleted"](#244-module-state-deleted)<br>
+[2.4.5: module state: "gathered"](#245-module-state-gathered)<br>
+[2.4.6: module state: "rendered" / "parsed"](#246-module-state-rendered)<br>
+[2.5: Reset your lab environment](#25-reset-your-lab-environment)<br>
+[2.6: Using purpose specific modules to archieve the desired configuration state](#26-using-purpose-specific-modules-to-archieve-the-desired-configuration-state)<br>
+[2.6.1: Assessing the use of purpose specific configuration modules](#261-assessing-the-use-of-purpose-specific-configuration-modules)<br>
+[2.7: Using config modules to make changes](#27-using-config-modules-to-make-changes)<br>
+[2.7.1: Using the config module to load static config files into devices](#271-using-the-config-module-to-load-static-config-files-into-devices)<br>
+[2.7.2: Using the config module to inject lines of config into devices](#272-using-the-config-module-to-inject-lines-of-config-into-devices)<br>
+[2.7.3: Using the config module to load dynamic config files into devices](#273-using-the-config-module-to-load-dynamic-config-files-into-devices)<br>
+
 ## 2.1 Building a new containerlab environment
 Before we get started with configuring our switches, we need to build a new containerlab environment. This time, it will include some more switches in a traditional leaf-spine setup. As such:
 
