@@ -22,7 +22,7 @@ A lot of the workshop material is inspired from:
 This workshop uses Arista cEOS, because it is so very easy to work with. If you are using Cisco, Arista will feel very familiar, most commands are similiar between the two. If you are using some other network OS, don't worry, as techniques tought by this workshop can be re-used for any network vendor.
 
 # 0.2 Technical prerequisites
-To complete this lab you only need a web browser. While all web browsers should work, there is a known issue with Firefox where you cannot copy and paste content into your working environment. If you can, Chrome and Opera web browsers have been proven to work without issues.
+To complete this lab you only need a web browser. While all web browsers should work, there is a known issue with Firefox where you cannot copy and paste content into your working environment. If you can, Chrome and Opera web browsers have been proven to work without issues. Edge and Safari browser likely also works without any issues.
 
 # 0.3 Knowledge prerequisites
 This work assumes a few things from the student of the workshop, such as:
