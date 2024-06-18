@@ -1,12 +1,13 @@
 # Section 0: Introduction to the workshop
 ```
 0.1: Introduction to the workshop
-0.2: Knowledge prerequisites
-0.3: What this workshop is NOT about
-0.4: Lab graphics
-0.5: If something goes wrong
-0.6: Preparing to do the lab
-0.7: Accessing the lab for the first time
+0.2: Technical prerequisites
+0.3: Knowledge prerequisites
+0.4: What this workshop is NOT about
+0.5: Lab graphics
+0.6: If something goes wrong
+0.7: Preparing to do the lab
+0.8: Accessing the lab for the first time
 ```
 
 # 0.1 Introduction to the workshop 
@@ -20,20 +21,23 @@ A lot of the workshop material is inspired from:
 
 This workshop uses Arista cEOS, because it is so very easy to work with. If you are using Cisco, Arista will feel very familiar, most commands are similiar between the two. If you are using some other network OS, don't worry, as techniques tought by this workshop can be re-used for any network vendor.
 
-# 0.2 Knowledge prerequisites
+# 0.2 Technical prerequisites
+To complete this lab you only need a web browser. While all web browsers should work, there is a known issue with Firefox where you cannot copy and paste content into your working environment. If you can, Chrome and Opera web browsers have been proven to work without issues.
+
+# 0.3 Knowledge prerequisites
 This work assumes a few things from the student of the workshop, such as:
 * The person has intermediate knowledge about Ansible.
 * The person has intermediate to expert knowledge about networking, more specific, about switching and routing (level 2 to 5).
 * It's useful (not required) if you have basic knowledge of how to navigate in a Linux shell.
 
-# 0.3: What this workshop is NOT about
+# 0.4: What this workshop is NOT about
 This workshop will not explain networking concepts. This is not a workshop which attempts to teach networking, routing or switching.
 
 How to implement network automation for production environents, which includes an enterprise framework such as Ansible Automation Platform.
 
 This workshop neither tries to explain the basics of Ansible, you are expected to understand what roles, playbooks, collections, variables, inventories are and know the differences between the different Ansible CLI and management tools such as Ansible Automation Platform.
 
-# 0.4 Lab graphics
+# 0.5 Lab graphics
 
 In this lab, we use some basic graphics to make the lab easier to understand. Such as:
 
@@ -49,7 +53,7 @@ Here is some code that you need to run
 Here is an example of expected output when running commands
 ```
 
-# 0.5: :exclamation: If something goes wrong
+# 0.6: :exclamation: If something goes wrong
 If by some reason you get stuck in a lab - then here's what you should do. **Follow below steps 1-5**. _Do not skip any steps if not told to._
 
 1. If you do not understand what to do in a lab, or do not understand what you are doing, skip immediately to step 5. Also, the authors of this lab apologize for that. The purpose of this lab is so that everyone can do it and understand it.
@@ -59,7 +63,7 @@ If by some reason you get stuck in a lab - then here's what you should do. **Fol
 5. Ask the person beside you if that person also had an issue with what you are doing. If so, that may indicate there is actually something wrong.
 6. If you are doing this as a part of teacher lead workshop. Raise your hand and someone will come and help you... Otherwise, find the issue, and contribute a fix. You can do it.
 
-# 0.6 Preparations to do the lab
+# 0.7 Preparations to do the lab
 
 :exclamation: To get started with the labs, you first need to get your assigned username and servers. This will be provided to you by the people who operate this lab. If you have deployed the lab yourself, well, then you know where to login. 
 
@@ -83,7 +87,7 @@ Use below links as reference when needed. For now, continue on:
 * **vi/vim**: https://vim.rtorr.com/ 
 * **emacs** Congratulations, you obviously know what you are doing already
 
-# 0.7 Accessing the lab for the first time
+# 0.8 Accessing the lab for the first time
 
 1. Ensure you have received an URL which you access the lab using your web browser. Please note. This lab has been tested using Chrome and Firefox. If you use anything else, you are on your own.
 

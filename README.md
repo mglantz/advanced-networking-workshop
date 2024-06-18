@@ -11,12 +11,13 @@ Scroll down past the overview if you want information about how to install this 
 ### [Section 0: Introduction to the lab](labs/lab-0/README.md)
 ```
 0.1: Introduction to the workshop
-0.2: Knowledge prerequisites
-0.3: What this workshop is NOT about
-0.4: Lab graphics
-0.5: If something goes wrong
-0.6: Preparing to do the lab
-0.7: Accessing the lab for the first time
+0.2: Technical prerequisites
+0.3: Knowledge prerequisites
+0.4: What this workshop is NOT about
+0.5: Lab graphics
+0.6: If something goes wrong
+0.7: Preparing to do the lab
+0.8: Accessing the lab for the first time
 ```
 
 ### [Section 1: Fundamentals, test automation, information related tasks](labs/lab-1/README.md)
