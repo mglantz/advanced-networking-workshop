@@ -10,11 +10,10 @@ And this blog, where David Varnum step-by-step reviews a setup:
 * [Arista BGP EVPN - Configuration example](https://overlaid.net/2019/01/27/arista-bgp-evpn-configuration-example/)
 
 ## Overview
-```
-3.1 Review of containerlab and desired state device configuration
-3.2 Automating your network
-3.3. Validating your setup
-```
+#### Table of Contents
+[3.1 Review of containerlab and desired state device configuration](#31-review-of-containerlab-and-desired-state-device-configuration)<br>
+[3.2 Automating your network](#32-automating-your-network)<br>
+[3.3. Validating your setup](#33-validating-your-setup)<br>
 
 ## 3.1 Review of containerlab and desired state device configuration
 First off, what we want to accomplish, looks like this:
