@@ -6,7 +6,7 @@
 [0.4: What this workshop is NOT about](#04-what-this-workshop-is-not-about)<br>
 [0.5: Lab graphics](#05-lab-graphics)<br>
 [0.6: If something goes wrong](#06-if-something-goes-wrong)<br>
-[0.7 Preparations to do the lab](#07-preparations-to-do-the-lab)<br>
+[0.7: Preparations to do the lab](#07-preparations-to-do-the-lab)<br>
 [0.8: Accessing the lab for the first time](#08-accessing-the-lab-for-the-first-time)<br>
 
 # 0.1 Introduction to the workshop 
