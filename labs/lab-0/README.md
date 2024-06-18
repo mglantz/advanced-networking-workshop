@@ -52,7 +52,7 @@ Here is some code that you need to run
 Here is an example of expected output when running commands
 ```
 
-# 0.6: :exclamation: If something goes wrong
+# 0.6: If something goes wrong
 If by some reason you get stuck in a lab - then here's what you should do. **Follow below steps 1-5**. _Do not skip any steps if not told to._
 
 1. If you do not understand what to do in a lab, or do not understand what you are doing, skip immediately to step 5. Also, the authors of this lab apologize for that. The purpose of this lab is so that everyone can do it and understand it.
