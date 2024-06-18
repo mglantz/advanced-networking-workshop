@@ -37,11 +37,11 @@ This workshop neither tries to explain the basics of Ansible, you are expected t
 
 In this lab, we use some basic graphics to make the lab easier to understand. Such as:
 
-:boom: This is something which you have to do.
-:star: If you have time, you can also do this.
-:exclamation: Take careful notice of this, or you may fall on your face.
-:unlock: Show solution
-:thumbsup: This text contains information about a best practice.
+* :boom: This is something which you have to do.
+* :star: If you have time, you can also do this.
+* :exclamation: Take careful notice of this, or you may fall on your face.
+* :unlock: Show solution
+* :thumbsup: This text contains information about a best practice.
 ```
 Here is some code that you need to run
 ```
