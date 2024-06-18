@@ -1,6 +1,6 @@
 # Section 0: Introduction to the workshop
 ```
-0.1: Introduction to the workshop
+[0.1: Introduction to the workshop](#0.1-introduction-to-the-workshop)
 0.2: Technical prerequisites
 0.3: Knowledge prerequisites
 0.4: What this workshop is NOT about
