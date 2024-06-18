@@ -16,7 +16,7 @@ This is what we will learn about in this first section of the workshop.
 [2.4.3: module state: "overridden"](#243-module-state-overridden)<br>
 [2.4.4: module state: "deleted"](#244-module-state-deleted)<br>
 [2.4.5: module state: "gathered"](#245-module-state-gathered)<br>
-[2.4.6: module state: "rendered" / "parsed"](#246-module-state-rendered)<br>
+[2.4.6: module state: "rendered" and "parsed"](#246-module-state-rendered-and-parsed)<br>
 [2.5: Reset your lab environment](#25-reset-your-lab-environment)<br>
 [2.6: Using purpose specific modules to archieve the desired configuration state](#26-using-purpose-specific-modules-to-archieve-the-desired-configuration-state)<br>
 [2.6.1: Assessing the use of purpose specific configuration modules](#261-assessing-the-use-of-purpose-specific-configuration-modules)<br>
@@ -643,7 +643,7 @@ You get below data gathered:
   state: suspend
 ```
 
-### 2.4.6: module state: "rendered" / "parsed"
+### 2.4.6: module state: "rendered" and "parsed"
 The rendered option allows you to convert structured data, that you would fetch from facts gathering, to native device config.
 The "parsed" option allows you to do vice-versa. Meaning, to convert native device config, to structured data.
 Doing this is useful when you are using Ansible to document your network.
