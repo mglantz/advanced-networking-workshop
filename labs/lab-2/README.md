@@ -10,7 +10,7 @@ This is what we will learn about in this first section of the workshop.
 [2.2: Reviewing the initial desired configuration state](#22-reviewing-the-initial-desired-configuration-state)<br>
 [2.3: Using the command module to accomplish our desired state](#23-using-the-command-module-to-accomplish-our-desired-state)<br>
 [2.3.1: Assessing the use of the command module](#231-assessing-the-use-of-the-command-module)<br>
-[2.4: Learning about purpose specific configuration modules](#24-learning-about-purpose-specific-configuration-modules)<br>
+[2.4: Learning Network Resource modules](#24-learning-about-network-resource-modules)<br>
 [2.4.1: module state: "merged" (often the default)](#241-module-state-merged-often-the-default)<br>
 [2.4.2: module state: "replaced"](#242-module-state-replaced)<br>
 [2.4.3: module state: "overridden"](#243-module-state-overridden)<br>
@@ -18,7 +18,7 @@ This is what we will learn about in this first section of the workshop.
 [2.4.5: module state: "gathered"](#245-module-state-gathered)<br>
 [2.4.6: module state: "rendered" and "parsed"](#246-module-state-rendered-and-parsed)<br>
 [2.5: Reset your lab environment](#25-reset-your-lab-environment)<br>
-[2.6: Using purpose specific modules to archieve the desired configuration state](#26-using-purpose-specific-modules-to-archieve-the-desired-configuration-state)<br>
+[2.6: Using network resource modules to archieve the desired configuration state](#26-using-network-resource-modules-to-archieve-the-desired-configuration-state)<br>
 [2.6.1: Assessing the use of purpose specific configuration modules](#261-assessing-the-use-of-purpose-specific-configuration-modules)<br>
 [2.7: Using config modules to make changes](#27-using-config-modules-to-make-changes)<br>
 [2.7.1: Using the config module to load static config files into devices](#271-using-the-config-module-to-load-static-config-files-into-devices)<br>
@@ -216,7 +216,9 @@ Don't worry though, we will try out all the different methods, so you can decide
 
 ## 2.3 Using the command module to accomplish our desired state
 
-We will start off trying out what in essence is a not-recommended approach to applying configuration changes - which is using the command module directly. The main reason why we cover it is because the command module to some is easier to understand, which may lure you to use it. We will see it's limitations on full display in this exercise.
+We will start off doing a classic, which is learning what to NOT do: using the command module directly to make modification. The main reason why we cover it, is so that you may see it's limitations on full display. 
+
+:exclamation: Feel free to use the solutions, you are not meant to spend any significant time figure this part out.
 
 :boom: Task 1: Create a playbook called cmd_config.yml which uses the arista.eos.eos_command module to accomplish below configuration for our leaf1 and leaf2 switches.
 * :thumbsup: Hints:
@@ -350,6 +352,8 @@ End of solution: Task 1
 
 :boom: Task 2: Now, run the playbook and validate that the configuration state of the switches is correct using 'ssh admin@IP-OF-SWITCH' (password: admin).
 
+:exclamation: Even changes are performed, the command module will return OK.
+
 <details>
 <summary>:unlock: Show example solution: Task 2</summary>
 <p>
@@ -471,18 +475,20 @@ Depending on your approach, you will have ended up with a playbook similiar to b
 </p>
 </details>
 
-In the example above, we have done some work to separate static and dynamic configuration and should have come to the conclusion that in our case, it's mainly the "ip address" line which differs between the two leaf switches. Still, this is far from perfect. Questions to ask yourself is:
+In the example above, we have done some work to separate static and dynamic configuration and should have come to the conclusion that in our case, it's mainly the "ip address" line which differs between the two leaf switches. Still, this is far from perfect. First off, the command module is not meant to be used like this, even if it is not uncommon to see that being the case. This becomes overly clear when the module for example does not return CHANGED when we perform changes to our switches.
+
+Moreover, questions to ask yourself is:
 
 * What happens if the cli syntax changes?
 * How do you see when configuration is actually changed on a device?
 * Is this easy to maintain?
 
 The answers to above questions are:
-* Your automation breaks and you may not know when that happens.
-* That is very complicated to see at all.
-* No.
+* Your automation breaks and you may not know when that happens. Maintaining such automation over time will be costly, timewise.
+* That is very complicated, as you would have to diff a previous backup to current running config to see that at all. The non-idempotent ways of the command modules flatly makes it unsuitable for applying configuration.
+* No, it is not.
 
-## 2.4 Learning about purpose specific configuration modules
+## 2.4 Learning about Network Resource modules
 In your Ansible toolbox, there are a lot of modules built to manage specific configuration for your device, such as interface and VLAN configuration.
 This part is about learning how to use those type of modules to accomplish our designed configuration state. and their common so called module states.
 
@@ -491,7 +497,7 @@ First let's learn a bit about these types of modules. Have a look at the differe
 * [Cisco IOS modules](https://docs.ansible.com/ansible/latest/collections/cisco/ios/)
 * [Juniper JunOS modules](https://docs.ansible.com/ansible/latest/collections/junipernetworks/junos/index.html)
 
-All these vendors have specific modules to manage things such as:
+All these vendors have specific network resource modules to manage things such as:
 * ACLs
 * BGP
 * L2, L3, LACP and LAG interfaces
@@ -723,7 +729,7 @@ $
 </p>
 </details>
 
-# 2.6 Using purpose specific modules to archieve the desired configuration state
+# 2.6 Using network resource modules to archieve the desired configuration state
 Now we're going to use the L3 and VLAN specific configuration modules to archieve our desired state.
 
 <details>
@@ -943,6 +949,7 @@ You should have created something similiar as below as a playbook:
 </details>
 
 Now, let's assess what we got, compared to our solution which used the command module. Key differences were:
+* We can easily separate items of concerns in our device configurations, where we can have one playbook which does a specific thing.
 * Less Ansible code
 * Easier to understand code. Example: "mode: layer3" instead of "no switchport"
 * We can see when changes are made
@@ -950,7 +957,7 @@ Now, let's assess what we got, compared to our solution which used the command m
 * We do not have to maintain cli command syntax, the modules does that for us.
 
 ## 2.7 Using config modules to make changes
-The last approach, is often viewed as the best one. Perhaps because it is a very flexible and very powerful way to manage configuration of network devices, which easily scales across tens of thousands of network devices, or more.
+The last approach is a simple, though very flexible and powerful way to manage configuration of network devices, which easily scales across tens of thousands of network devices, or more.
 
 It is using the config module for our specific vendor to apply configuration. Advantage of using the config module is that we can inject arbitrary lines of configuration into a device, or inject a complete config file, which may be static in nature (one per device) or which may be generated dynamically using Ansible templating language (jinja2).
 
