@@ -949,7 +949,6 @@ You should have created something similiar as below as a playbook:
 </details>
 
 Now, let's assess what we got, compared to our solution which used the command module. Key differences were:
-* We can easily separate items of concerns in our device configurations, where we can have one playbook which does a specific thing.
 * Less Ansible code
 * Easier to understand code. Example: "mode: layer3" instead of "no switchport"
 * We can see when changes are made
