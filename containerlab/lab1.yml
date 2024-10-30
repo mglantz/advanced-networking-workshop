@@ -7,11 +7,11 @@ topology:
     leaf1:
       kind: ceos
       startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf1-start.cfg
-      mgmt_ipv4: 172.100.100.100/24
+      mgmt-ipv4: 172.100.100.100/24
     leaf2:
       kind: ceos
       startup-config: ~/advanced-networking-workshop/containerlab/configs/leaf2-start.cfg
-      mgmt_ipv4: 172.100.100.101/24
+      mgmt-ipv4: 172.100.100.101/24
 
   links:
     - endpoints: ["leaf1:eth9", "leaf2:eth9"]
