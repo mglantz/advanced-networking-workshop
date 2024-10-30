@@ -1,0 +1,6 @@
+- name: Ping switches
+  hosts: leafs
+  tasks:
+    - name: Send ICMP to hosts
+      ansible.builtin.ping:
+        data: pong
