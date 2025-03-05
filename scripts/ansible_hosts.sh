@@ -23,7 +23,7 @@ case $1 in
 			exit 1
 		fi
 		echo "[leafs]" >>$inventory_file
-		sudo containerlab inspect -t $install_dir/containerlab/lab1.yml 2>/dev/null|grep clab|cut -d'|' -f3,8| sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g"|grep leaf >>$inventory_file
+		sudo containerlab inspect -t $install_dir/containerlab/lab1.yml 2>/dev/null|grep clab|awk '{ print $2 " ansible_host=" $8 }'|grep leaf >>$inventory_file
 		;;
 	lab2|--lab2|LAB2|Lab2)
                 if [ ! -f $install_dir/containerlab/lab2.yml ]
@@ -33,10 +33,10 @@ case $1 in
                 fi
 
                 echo "[leafs]" >>$inventory_file
-                sudo containerlab inspect -t $install_dir/containerlab/lab2.yml 2>/dev/null|grep clab|cut -d'|' -f3,8| sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g"|grep leaf >>$inventory_file
+                sudo containerlab inspect -t $install_dir/containerlab/lab2.yml 2>/dev/null|grep clab|awk '{ print $2 " ansible_host=" $8 }'|grep leaf >>$inventory_file
                 echo "" >>$inventory_file
                 echo "[spines]" >>$inventory_file
-                sudo containerlab inspect -t $install_dir/containerlab/lab2.yml 2>/dev/null|grep clab|cut -d'|' -f3,8| sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g"|grep spine >>$inventory_file
+                sudo containerlab inspect -t $install_dir/containerlab/lab2.yml 2>/dev/null|grep clab|awk '{ print $2 " ansible_host=" $8 }'|grep spine >>$inventory_file
 
                 echo "" >>$inventory_file
                 echo "[switches:children]" >>$inventory_file
@@ -45,15 +45,15 @@ case $1 in
 		;;
 	lab3-full|--lab3-full|LAB3-FULL|lab3|LAB3)
 		echo "[linux]" >>$inventory_file
-		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|cut -d'|' -f3,8|grep clab | grep host|sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g" >>$inventory_file
+		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|grep clab | awk '{ print $2 " ansible_host=" $8 }'|grep lab3-host >>$inventory_file
 
 		echo "" >>$inventory_file
 		echo "[leafs]" >>$inventory_file
-		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|cut -d'|' -f3,8|grep clab | sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g"|grep leaf >>$inventory_file
+		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|grep clab | awk '{ print $2 " ansible_host=" $8 }'|grep leaf >>$inventory_file
 
 		echo "" >>$inventory_file
 		echo "[spines]" >>$inventory_file
-		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|cut -d'|' -f3,8|grep clab | sed -e "s@/24@@g" -e "s/ //g" -e "s/|/ ansible_host=/g"|grep spine >>$inventory_file
+		sudo containerlab inspect -t $install_dir/containerlab/lab3-full.yml 2>/dev/null|grep clab | awk '{ print $2 " ansible_host=" $8 }'|grep spine >>$inventory_file
 
 		echo "" >>$inventory_file
 		echo "[switches:children]" >>$inventory_file
